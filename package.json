@@ -30,7 +30,10 @@
     "db:reset": "prisma migrate reset --force && prisma migrate deploy && prisma db seed",
     "db:studio": "prisma studio"
   },
-  "prettier": {},
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
   "eslintIgnore": [
     "/node_modules",
     "/build",
