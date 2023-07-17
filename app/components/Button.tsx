@@ -20,7 +20,7 @@ export default function Button({ children, primary = false }: Props) {
       ${
         primary
           ? 'border-dark-pink bg-dark-pink text-white'
-          : 'border-dark-blue bg-transparent text-black hover:border-light-blue/10 hover:bg-light-blue/25'
+          : 'border-dark-blue bg-transparent text-black hover:border-light-blue/25 hover:bg-light-blue/25'
       }
       hover:pr-8
     `}
