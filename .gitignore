@@ -9,3 +9,5 @@ node_modules
 /postgres-data
 
 .DS_Store
+
+storybook-static
