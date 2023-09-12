@@ -1,43 +1,50 @@
-import React from 'react';
 import type { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
-import { icon, library } from '@fortawesome/fontawesome-svg-core';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  icon as fontAwesomeIcon,
+  library,
+  toHtml,
+} from '@fortawesome/fontawesome-svg-core';
+import * as faIcons from '~/utils/icons';
 
-library.add(faChevronRight);
+const icons = Object.values(faIcons);
+library.add(...icons);
 
 export type Props = {
+  name: IconName;
   className?: React.HTMLAttributes<HTMLSpanElement>['className'];
   prefix?: Extract<IconPrefix, 'fas' | 'fab' | 'far'>;
-  name: IconName;
-  iconClasses?: string;
-  title?: string;
+  sizes?: 's' | 'm' | 'l' | 'xl' | 'full';
+  faClasses?: string;
 };
+
+const sizeMap = new Map<Props['sizes'], string>();
+sizeMap.set('s', 'fa-xs');
+sizeMap.set('m', ''); // Default font-size
+sizeMap.set('l', 'fa-2x');
+sizeMap.set('xl', 'fa-3x');
+sizeMap.set('full', 'fa-5x');
 
 const Icon = ({
   name,
   prefix = 'fas',
   className = '',
-  iconClasses = '',
-  title = '',
+  sizes = 'm',
+  faClasses = '',
 }: Props) => {
-  const iconHTML = icon(
+  const icon = fontAwesomeIcon(
     {
       prefix,
       iconName: name,
     },
     {
-      classes: iconClasses,
-      styles: {
-        height: '1em',
-      },
+      classes: [faClasses, sizeMap.get(sizes) || ''],
     }
-  ).html;
+  ).abstract.shift();
 
   return (
     <span
-      title={title}
       className={className}
-      dangerouslySetInnerHTML={{ __html: iconHTML[0] }}
+      dangerouslySetInnerHTML={{ __html: toHtml(icon) }}
     />
   );
 };

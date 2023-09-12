@@ -15,6 +15,7 @@ export const Default: Story = {
     name: 'chevron-right',
   },
   argTypes: {
+    // TODO: Add missing argtypes
     prefix: {
       defaultValue: 'fas',
     },
