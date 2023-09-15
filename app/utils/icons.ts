@@ -1,1 +1,5 @@
-export { faChevronRight, faBars } from '@fortawesome/free-solid-svg-icons';
+export {
+  faChevronRight,
+  faBars,
+  faSearch,
+} from '@fortawesome/free-solid-svg-icons';
