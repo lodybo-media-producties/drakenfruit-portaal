@@ -20,7 +20,7 @@ import type { LoaderArgs } from '@remix-run/node';
 import type { FitEnum } from 'sharp';
 import sharp from 'sharp';
 
-const ASSETS_ROOT = 'app/assets';
+const PUBLIC_ROOT = 'public';
 const IMAGES_ROOT = 'images';
 const { createReadStream, statSync } = fs;
 
@@ -71,8 +71,8 @@ function extractParams(
   }
 
   let root = IMAGES_ROOT;
-  if (searchParams.has('root') && searchParams.get('root') === 'assets') {
-    root = ASSETS_ROOT;
+  if (searchParams.has('root') && searchParams.get('root') === 'public') {
+    root = PUBLIC_ROOT;
   }
 
   return { src, width, height, fit, root };

@@ -25,7 +25,7 @@ const config: StorybookConfig = {
     autodocs: true,
   },
   viteFinal: async (config) => {
-    config.plugins.push(tsconfigPaths());
+    config.plugins?.push(tsconfigPaths());
     return config;
   },
 };
