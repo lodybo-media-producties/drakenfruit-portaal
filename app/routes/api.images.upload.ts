@@ -1,4 +1,4 @@
-import type { ActionArgs, NodeOnDiskFile } from '@remix-run/node';
+import type { ActionFunctionArgs, NodeOnDiskFile } from '@remix-run/node';
 import { json, unstable_parseMultipartFormData } from '@remix-run/node';
 import { requireAdmin } from '~/session.server';
 import { getErrorMessage } from '~/utils/utils';
@@ -7,7 +7,7 @@ import type { APIResponse, ImageUploadResponse } from '~/types/Responses';
 
 const ALLOWED_ORIGINS = ['http://localhost:3000'];
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   await requireAdmin(request);
 
   const origin = request.headers.get('origin');
