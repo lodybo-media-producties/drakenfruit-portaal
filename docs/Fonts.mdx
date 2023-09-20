@@ -1,0 +1,50 @@
+import { Meta, Typeset } from '@storybook/blocks';
+import { typography, convertToPx, getPureRem, mapSizesToTypeset } from './typeset';
+
+<Meta title="Documentation/Typography" />
+
+# Typography
+An overview of the typography used in the Portal.
+
+**Sizes**
+The available sizes can be found in Tailwind's [theme configuration](https://tailwindcss.com/docs/font-size).
+
+<ul>
+{
+typography.sizes.map(({ name, size }) => (
+  <li><strong>{name}</strong> {size} ({convertToPx(getPureRem(size))})</li>
+))}
+</ul>
+
+**Weights**
+The following weights are available: `400` (normal), `900` (bold).
+
+## Satoshi Black
+The Satoshi Black font is used for the logo and small titles.
+
+<Typeset
+  fontFamily={typography.type.heading}
+  fontWeight={typography.weights.bold}
+  fontSizes={mapSizesToTypeset(typography.sizes)}
+  sampleText="Satoshi Black"
+/>
+
+## Satoshi
+The Satoshi font is used for body text.
+
+<Typeset
+  fontFamily={typography.type.body}
+  fontWeight={typography.weights.normal}
+  fontSizes={mapSizesToTypeset(typography.sizes)}
+  sampleText="Satoshi"
+/>
+
+## Typewriter Condensed
+The Typewriter Condensed font is used for quotes, medium and small headings.
+
+<Typeset
+  fontFamily={typography.type.type}
+  fontWeight={typography.weights.normal}
+  fontSizes={mapSizesToTypeset(typography.sizes)}
+  sampleText="Typewriter Condensed"
+/>

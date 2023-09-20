@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import Icon from '~/components/Icon';
+import { forwardRef } from 'react';
 
 type Props = {
   /**
@@ -13,9 +14,11 @@ type Props = {
   primary?: boolean;
 };
 
-export default function Button({ children, primary = false }: Props) {
-  return (
+// export default function Button({ children, primary = false }: Props) {
+const Button = forwardRef<HTMLButtonElement, Props>(
+  ({ children, primary = false, ...props }, ref) => (
     <button
+      ref={ref}
       className={`group relative rounded border-2 px-4 py-2 font-type text-lg transition-all motion-reduce:transition-none
       ${
         primary
@@ -24,6 +27,7 @@ export default function Button({ children, primary = false }: Props) {
       }
       hover:pr-8
     `}
+      {...props}
     >
       {children}
       <Icon
@@ -31,5 +35,8 @@ export default function Button({ children, primary = false }: Props) {
         className="absolute right-2 opacity-0 transition group-hover:opacity-100 motion-reduce:transition-none"
       />
     </button>
-  );
-}
+  )
+);
+Button.displayName = 'Button';
+
+export default Button;

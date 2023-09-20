@@ -3,7 +3,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 const config: StorybookConfig = {
   stories: [
-    '../app/components/**/*.mdx',
+    '../docs/**/*.mdx',
     '../app/components/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   staticDirs: ['../public'],
@@ -23,6 +23,7 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: true,
+    defaultName: 'Components',
   },
   viteFinal: async (config) => {
     config.plugins?.push(tsconfigPaths());

@@ -12,6 +12,15 @@ const preview: Preview = {
         date: /Date$/,
       },
     },
+    layout: 'centered',
+    docs: {
+      toc: true,
+    },
+    options: {
+      storySort: {
+        order: ['Documentation', 'Components'],
+      },
+    },
   },
 
   decorators: [
