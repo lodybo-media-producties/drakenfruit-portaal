@@ -7,8 +7,9 @@ import {
   DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import Icon from '~/components/Icon';
+import { useTranslation } from 'react-i18next';
 
-type Filter = {
+export type Filter = {
   slug: string;
   label: string;
   defaultChecked?: boolean;
@@ -20,10 +21,15 @@ type Props = {
   onSelectedFiltersChange: (selectedFilters: Filter[]) => void;
 };
 
+type TriggerButtonProps = {
+  label: string;
+};
+
 export default function SearchFilters({
   filters,
   onSelectedFiltersChange,
 }: Props) {
+  const { t } = useTranslation('components');
   const [selectedFilters, setSelectedFilters] = useState<Filter[]>(
     filters.filter(({ defaultChecked }) => defaultChecked)
   );
@@ -53,7 +59,7 @@ export default function SearchFilters({
     <div className="flex flex-col gap-2 h-20">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <TriggerButton />
+          <TriggerButton label={t('SearchFilters.ButtonTitle')} />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           {filters.map((filter) => (
@@ -64,7 +70,7 @@ export default function SearchFilters({
               defaultChecked={filter.defaultChecked}
               disabled={filter.disabled}
             >
-              {filter.label}
+              {t(filter.label)}
             </DropdownMenuCheckboxItem>
           ))}
         </DropdownMenuContent>
@@ -73,24 +79,26 @@ export default function SearchFilters({
       {selectedFilters.length ? (
         <small>
           Gekozen filters:{' '}
-          {selectedFilters.map((filter) => filter.label).join(', ')}
+          {selectedFilters.map((filter) => t(filter.label)).join(', ')}
         </small>
       ) : null}
     </div>
   );
 }
 
-const TriggerButton = forwardRef<HTMLButtonElement, {}>((props, ref) => (
-  <button
-    ref={ref}
-    className="w-44 group relative rounded border-2 px-4 py-2 font-type text-lg transition-all motion-reduce:transition-none border-dark-blue bg-transparent text-black hover:border-light-blue/25 hover:bg-light-blue/25 data-[state=open]:border-light-blue/25 data-[state=open]:bg-light-blue/25"
-    {...props}
-  >
-    Onderwerpen
-    <Icon
-      name="chevron-down"
-      className="pl-2 transition-all opacity-50 group-hover:opacity-100 data-[state=open]:opacity-100 motion-reduce:transition-none"
-    />
-  </button>
-));
+const TriggerButton = forwardRef<HTMLButtonElement, TriggerButtonProps>(
+  (props, ref) => (
+    <button
+      ref={ref}
+      className="w-44 group relative rounded border-2 px-4 py-2 font-type text-lg transition-all motion-reduce:transition-none border-dark-blue bg-transparent text-black hover:border-light-blue/25 hover:bg-light-blue/25 data-[state=open]:border-light-blue/25 data-[state=open]:bg-light-blue/25"
+      {...props}
+    >
+      {props.label}
+      <Icon
+        name="chevron-down"
+        className="pl-2 transition-all opacity-50 group-hover:opacity-100 data-[state=open]:opacity-100 motion-reduce:transition-none"
+      />
+    </button>
+  )
+);
 TriggerButton.displayName = 'TriggerButton';

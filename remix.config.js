@@ -4,5 +4,6 @@ module.exports = {
   ignoredRouteFiles: ['**/.*', '**/*.test.{js,jsx,ts,tsx}'],
   postcss: true,
   serverModuleFormat: 'cjs',
+  devServerPort: 8002,
   tailwind: true,
 };

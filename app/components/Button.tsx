@@ -1,8 +1,11 @@
-import type { ReactNode } from 'react';
+import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
 import Icon from '~/components/Icon';
 import { forwardRef } from 'react';
 
-type Props = {
+type Props = DetailedHTMLProps<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+> & {
   /**
    * The contents of the button.
    */
@@ -14,7 +17,6 @@ type Props = {
   primary?: boolean;
 };
 
-// export default function Button({ children, primary = false }: Props) {
 const Button = forwardRef<HTMLButtonElement, Props>(
   ({ children, primary = false, ...props }, ref) => (
     <button
