@@ -8,11 +8,15 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react';
 
 import { getUser } from '~/session.server';
 import stylesheet from '~/tailwind.css';
 import Header from '~/components/Header';
+import i18next from '~/i18next.server';
+import { useChangeLanguage } from 'remix-i18next';
+import { useTranslation } from 'react-i18next';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -20,12 +24,24 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  return json({ user: await getUser(request) });
+  const locale = await i18next.getLocale(request);
+  return json({ user: await getUser(request), locale });
 };
 
 export default function App() {
+  // Get the locale from the loader
+  let { locale } = useLoaderData<typeof loader>();
+
+  let { i18n } = useTranslation();
+
+  // This hook will change the i18n instance language to the current locale
+  // detected by the loader, this way, when we do something to change the
+  // language, this locale will change and i18next will load the correct
+  // translation files
+  useChangeLanguage(locale);
+
   return (
-    <html lang="en" className="h-full">
+    <html className="h-full" lang={locale} dir={i18n.dir()}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -42,3 +58,7 @@ export default function App() {
     </html>
   );
 }
+
+export const handle = {
+  i18n: 'common',
+};
