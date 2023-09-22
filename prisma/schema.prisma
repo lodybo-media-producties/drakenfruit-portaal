@@ -7,15 +7,31 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
+enum Role {
+  MAINTAINER
+  ADMIN
+  CONSULTANT
+  PROJECTMANAGER
+}
+
 model User {
-  id    String @id @default(cuid())
-  email String @unique
+  id String @id @default(cuid())
+
+  email    String    @unique
+  password Password?
+
+  firstName    String
+  lastName     String
+  role         Role
+  organization String
+  locale       String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  password Password?
-  notes    Note[]
 }
 
 model Password {
@@ -25,14 +41,65 @@ model Password {
   userId String @unique
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
+model Article {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  title   Json
+  /// [Translated]
+  content Json
+  /// [Translated]
+  summary Json
+
+  author   String
+  category String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+model Tool {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  name        Json
+  slug        String
+  /// [Translated]
+  summary     Json
+  /// [Translated]
+  content     Json
+  downloadUrl String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Webinar {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  title       Json
+  /// [Translated]
+  description Json
+  link        String
+  /// [Translated]
+  transcript  Json?
+  /// [Translated]
+  slides      Json?
+  /// [Translated]
+  tools       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+  slug        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

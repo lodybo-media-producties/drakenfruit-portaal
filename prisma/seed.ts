@@ -1,44 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import { users } from './seed-data';
 
 const prisma = new PrismaClient();
 
 async function seed() {
-  const email = "rachel@remix.run";
+  console.log(`Seeding database...`);
 
-  // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
-    // no worries if it doesn't exist yet
-  });
-
-  const hashedPassword = await bcrypt.hash("racheliscool", 10);
-
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: {
-        create: {
-          hash: hashedPassword,
-        },
-      },
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My first note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
-
-  await prisma.note.create({
-    data: {
-      title: "My second note",
-      body: "Hello, world!",
-      userId: user.id,
-    },
-  });
+  createUsers();
 
   console.log(`Database has been seeded. 🌱`);
 }
@@ -51,3 +20,19 @@ seed()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+async function createUsers() {
+  for (const user of users) {
+    console.log(`Creating user: ${user.email}`);
+    await prisma.user.create({
+      data: {
+        ...user,
+        password: {
+          create: {
+            hash: bcrypt.hashSync(user.password, 10),
+          },
+        },
+      },
+    });
+  }
+}
