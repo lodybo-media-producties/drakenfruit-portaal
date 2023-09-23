@@ -22,8 +22,8 @@ export async function createUser(email: User['email'], password: string) {
       firstName: '',
       lastName: '',
       locale: 'en',
-      role: 'PROJECTMANAGER',
-      organization: '',
+      role: 'PROJECTLEADER',
+      organisation: {},
       password: {
         create: {
           hash: hashedPassword,
