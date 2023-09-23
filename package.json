@@ -44,7 +44,8 @@
     "/node_modules",
     "/build",
     "/public/build",
-    "/postgres-data"
+    "/postgres-data",
+    "/storybook-static"
   ],
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.4.2",

@@ -1,13 +1,8 @@
-import { Organisation, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
-
-let drakenfruit: Organisation;
-let lodybo: Organisation;
-let ministerieVanHuisvesting: Organisation;
-let agencyForAmbition: Organisation;
 
 async function seed() {
   console.log(`Seeding database...`);
@@ -27,7 +22,8 @@ seed()
   });
 
 async function createOrganisations() {
-  lodybo = await prisma.organisation.create({
+  console.log('Creating Lodybo...');
+  await prisma.organisation.create({
     data: {
       name: 'Lodybo',
       description: 'Lodybo, for all your software needs.',
@@ -53,7 +49,8 @@ async function createOrganisations() {
     },
   });
 
-  drakenfruit = await prisma.organisation.create({
+  console.log('Creating Drakenfruit...');
+  await prisma.organisation.create({
     data: {
       name: 'Drakenfruit',
       description: 'Drakenfruit, for diversity and inclusion.',
@@ -103,7 +100,8 @@ async function createOrganisations() {
     },
   });
 
-  ministerieVanHuisvesting = await prisma.organisation.create({
+  console.log('Creating Ministerie van Huisvesting...');
+  await prisma.organisation.create({
     data: {
       name: 'Ministerie van Huisvesting',
       description: 'Ministerie van Huisvesting, voor al uw huisvesting.',
@@ -129,7 +127,8 @@ async function createOrganisations() {
     },
   });
 
-  agencyForAmbition = await prisma.organisation.create({
+  console.log('Creating Agency For Ambition...');
+  await prisma.organisation.create({
     data: {
       name: 'Agency For Ambition',
       description: 'Agency For Ambition, for all your ambitions.',
