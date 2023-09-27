@@ -67,6 +67,7 @@ export function useUser(): User {
 }
 
 export function validateEmail(email: unknown): email is string {
+  console.warn('deprecated email validation');
   return typeof email === 'string' && email.length > 3 && email.includes('@');
 }
 
