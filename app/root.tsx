@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from '@remix-run/react';
 
 import { getUser } from '~/session.server';
@@ -17,6 +18,7 @@ import Header from '~/components/Header';
 import i18next from '~/i18next.server';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
+import { getErrorMessage, useOptionalUser } from '~/utils/utils';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -29,10 +31,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export default function App() {
+  const user = useOptionalUser();
   // Get the locale from the loader
-  let { locale } = useLoaderData<typeof loader>();
-
-  let { i18n } = useTranslation();
+  const { locale } = useLoaderData<typeof loader>();
+  const { i18n } = useTranslation();
 
   // This hook will change the i18n instance language to the current locale
   // detected by the loader, this way, when we do something to change the
@@ -49,11 +51,38 @@ export default function App() {
         <Links />
       </head>
       <body className="h-full font-body bg-egg-white">
-        <Header />
+        <Header user={user} />
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  console.error(error);
+  const message = getErrorMessage(error);
+
+  return (
+    <html>
+      <head>
+        <title>Oh no!</title>
+        <Meta />
+        <Links />
+      </head>
+      <body className="text-black font-body flex w-screen h-screen justify-center items-center">
+        <div className="w-[75vw]">
+          <h1 className="text-3xl font-heading mb-4">Oh no!</h1>
+          <p>Er is iets fout gegaan helaas...</p>
+
+          <pre>
+            <code className="p-6 font-type bg-black text-white">{message}</code>
+          </pre>
+        </div>
+        <Scripts />
       </body>
     </html>
   );

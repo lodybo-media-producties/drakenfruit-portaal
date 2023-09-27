@@ -1,8 +1,14 @@
 // import logo from '~/assets/images/logo/horizontal-icon-name-smaller.png';
 import { Image } from '~/components/Image';
 import Icon from '~/components/Icon';
+import type { User } from '~/models/user.server';
+import { Link } from '@remix-run/react';
 
-export default function Header() {
+type Props = {
+  user?: User;
+};
+
+export default function Header({ user }: Props) {
   return (
     <div className="bg-light-blue flex flex-row justify-between gap-2.5 px-5 py-2.5">
       <Image
@@ -24,7 +30,14 @@ export default function Header() {
         alt="Drakenfruit logo"
       />
 
-      <div className="w-1/6 flex place-content-center place-items-center">
+      <div className="w-1/6 flex place-content-center place-items-center gap-2.5">
+        {user ? (
+          <form method="post" action="/logout">
+            <button>Uitloggen</button>
+          </form>
+        ) : (
+          <Link to="/login">Inloggen</Link>
+        )}
         <Icon name="bars" sizes="l" />
       </div>
     </div>

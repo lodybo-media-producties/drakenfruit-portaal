@@ -19,7 +19,7 @@ type Props = ForProps | ChildrenProps;
 
 export default function Label({ label, children, htmlFor }: Props) {
   return (
-    <UILabel className="text flex flex-col gap-2" htmlFor={htmlFor}>
+    <UILabel className="w-full text flex flex-col gap-2" htmlFor={htmlFor}>
       {label}
       {children}
     </UILabel>
