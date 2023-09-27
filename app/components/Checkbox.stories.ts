@@ -30,7 +30,7 @@ export const Disabled: Story = {
   },
 };
 
-export const subLabel: Story = {
+export const SubLabel: Story = {
   args: {
     ...Default.args,
     subLabel: 'Ik heb ze gelezen en ik ga ermee akkoord',

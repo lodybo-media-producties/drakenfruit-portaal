@@ -4,8 +4,7 @@ import type {
   MetaFunction,
 } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
-import { Form, Link, useActionData, useSearchParams } from '@remix-run/react';
-import { useEffect, useRef } from 'react';
+import { Form, useActionData, useSearchParams } from '@remix-run/react';
 
 import { verifyLogin } from '~/models/user.server';
 import { createUserSession, getUserId } from '~/session.server';
@@ -14,7 +13,6 @@ import type { LoginErrors } from '~/types/Validations';
 import EmailInput from '~/components/EmailInput';
 import PasswordInput from '~/components/PasswordInput';
 import Button from '~/components/Button';
-import { Check } from 'lucide-react';
 import Checkbox from '~/components/Checkbox';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
