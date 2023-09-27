@@ -23,6 +23,9 @@ const adminMenuItems: NavItem[] = [
   { title: 'Organisaties', to: '/admin/organisaties', icon: 'building-user' },
   { title: 'Projecten', to: '/admin/projecten', icon: 'folder-open' },
   { title: 'Gebruikers', to: '/admin/gebruikers', icon: 'users' },
+];
+
+const contentMenuItems: NavItem[] = [
   { title: 'Artikelen', to: '/admin/artikelen', icon: 'file-lines' },
   { title: 'Webinars', to: '/admin/webinars', icon: 'file-video' },
   { title: 'Tools', to: '/admin/tools', icon: 'file-zipper' },
@@ -49,10 +52,17 @@ export default function AccountLayout() {
         <SideNav items={mainMenuItems} />
 
         {isAllowedForRole('OFFICEMANAGER', user) ? (
-          <div className="mt-4">
-            <AccountMenuTitle>Administratie</AccountMenuTitle>
-            <SideNav items={adminMenuItems} />
-          </div>
+          <>
+            <div className="mt-4">
+              <AccountMenuTitle>Administratie</AccountMenuTitle>
+              <SideNav items={adminMenuItems} />
+            </div>
+
+            <div className="mt-4">
+              <AccountMenuTitle>Content</AccountMenuTitle>
+              <SideNav items={contentMenuItems} />
+            </div>
+          </>
         ) : null}
       </div>
 
