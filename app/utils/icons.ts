@@ -12,4 +12,6 @@ export {
   faFileLines,
   faFileVideo,
   faFileZipper,
+  faUserGear,
+  faCircleUser,
 } from '@fortawesome/free-solid-svg-icons';

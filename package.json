@@ -143,6 +143,7 @@
     "shadcn-ui": "^0.4.0",
     "start-server-and-test": "^2.0.0",
     "storybook": "^7.4.5",
+    "storybook-addon-deep-controls": "^0.2.1",
     "storybook-react-i18next": "^2.0.9",
     "tailwindcss": "^3.3.3",
     "ts-node": "^10.9.1",

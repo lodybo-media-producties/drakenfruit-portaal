@@ -17,6 +17,7 @@ const config: StorybookConfig = {
       options: {},
     },
     'storybook-react-i18next',
+    'storybook-addon-deep-controls',
   ],
   framework: {
     name: '@storybook/react-vite',

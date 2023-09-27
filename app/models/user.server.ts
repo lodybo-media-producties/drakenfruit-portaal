@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 
 import { prisma } from '~/db.server';
 
-type User = SerializeFrom<DbUser>;
+type User = SerializeFrom<DbUser> | DbUser;
 
 export type { User, Role };
 
