@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Satoshi-Black';
+  src: url('/fonts/Satoshi-Black.woff2') format('woff2'),
+  url('/fonts/Satoshi-Black.woff') format('woff'),
+  url('/fonts/Satoshi-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Satoshi-Regular';
+  src: url('/fonts/Satoshi-Regular.woff2') format('woff2'),
+  url('/fonts/Satoshi-Regular.woff') format('woff'),
+  url('/fonts/Satoshi-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Typewrite Condensed';
+  src: url('/fonts/typewcond_demi.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+
+body {
+  font-family: Satoshi-Regular, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Satoshi-Black, sans-serif;
+}
+
+code {
+  font-family: Typewrite Condensed, serif;
+}

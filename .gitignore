@@ -2,6 +2,7 @@ node_modules
 
 /build
 /public/build
+/public/tinymce/
 .env
 
 /cypress/screenshots
@@ -13,3 +14,5 @@ node_modules
 .DS_Store
 
 storybook-static
+
+media/

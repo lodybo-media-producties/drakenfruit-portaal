@@ -16,6 +16,7 @@ const config: StorybookConfig = {
       name: '@storybook/addon-styling',
       options: {},
     },
+    'storybook-react-i18next',
   ],
   framework: {
     name: '@storybook/react-vite',
