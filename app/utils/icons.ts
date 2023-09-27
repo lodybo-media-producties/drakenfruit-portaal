@@ -4,4 +4,12 @@ export {
   faBars,
   faSearch,
   faCheck,
+  faSliders,
+  faBookmark,
+  faBuildingUser,
+  faFolderOpen,
+  faUsers,
+  faFileLines,
+  faFileVideo,
+  faFileZipper,
 } from '@fortawesome/free-solid-svg-icons';

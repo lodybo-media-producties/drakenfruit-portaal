@@ -1,9 +1,12 @@
-import type { Password, User } from '@prisma/client';
+import type { Password, User as DbUser, Role } from '@prisma/client';
+import type { SerializeFrom } from '@remix-run/server-runtime';
 import bcrypt from 'bcryptjs';
 
 import { prisma } from '~/db.server';
 
-export type { User } from '@prisma/client';
+type User = SerializeFrom<DbUser>;
+
+export type { User, Role };
 
 export async function getUserById(id: User['id']) {
   return prisma.user.findUnique({ where: { id } });
