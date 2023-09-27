@@ -14,6 +14,8 @@ import type { LoginErrors } from '~/types/Validations';
 import EmailInput from '~/components/EmailInput';
 import PasswordInput from '~/components/PasswordInput';
 import Button from '~/components/Button';
+import { Check } from 'lucide-react';
+import Checkbox from '~/components/Checkbox';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -84,20 +86,7 @@ export default function LoginPage() {
           <input type="hidden" name="redirectTo" value={redirectTo} />
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember"
-                name="remember"
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <label
-                htmlFor="remember"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Herinner mij
-              </label>
-            </div>
+            <Checkbox name="remember" label="Herinner mij" />
 
             <Button type="submit">Log mij in</Button>
           </div>

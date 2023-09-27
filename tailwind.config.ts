@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import { neutral } from 'tailwindcss/colors';
 
 export default {
   darkMode: 'class',
@@ -14,6 +15,7 @@ export default {
     colors: {
       transparent: 'transparent',
       current: 'currentColor',
+      neutral,
       black: '#000000',
       white: '#FFFFFF',
       'dark-blue': '#6F8D9C',
