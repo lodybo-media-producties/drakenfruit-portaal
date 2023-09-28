@@ -1,11 +1,11 @@
-import { Outlet, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import {
   json,
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
 import { requireUser } from '~/session.server';
-import Sidebar from '~/components/Sidebar';
+import AccountLayout from '~/layouts/account';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request);
@@ -17,18 +17,8 @@ export const meta: MetaFunction = () => [
   { title: 'Account | Drakenfruit', description: 'Account' },
 ];
 
-export default function AccountLayout() {
+export default function AccountRoute() {
   const { user } = useLoaderData<typeof loader>();
 
-  return (
-    <div className="flex flex-row gap-0 w-full h-full">
-      <div className="w-1/6 bg-light-blue p-4">
-        <Sidebar user={user} />
-      </div>
-
-      <div className="w-5/6 p-4">
-        <Outlet />
-      </div>
-    </div>
-  );
+  return <AccountLayout user={user} />;
 }

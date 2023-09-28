@@ -51,6 +51,8 @@ model Project {
 model User {
   id String @id @default(cuid())
 
+  avatarUrl String?
+
   email    String    @unique
   password Password?
 
@@ -78,15 +80,20 @@ model Password {
 model Article {
   id String @id @default(cuid())
 
+  image String?
+
   /// [Translated]
-  title   Json
+  title Json
+
   /// [Translated]
   content Json
+
   /// [Translated]
   summary Json
 
-  author   String
-  category String
+  author String
+
+  categories Category[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -96,12 +103,16 @@ model Tool {
   id String @id @default(cuid())
 
   /// [Translated]
-  name        Json
-  slug        String
+  name Json
+
+  slug String
+
   /// [Translated]
-  summary     Json
+  summary Json
+
   /// [Translated]
-  content     Json
+  content Json
+
   downloadUrl String
 
   createdAt DateTime @default(now())
@@ -112,16 +123,21 @@ model Webinar {
   id String @id @default(cuid())
 
   /// [Translated]
-  title       Json
+  title Json
+
   /// [Translated]
   description Json
-  link        String
+
+  link String
+
   /// [Translated]
-  transcript  Json?
+  transcript Json?
+
   /// [Translated]
-  slides      Json?
+  slides Json?
+
   /// [Translated]
-  tools       Json?
+  tools Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -130,9 +146,16 @@ model Webinar {
 model Category {
   id String @id @default(cuid())
 
-  name        String
+  /// [Translated]
+  name String
+
+  /// [Translated]
   description String
-  slug        String
+
+  /// [Translated]
+  slug String
+
+  Articles Article[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
