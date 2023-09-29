@@ -1,16 +1,19 @@
 import { type Prisma } from '@prisma/client';
 import { prisma } from '~/db.server';
 
-export type ArticlesWithCategoriesSummaryList = Prisma.ArticleGetPayload<{
-  include: {
-    categories: {
-      select: {
-        id: true;
-        name: true;
+export type ArticlesWithCategoriesSummaryList = Omit<
+  Prisma.ArticleGetPayload<{
+    include: {
+      categories: {
+        select: {
+          id: true;
+          name: true;
+        };
       };
     };
-  };
-}>;
+  }>,
+  'createdAt' | 'updatedAt'
+>;
 
 export function getArticlesSummaryList(): Promise<
   ArticlesWithCategoriesSummaryList[]
