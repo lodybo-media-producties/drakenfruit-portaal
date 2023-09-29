@@ -12,10 +12,30 @@
     "Trigger Label": "Kies een auteur",
     "Not Found Message": "Geen auteur gevonden"
   },
+  "CategoryInput": {
+    "Placeholder": "Categorie",
+    "Trigger Label": "Kies een categorie",
+    "Not Found Message": "Geen categorie gevonden",
+    "Create Option": "Maak een categorie aan",
+    "Selected Categories Label_one": "Geselecteerde categorie: {{categories}}",
+    "Selected Categories Label_other": "Geselecteerde categorieën: {{categories}}"
+  },
+  "ImageInput": {
+    "Button Label": "Kies een afbeelding",
+    "Remove Image Label": "Verwijder afbeelding",
+    "Image Selected Label_one": "Geselecteerde afbeelding: ",
+    "Image Selected Label_other": "Geselecteerde afbeeldingen: "
+  },
   "ArticleMutationForm": {
     "Title Label": "Titel van het artikel",
+    "Slug Label": "Slug van het artikel",
     "Summary Label": "Samenvatting",
     "Author Label": "Geschreven door",
-    "Content Label": "Inhoud"
+    "Content Label": "Inhoud",
+    "Category Label": "Kies een of meerdere categorieën",
+    "Image Label": "Hoofdafbeelding",
+    "Save Button Label": "Opslaan",
+    "Publish Button Label": "Publiceren",
+    "Edit Button Label": "Wijzigingen opslaan"
   }
 }

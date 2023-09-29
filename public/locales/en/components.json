@@ -12,10 +12,30 @@
     "Trigger Label": "Select an author",
     "Not Found Message": "No authors found"
   },
+  "CategoryInput": {
+    "Placeholder": "Category",
+    "Trigger Label": "Select a category",
+    "Not Found Message": "No categories found",
+    "Create Option": "Create category",
+    "Selected Categories Label_one": "Selected category: {{categories}}",
+    "Selected Categories Label_other": "Selected categories: {{categories}}"
+  },
+  "ImageInput": {
+    "Button Label": "Choose an image",
+    "Remove Image Label": "Remove image",
+    "Image Selected Label_one": "Selected image: ",
+    "Image Selected Label_other": "Selected images: "
+  },
   "ArticleMutationForm": {
     "Title Label": "Title",
+    "Slug Label": "Slug",
     "Summary Label": "Summary",
     "Author Label": "Written by",
-    "Content Label": "Content"
+    "Content Label": "Content",
+    "Category Label": "Select one or more categories",
+    "Image Label": "Article Image",
+    "Save Button Label": "Save",
+    "Publish Button Label": "Publish",
+    "Edit Button Label": "Save Changes"
   }
 }

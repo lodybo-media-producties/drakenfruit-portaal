@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '~/lib/utils';
+import Message from '~/components/Message';
 
 interface BaseInputProps {
   error?: string;
@@ -33,6 +34,16 @@ const inputFocusClasses = `
   dark:ring-offset-gray-950
 `;
 
+const focusWithin = `
+  focus-within:outline-none
+  focus-within:ring-2
+  focus-within:ring-offset-2
+  focus-within:ring-gray-400
+  dark:focus-within:ring-gray-800
+  ring-offset-white
+  dark:ring-offset-gray-950
+`;
+
 const inputPlaceholderClasses = `
   placeholder:text-gray-500
   dark:placeholder:text-gray-400
@@ -41,6 +52,7 @@ const inputPlaceholderClasses = `
 export const inputClasses = {
   borderAndBg: inputBorderAndBgClasses,
   focusAndFocusVisible: inputFocusClasses,
+  focusWithin,
   placeholder: inputPlaceholderClasses,
 };
 
@@ -84,18 +96,16 @@ const Input = React.forwardRef<HTMLInputElement, TextInputProps>(
           type={type}
           className={classes}
           aria-invalid={error ? true : undefined}
-          aria-describedby={`${props.id}-${type}-error`}
+          aria-describedby={`${props.id ?? props.name ?? ''}-${type}-error`}
           ref={ref as React.Ref<HTMLInputElement>}
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
         />
-        {error ? (
-          <div
-            className="pt-1 text-dark-pink "
-            id={`${props.id}-${type}-error`}
-          >
-            {error}
-          </div>
-        ) : null}
+        <Message
+          variant="error"
+          id={`${props.id}-${type}-error`}
+          message={error}
+          subtle
+        />
       </>
     );
   }
@@ -115,14 +125,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref as React.Ref<HTMLTextAreaElement>}
           {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
         />
-        {error ? (
-          <div
-            className="pt-1 text-dark-pink "
-            id={`${props.id}-textarea-error`}
-          >
-            {error}
-          </div>
-        ) : null}
+        <Message variant="error" message={error} id={`${props.id}-textarea`} />
       </>
     );
   }

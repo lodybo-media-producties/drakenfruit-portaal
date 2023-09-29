@@ -17,4 +17,6 @@ export {
   faPen,
   faTrashAlt,
   faSort,
+  faTimes,
+  faArrowLeft,
 } from '@fortawesome/free-solid-svg-icons';

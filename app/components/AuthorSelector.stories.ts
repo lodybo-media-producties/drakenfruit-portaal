@@ -7,7 +7,7 @@ export default {
   args: {
     onSelect: (author) =>
       console.log(
-        `Selected author ${authors.find((a) => a.id === author)?.firstName})}`
+        `Selected author ${authors.find((a) => a.id === author)?.firstName}`
       ),
   },
   argTypes: {
@@ -32,7 +32,7 @@ export const Default: Story = {
 export const WithSelectedAuthor: Story = {
   args: {
     authors,
-    selectedAuthorID: '2',
+    initialSelectedAuthorID: '2',
   },
 };
 

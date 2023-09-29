@@ -1,7 +1,6 @@
-import type { Config } from 'tailwindcss';
-import { neutral } from 'tailwindcss/colors';
+const { neutral } = require('tailwindcss/colors');
 
-export default {
+module.exports = {
   darkMode: 'class',
   content: ['./app/**/*.{js,jsx,ts,tsx}'],
   theme: {
@@ -56,4 +55,4 @@ export default {
     },
   },
   plugins: [require('tailwindcss-animate')],
-} satisfies Config;
+};

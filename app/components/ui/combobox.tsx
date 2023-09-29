@@ -21,16 +21,33 @@ export type ComboboxOption = {
   label: string;
 };
 
-type Props = {
+interface BaseProps {
   id?: string;
   options: ComboboxOption[];
   placeholder: string;
   notFoundMessage: string;
-  onSelect?: (value: string) => void;
   triggerLabel?: string;
-  initialValue?: string;
+  showSelectedInTrigger?: boolean;
   error?: string;
-};
+  multiple?: boolean;
+}
+
+interface SingleSelectProps extends BaseProps {
+  multiple?: false;
+  initialValue?: string;
+  onSelect?: (value: string) => void;
+
+  initialValues?: never;
+}
+
+interface MultiSelectProps extends BaseProps {
+  multiple: true;
+  onSelect?: (value: string[]) => void;
+  initialValues?: string[];
+  initialValue?: never;
+}
+
+type Props = SingleSelectProps | MultiSelectProps;
 
 export function Combobox({
   options,
@@ -38,20 +55,64 @@ export function Combobox({
   notFoundMessage,
   onSelect,
   triggerLabel,
+  showSelectedInTrigger,
   error,
+  multiple,
   initialValue = '',
+  initialValues = [],
   id = 'combobox',
 }: Props) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(initialValue);
+  const [value, setValue] = React.useState(
+    multiple ? initialValues : initialValue
+  );
 
   const handleSelect = (selectedValue: string) => {
     const newValue = selectedValue === value ? '' : selectedValue;
-    setValue(newValue);
 
-    onSelect?.(newValue);
+    if (multiple) {
+      const newValues = value.includes(selectedValue)
+        ? (value as string[]).filter((v) => v !== selectedValue)
+        : [...value, selectedValue];
+
+      setValue(newValues);
+      onSelect?.(newValues);
+    } else {
+      setValue(newValue);
+      onSelect?.(newValue);
+    }
 
     setOpen(false);
+  };
+
+  const isValueSelected = (option: ComboboxOption) => {
+    if (multiple) {
+      return value.includes(option.value);
+    }
+
+    return option.value === value;
+  };
+
+  const getValueLabel = () => {
+    if (!showSelectedInTrigger) {
+      return triggerLabel ?? placeholder;
+    }
+
+    let label: string | undefined;
+
+    if (multiple) {
+      label = (value as string[])
+        .map((v) => options.find((o) => o.value === v)?.label)
+        .join(', ');
+    } else {
+      label = options.find((o) => o.value === value)?.label;
+    }
+
+    if (label) {
+      return label;
+    }
+
+    return triggerLabel ?? placeholder;
   };
 
   return (
@@ -87,9 +148,7 @@ export function Combobox({
             inputClasses.focusAndFocusVisible
           )}
         >
-          {value
-            ? options.find((option) => option.value === value)?.label
-            : triggerLabel ?? placeholder}
+          {getValueLabel()}
           <Icon name="sort" />
         </button>
       </PopoverTrigger>
@@ -108,7 +167,7 @@ export function Combobox({
                   name="check"
                   className={cn(
                     'mr-2 h-4 w-4',
-                    value === option.value ? 'opacity-100' : 'opacity-0'
+                    isValueSelected(option) ? 'opacity-100' : 'opacity-0'
                   )}
                 />
                 {option.label}

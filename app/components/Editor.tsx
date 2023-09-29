@@ -12,9 +12,11 @@ type Props = {
    * This will be used when submitting the form.
    */
   name: string;
+
+  onChange?: (content: string) => void;
 };
 
-export default function Editor({ initialValue, name }: Props) {
+export default function Editor({ initialValue, name, onChange }: Props) {
   const { i18n } = useTranslation();
 
   return (
@@ -23,6 +25,11 @@ export default function Editor({ initialValue, name }: Props) {
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         textareaName={name}
         initialValue={initialValue}
+        onEditorChange={(content) => {
+          if (onChange) {
+            onChange(content);
+          }
+        }}
         init={{
           height: 500,
           width: '100%',

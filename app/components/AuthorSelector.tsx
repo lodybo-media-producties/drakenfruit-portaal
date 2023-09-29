@@ -2,12 +2,14 @@ import { type User } from '~/models/user.server';
 import { Combobox, type ComboboxOption } from '~/components/ui/combobox';
 import { useTranslation } from 'react-i18next';
 import * as React from 'react';
+import { useState } from 'react';
+import Message from '~/components/Message';
 
 export type Author = Pick<User, 'id' | 'firstName' | 'lastName'>;
 
 type Props = {
   authors: Author[];
-  selectedAuthorID?: string;
+  initialSelectedAuthorID?: string;
   onSelect?: (authorID: string) => void;
   error?: string;
 };
@@ -15,15 +17,25 @@ type Props = {
 export default function AuthorSelector({
   authors,
   onSelect,
-  selectedAuthorID,
+  initialSelectedAuthorID,
   error,
 }: Props) {
+  const [selectedAuthorID, setSelectedAuthorID] = useState(
+    initialSelectedAuthorID
+  );
   const { t } = useTranslation('components');
 
   const options: ComboboxOption[] = authors.map((author) => ({
     value: author.id,
     label: `${author.firstName} ${author.lastName}`,
   }));
+
+  const handleAuthorSelect = (selectedAuthor: string) => {
+    setSelectedAuthorID(selectedAuthor);
+    if (onSelect) {
+      onSelect(selectedAuthor);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -33,10 +45,11 @@ export default function AuthorSelector({
         placeholder={t('AuthorSelector.Placeholder')}
         triggerLabel={t('AuthorSelector.Trigger Label')}
         notFoundMessage={t('AuthorSelector.Not Found Message')}
-        onSelect={onSelect}
+        onSelect={handleAuthorSelect}
         error={error}
+        showSelectedInTrigger
       />
-      {error ? <div className="pt-1 text-dark-pink ">{error}</div> : null}
+      <Message variant="error" message={error} subtle />
       <input
         className="h-0"
         type="hidden"

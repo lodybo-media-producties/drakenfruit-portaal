@@ -5,7 +5,7 @@ import i18n from '~/i18n'; // your i18n configuration file
 
 let i18next = new RemixI18Next({
   detection: {
-    supportedLanguages: i18n.supportedLngs,
+    supportedLanguages: i18n.supportedLngs as unknown as string[],
     fallbackLanguage: i18n.fallbackLng,
   },
   // This is the configuration for i18next used
