@@ -6,5 +6,16 @@
     "Project Management": "Project Management",
     "Tools": "Tools",
     "Webinars": "Webinars"
+  },
+  "AuthorSelector": {
+    "Placeholder": "Auteur",
+    "Trigger Label": "Kies een auteur",
+    "Not Found Message": "Geen auteur gevonden"
+  },
+  "ArticleMutationForm": {
+    "Title Label": "Titel van het artikel",
+    "Summary Label": "Samenvatting",
+    "Author Label": "Geschreven door",
+    "Content Label": "Inhoud"
   }
 }

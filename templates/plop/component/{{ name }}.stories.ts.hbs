@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import {{ name }} from './{{ name }}';
+
+export default {
+  title: '{{ storybookCategory }}/{{ storybookTitle }}',
+  component: {{ name }},
+} satisfies Meta<typeof {{ name }}>;
+
+type Story = StoryObj<typeof {{ name }}>;
+
+export const Default: Story = {
+  args: {
+
+  },
+};

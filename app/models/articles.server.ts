@@ -1,5 +1,10 @@
-import { type Prisma } from '@prisma/client';
+import { type Prisma, type Article } from '@prisma/client';
 import { prisma } from '~/db.server';
+import { type SerializeFrom } from '@remix-run/server-runtime';
+
+export type SerializedArticle = SerializeFrom<Article>;
+
+export { Article };
 
 export type ArticlesWithCategoriesSummaryList = Omit<
   Prisma.ArticleGetPayload<{

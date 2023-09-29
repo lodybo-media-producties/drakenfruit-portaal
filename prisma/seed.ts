@@ -72,7 +72,7 @@ async function createOrganisations() {
             email: 'simone@drakenfruit.com',
             locale: 'nl',
             firstName: 'Simone',
-            lastName: faker.person.lastName(),
+            lastName: 'Leenders',
             role: 'OFFICEMANAGER',
             password: {
               create: {

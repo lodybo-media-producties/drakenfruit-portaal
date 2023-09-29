@@ -16,4 +16,5 @@ export {
   faCircleUser,
   faPen,
   faTrashAlt,
+  faSort,
 } from '@fortawesome/free-solid-svg-icons';

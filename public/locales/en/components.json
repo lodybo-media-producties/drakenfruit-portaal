@@ -6,5 +6,16 @@
     "Project Management": "Project Management",
     "Tools": "Tools",
     "Webinars": "Webinars"
+  },
+  "AuthorSelector": {
+    "Placeholder": "Author",
+    "Trigger Label": "Select an author",
+    "Not Found Message": "No authors found"
+  },
+  "ArticleMutationForm": {
+    "Title Label": "Title",
+    "Summary Label": "Summary",
+    "Author Label": "Written by",
+    "Content Label": "Content"
   }
 }

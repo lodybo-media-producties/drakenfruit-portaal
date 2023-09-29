@@ -1,4 +1,7 @@
 {
   "greeting": "Hallo, Wereld!",
-  "change language": "Verander taal"
+  "change language": "Verander taal",
+  "Articles": {
+    "New Article Page Title": "Nieuw Artikel"
+  }
 }
