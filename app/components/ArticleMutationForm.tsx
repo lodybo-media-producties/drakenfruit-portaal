@@ -41,7 +41,6 @@ type Props = {
   categories: CategorySelection[];
   backLink: string;
   backLinkLabel: string;
-  onSubmit: (values: ArticleFormValues) => void;
 };
 
 export default function ArticleMutationForm({
@@ -51,7 +50,6 @@ export default function ArticleMutationForm({
   initialValues,
   backLink,
   backLinkLabel,
-  onSubmit,
 }: Props) {
   const { t } = useTranslation('components');
   const [lang, setLang] = useState<SupportedLanguages>('nl');
@@ -100,10 +98,11 @@ export default function ArticleMutationForm({
 
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
+    setSlug(values[value as SupportedLanguages].slug);
   };
 
-  const generateArticle = (): ArticleFormValues => {
-    return {
+  const generateArticle = (): FormData => {
+    const data: ArticleFormValues = {
       id: initialValues?.id ?? '',
       authorId: initialValues?.authorId ?? '',
       published: initialValues?.published ?? false, // TODO: handle this
@@ -126,6 +125,25 @@ export default function ArticleMutationForm({
       categories: initialValues?.categories ?? [],
       image: initialValues?.image ?? '',
     };
+
+    console.log('sending data...', data);
+
+    const formData = new FormData();
+    formData.append('id', data.id);
+    formData.append('authorId', data.authorId);
+    formData.append('published', data.published.toString());
+    formData.append('title[nl]', data.title.nl);
+    formData.append('title[en]', data.title.en);
+    formData.append('slug[nl]', data.slug.nl);
+    formData.append('slug[en]', data.slug.en);
+    formData.append('summary[nl]', data.summary.nl);
+    formData.append('summary[en]', data.summary.en);
+    formData.append('content[nl]', data.content.nl);
+    formData.append('content[en]', data.content.en);
+    formData.append('categories', JSON.stringify(data.categories));
+    formData.append('image', data.image ?? '');
+
+    return formData;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -142,7 +160,6 @@ export default function ArticleMutationForm({
 
       <input type="hidden" name="articleID" defaultValue={initialValues?.id} />
 
-      <p>{initialValues?.title[lang]}</p>
       <TextInput
         className="w-3/4"
         name="title"
@@ -156,7 +173,8 @@ export default function ArticleMutationForm({
         className="w-3/4"
         name="slug"
         label={t('ArticleMutationForm.Slug Label')}
-        defaultValue={slug}
+        value={slug}
+        onChange={(e) => updateValues(e.target.name, e.target.value)}
       />
 
       <ImageInput

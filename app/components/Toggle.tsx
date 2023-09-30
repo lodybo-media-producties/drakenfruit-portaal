@@ -26,6 +26,7 @@ export default function Toggle({ options, onSelect }: Props) {
     <div className="flex flex-row gap-0 border border-dark-blue bg-light-blue">
       {options.map((option) => (
         <button
+          type="button"
           key={option.value}
           className={`flex-1 py-1 px-6 transition-colors ${
             inputClasses.focusAndFocusVisible

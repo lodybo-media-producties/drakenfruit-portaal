@@ -8,6 +8,10 @@ type User = SerializeFrom<DbUser> | DbUser;
 
 export type { User, Role };
 
+export async function getUsers() {
+  return prisma.user.findMany();
+}
+
 export async function getUserById(id: User['id']) {
   return prisma.user.findUnique({ where: { id } });
 }
