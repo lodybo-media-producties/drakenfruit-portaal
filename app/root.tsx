@@ -12,7 +12,7 @@ import {
   useRouteError,
 } from '@remix-run/react';
 
-import { getUser } from '~/session.server';
+import { commitSession, getSession, getUser } from '~/session.server';
 import stylesheet from '~/tailwind.css';
 import Header from '~/components/Header';
 import i18next from '~/i18next.server';
@@ -20,6 +20,9 @@ import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getErrorMessage, useOptionalUser } from '~/utils/utils';
 import { langSessionCookie } from '~/cookies.server';
+import { Toaster } from '~/components/ui/toaster';
+import { useEffect } from 'react';
+import { useToast } from '~/components/ui/use-toast';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -27,11 +30,18 @@ export const links: LinksFunction = () => [
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request);
+  const toasterData = session.get('toast') || null;
+
+  const headers = new Headers();
+  headers.set('Set-Cookie', await langSessionCookie.serialize('nl'));
+  headers.set('Set-Cookie', await commitSession(session));
+
   const locale = await i18next.getLocale(request);
   return json(
-    { user: await getUser(request), locale },
+    { user: await getUser(request), locale, toasterData },
     {
-      headers: { 'Set-Cookie': await langSessionCookie.serialize(locale) },
+      headers,
     }
   );
 };
@@ -39,14 +49,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function App() {
   const user = useOptionalUser();
   // Get the locale from the loader
-  const { locale } = useLoaderData<typeof loader>();
+  const { locale, toasterData } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
+  const { toast } = useToast();
 
   // This hook will change the i18n instance language to the current locale
   // detected by the loader, this way, when we do something to change the
   // language, this locale will change and i18next will load the correct
   // translation files
   useChangeLanguage(locale);
+
+  useEffect(() => {
+    if (toasterData) {
+      toast({
+        title: toasterData.title,
+        description: toasterData.description,
+        variant: toasterData.destructive ? 'destructive' : 'default',
+      });
+    }
+  }, [toasterData, toast]);
 
   return (
     <html className="h-full" lang={locale} dir={i18n.dir()}>
@@ -59,6 +80,7 @@ export default function App() {
       <body className="h-full font-body bg-egg-white">
         <Header user={user} />
         <Outlet />
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

@@ -188,6 +188,10 @@ export default function ArticleMutationForm({
     e.preventDefault();
 
     const data = generateFormDataFromArticleValues();
+    data.append(
+      'mode',
+      ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement)?.value
+    );
 
     fetcher.submit(data, {
       action: '/api/articles',
@@ -196,7 +200,7 @@ export default function ArticleMutationForm({
   };
 
   return (
-    <Form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
       <Toggle options={languageOptions} onSelect={handleLangSelect} />
 
       <input type="hidden" name="articleID" defaultValue={initialValues?.id} />
@@ -266,20 +270,20 @@ export default function ArticleMutationForm({
         <div className="flex flex-row gap-2">
           {mode === 'create' ? (
             <>
-              <Button type="submit">
+              <Button name="mode" value="draft" type="submit">
                 {t('ArticleMutationForm.Save Button Label')}
               </Button>
-              <Button primary type="submit">
+              <Button name="mode" value="publish" primary type="submit">
                 {t('ArticleMutationForm.Publish Button Label')}
               </Button>
             </>
           ) : (
-            <Button primary type="submit">
+            <Button name="mode" value="save" primary type="submit">
               {t('ArticleMutationForm.Edit Button Label')}
             </Button>
           )}
         </div>
       </div>
-    </Form>
+    </form>
   );
 }

@@ -1,7 +1,17 @@
 {
   "Articles": {
     "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Article created",
+          "Message": "The article was created successfully"
+        }
+      },
       "DELETE": {
+        "Success": {
+          "Title": "Article deleted",
+          "Message": "The article was deleted successfully"
+        },
         "Error": {
           "No ID": "No ID was provided"
         }

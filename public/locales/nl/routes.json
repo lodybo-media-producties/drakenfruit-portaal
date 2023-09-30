@@ -1,7 +1,17 @@
 {
   "Articles": {
     "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Artikel aangemaakt",
+          "Message": "Het artikel is aangemaakt."
+        }
+      },
       "DELETE": {
+        "Success": {
+          "Title": "Artikel verwijderd",
+          "Message": "Het artikel is verwijderd."
+        },
         "Error": {
           "No ID": "Geen ID opgegeven"
         }
