@@ -51,9 +51,9 @@ export default function ArticleMutationForm({
   currentUser,
 }: Props) {
   const { t } = useTranslation('components');
-  const [lang, setLang] = useState<SupportedLanguages>('nl');
-  const [slug, setSlug] = useState<string>(initialValues?.slug[lang] ?? '');
   const fetcher = useFetcher();
+
+  const [lang, setLang] = useState<SupportedLanguages>('nl');
   const [enTitle, setEnTitle] = useState(initialValues?.title.en ?? '');
   const [nlTitle, setNlTitle] = useState(initialValues?.title.nl ?? '');
   const [enSlug, setEnSlug] = useState(initialValues?.slug.en ?? '');
@@ -142,12 +142,6 @@ export default function ArticleMutationForm({
     setSelectedCategoryIDs(categories);
   };
 
-  const slugifyTitle = (title: string) => {
-    if (!slug) {
-      setSlug(slugify(title));
-    }
-  };
-
   const languageOptions: ToggleOption[] = [
     {
       label: 'Nederlands',
@@ -213,7 +207,7 @@ export default function ArticleMutationForm({
         label={t('ArticleMutationForm.Title Label')}
         value={getTitle()}
         onChange={(e) => handleTitleChange(e.target.value)}
-        onBlur={(e) => slugifyTitle(e.target.value)}
+        onBlur={(e) => handleSlugChange(slugify(e.target.value))}
       />
 
       <SlugInput
