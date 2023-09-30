@@ -1,12 +1,14 @@
 import { type ActionFunctionArgs, json } from '@remix-run/node';
 import { requireAdmin } from '~/session.server';
+import { convertFormDataToArticleFormValues } from '~/utils/content';
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireAdmin(request);
 
-  const data = await request.formData();
+  const formData = await request.formData();
+  const data = convertFormDataToArticleFormValues(formData);
 
-  console.log(Object.fromEntries(data.entries()));
+  console.log(data);
 
   return json({});
 }

@@ -7,6 +7,8 @@ type Props = {
    */
   initialValue?: string;
 
+  value?: string;
+
   /**
    * The name of the textarea that will be used to store the editor's content.
    * This will be used when submitting the form.
@@ -16,7 +18,7 @@ type Props = {
   onChange?: (content: string) => void;
 };
 
-export default function Editor({ initialValue, name, onChange }: Props) {
+export default function Editor({ initialValue, value, name, onChange }: Props) {
   const { i18n } = useTranslation();
 
   return (
@@ -25,6 +27,7 @@ export default function Editor({ initialValue, name, onChange }: Props) {
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         textareaName={name}
         initialValue={initialValue}
+        value={value}
         onEditorChange={(content) => {
           if (onChange) {
             onChange(content);

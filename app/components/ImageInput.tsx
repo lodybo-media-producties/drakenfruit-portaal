@@ -9,6 +9,8 @@ type Props = {
   name?: string;
   multiple?: boolean;
   initialValue?: string | null;
+  value?: string | null;
+  onChange?: (value: string) => void;
 };
 
 export default function ImageInput({
@@ -16,9 +18,11 @@ export default function ImageInput({
   name,
   multiple,
   initialValue,
+  value,
+  onChange,
 }: Props) {
   const [fileName, setFileName] = useState<string | null | undefined>(
-    initialValue
+    initialValue ?? value
   );
   const { t } = useTranslation('components');
   const ref = useRef<HTMLInputElement | null>(null);
@@ -28,6 +32,9 @@ export default function ImageInput({
       ref.current.onchange = (event) => {
         const { files } = event.target as HTMLInputElement;
         setFileName(files ? files[0].name : null);
+        if (onChange) {
+          onChange(files ? files[0].name : '');
+        }
       };
     }
   }, []);

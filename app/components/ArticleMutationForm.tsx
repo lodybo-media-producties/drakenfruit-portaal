@@ -19,18 +19,14 @@ import { useState } from 'react';
 import SlugInput from '~/components/SlugInput';
 import { type SupportedLanguages } from '~/i18n';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
+import { convertArticleFormValuesToFormData } from '~/utils/content';
 
-type ArticleFormValues = Omit<Article, 'createdAt' | 'updatedAt'> & {
+export type ArticleFormValues = Omit<
+  Article,
+  'id' | 'published' | 'createdAt' | 'updatedAt'
+> & {
+  id?: string;
   categories: string[];
-};
-
-type ArticleStringValues = Pick<
-  Record<keyof ArticleFormValues, string>,
-  'title' | 'slug' | 'summary' | 'content'
->;
-
-type LocalisedArticleValues = {
-  [key in SupportedLanguages]: ArticleStringValues;
 };
 
 type Props = {
@@ -54,21 +50,94 @@ export default function ArticleMutationForm({
   const { t } = useTranslation('components');
   const [lang, setLang] = useState<SupportedLanguages>('nl');
   const [slug, setSlug] = useState<string>(initialValues?.slug[lang] ?? '');
-  const [values, setValues] = useState<LocalisedArticleValues>({
-    nl: {
-      title: initialValues?.title.nl ?? '',
-      slug: initialValues?.slug.nl ?? '',
-      summary: initialValues?.summary.nl ?? '',
-      content: initialValues?.content.nl ?? '',
-    },
-    en: {
-      title: initialValues?.title.en ?? '',
-      slug: initialValues?.slug.en ?? '',
-      summary: initialValues?.summary.en ?? '',
-      content: initialValues?.content.en ?? '',
-    },
-  });
   const fetcher = useFetcher();
+  const [enTitle, setEnTitle] = useState(initialValues?.title.en ?? '');
+  const [nlTitle, setNlTitle] = useState(initialValues?.title.nl ?? '');
+  const [enSlug, setEnSlug] = useState(initialValues?.slug.en ?? '');
+  const [nlSlug, setNlSlug] = useState(initialValues?.slug.nl ?? '');
+  const [enSummary, setEnSummary] = useState(initialValues?.summary.en ?? '');
+  const [nlSummary, setNlSummary] = useState(initialValues?.summary.nl ?? '');
+  const [enContent, setEnContent] = useState(initialValues?.content.en ?? '');
+  const [nlContent, setNlContent] = useState(initialValues?.content.nl ?? '');
+  const [selectedAuthorID, setSelectedAuthorID] = useState(
+    initialValues?.authorId ?? ''
+  );
+  const [image, setImage] = useState(initialValues?.image ?? '');
+  const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
+    initialValues?.categories ?? []
+  );
+
+  const getTitle = () => {
+    if (lang === 'en') {
+      return enTitle;
+    } else {
+      return nlTitle;
+    }
+  };
+  const handleTitleChange = (title: string) => {
+    if (lang === 'en') {
+      setEnTitle(title);
+    } else {
+      setNlTitle(title);
+    }
+  };
+
+  const getSlug = () => {
+    if (lang === 'en') {
+      return enSlug;
+    } else {
+      return nlSlug;
+    }
+  };
+  const handleSlugChange = (slug: string) => {
+    if (lang === 'en') {
+      setEnSlug(slug);
+    } else {
+      setNlSlug(slug);
+    }
+  };
+
+  const getSummary = () => {
+    if (lang === 'en') {
+      return enSummary;
+    } else {
+      return nlSummary;
+    }
+  };
+  const handleSummaryChange = (summary: string) => {
+    if (lang === 'en') {
+      setEnSummary(summary);
+    } else {
+      setNlSummary(summary);
+    }
+  };
+
+  const getContent = () => {
+    if (lang === 'en') {
+      return enContent;
+    } else {
+      return nlContent;
+    }
+  };
+  const handleContentChange = (content: string) => {
+    if (lang === 'en') {
+      setEnContent(content);
+    } else {
+      setNlContent(content);
+    }
+  };
+
+  const handleAuthorChange = (authorID: string) => {
+    setSelectedAuthorID(authorID);
+  };
+
+  const handleImageChange = (image: string) => {
+    setImage(image);
+  };
+
+  const handleCategoriesChange = (categories: string[]) => {
+    setSelectedCategoryIDs(categories);
+  };
 
   const slugifyTitle = (title: string) => {
     if (!slug) {
@@ -87,68 +156,43 @@ export default function ArticleMutationForm({
     },
   ];
 
-  const updateValues = (name: string, value: string) => {
-    setValues({
-      ...values,
-      [lang]: {
-        [name]: value,
-      },
-    });
-  };
-
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
-    setSlug(values[value as SupportedLanguages].slug);
   };
 
-  const generateArticle = (): FormData => {
+  const generateFormDataFromArticleValues = (): FormData => {
     const data: ArticleFormValues = {
       id: initialValues?.id ?? '',
-      authorId: initialValues?.authorId ?? '',
-      published: initialValues?.published ?? false, // TODO: handle this
+      authorId: selectedAuthorID,
       title: {
-        nl: values.nl.title,
-        en: values.en.title,
+        en: enTitle,
+        nl: nlTitle,
       },
       slug: {
-        nl: values.nl.slug,
-        en: values.en.slug,
+        en: enSlug,
+        nl: nlSlug,
       },
       summary: {
-        nl: values.nl.summary,
-        en: values.en.summary,
+        en: enSummary,
+        nl: nlSummary,
       },
       content: {
-        nl: values.nl.content,
-        en: values.en.content,
+        en: enContent,
+        nl: nlContent,
       },
-      categories: initialValues?.categories ?? [],
-      image: initialValues?.image ?? '',
+      image,
+      categories: selectedCategoryIDs,
     };
 
-    console.log('sending data...', data);
-
-    const formData = new FormData();
-    formData.append('id', data.id);
-    formData.append('authorId', data.authorId);
-    formData.append('published', data.published.toString());
-    formData.append('title[nl]', data.title.nl);
-    formData.append('title[en]', data.title.en);
-    formData.append('slug[nl]', data.slug.nl);
-    formData.append('slug[en]', data.slug.en);
-    formData.append('summary[nl]', data.summary.nl);
-    formData.append('summary[en]', data.summary.en);
-    formData.append('content[nl]', data.content.nl);
-    formData.append('content[en]', data.content.en);
-    formData.append('categories', JSON.stringify(data.categories));
-    formData.append('image', data.image ?? '');
-
-    return formData;
+    return convertArticleFormValuesToFormData(data);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetcher.submit(generateArticle(), {
+
+    const data = generateFormDataFromArticleValues();
+
+    fetcher.submit(data, {
       action: '/api/articles',
       method: mode === 'create' ? 'POST' : 'PUT',
     });
@@ -164,8 +208,8 @@ export default function ArticleMutationForm({
         className="w-3/4"
         name="title"
         label={t('ArticleMutationForm.Title Label')}
-        value={values[lang].title}
-        onChange={(e) => updateValues(e.target.name, e.target.value)}
+        value={getTitle()}
+        onChange={(e) => handleTitleChange(e.target.value)}
         onBlur={(e) => slugifyTitle(e.target.value)}
       />
 
@@ -173,39 +217,46 @@ export default function ArticleMutationForm({
         className="w-3/4"
         name="slug"
         label={t('ArticleMutationForm.Slug Label')}
-        value={slug}
-        onChange={(e) => updateValues(e.target.name, e.target.value)}
+        value={getSlug()}
+        onChange={(e) => handleSlugChange(e.target.value)}
       />
 
       <ImageInput
         name="image"
         label={t('ArticleMutationForm.Image Label')}
-        initialValue={initialValues?.image}
+        value={image}
+        onChange={handleImageChange}
       />
 
       <TextAreaInput
         className="w-3/4"
         label={t('ArticleMutationForm.Summary Label')}
         name="summary"
-        value={values[lang].summary}
-        onChange={(e) => updateValues(e.target.name, e.target.value)}
+        value={getSummary()}
+        onChange={(e) => handleSummaryChange(e.target.value)}
       />
 
       <Label label={t('ArticleMutationForm.Author Label')}>
         <AuthorSelector
           authors={authors}
-          initialSelectedAuthorID={initialValues?.authorId}
+          initialSelectedAuthorID={selectedAuthorID}
+          onSelect={handleAuthorChange}
         />
       </Label>
 
       <Label label={t('ArticleMutationForm.Content Label')}>
-        <Editor name="content" initialValue={values[lang].content} />
+        <Editor
+          name="content"
+          initialValue={getContent()}
+          onChange={handleContentChange}
+        />
       </Label>
 
       <Label label={t('ArticleMutationForm.Category Label')}>
         <CategoryInput
           categories={categories}
-          initialCategories={initialValues?.categories}
+          initialCategories={selectedCategoryIDs}
+          onSelect={handleCategoriesChange}
         />
       </Label>
 
