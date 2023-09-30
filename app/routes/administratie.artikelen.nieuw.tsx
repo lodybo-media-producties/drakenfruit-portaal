@@ -1,6 +1,6 @@
 import ArticleMutationForm from '~/components/ArticleMutationForm';
 import { json, type LoaderFunctionArgs } from '@remix-run/node';
-import { requireAdmin } from '~/session.server';
+import { requireUserWithMinimumRole } from '~/session.server';
 import { getUsers } from '~/models/user.server';
 import { isAllowedForRole } from '~/utils/roles';
 import { type Author } from '~/components/AuthorSelector';
@@ -8,7 +8,11 @@ import { useLoaderData } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireAdmin(request);
+  const user = await requireUserWithMinimumRole(
+    'CONSULTANT',
+    request,
+    '/account'
+  );
 
   const users = await getUsers();
   const eligibleAuthors: Author[] = users
@@ -19,12 +23,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
       lastName,
     }));
 
-  return json({ authors: eligibleAuthors, categories: [] });
+  return json({ user, authors: eligibleAuthors, categories: [] });
 }
 
 export default function NewArticleRoute() {
   const { t } = useTranslation('routes');
-  const { authors, categories } = useLoaderData<typeof loader>();
+  const { user, authors, categories } = useLoaderData<typeof loader>();
 
   return (
     <ArticleMutationForm
@@ -33,6 +37,7 @@ export default function NewArticleRoute() {
       categories={categories}
       backLink="/administratie/artikelen"
       backLinkLabel={t('Articles.New.Back Link Label')}
+      currentUser={user}
     />
   );
 }

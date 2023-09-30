@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from '@remix-run/react';
 import slugify from '@sindresorhus/slugify';
@@ -15,11 +16,11 @@ import ImageInput from '~/components/ImageInput';
 import Button from '~/components/Button';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
-import { useState } from 'react';
 import SlugInput from '~/components/SlugInput';
 import { type SupportedLanguages } from '~/i18n';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
 import { convertArticleFormValuesToFormData } from '~/utils/content';
+import { type User } from '~/models/user.server';
 
 export type ArticleFormValues = Omit<
   Article,
@@ -37,6 +38,7 @@ type Props = {
   categories: CategorySelection[];
   backLink: string;
   backLinkLabel: string;
+  currentUser?: User;
 };
 
 export default function ArticleMutationForm({
@@ -46,6 +48,7 @@ export default function ArticleMutationForm({
   initialValues,
   backLink,
   backLinkLabel,
+  currentUser,
 }: Props) {
   const { t } = useTranslation('components');
   const [lang, setLang] = useState<SupportedLanguages>('nl');
@@ -60,7 +63,7 @@ export default function ArticleMutationForm({
   const [enContent, setEnContent] = useState(initialValues?.content.en ?? '');
   const [nlContent, setNlContent] = useState(initialValues?.content.nl ?? '');
   const [selectedAuthorID, setSelectedAuthorID] = useState(
-    initialValues?.authorId ?? ''
+    initialValues?.authorId ?? currentUser?.id ?? ''
   );
   const [image, setImage] = useState(initialValues?.image ?? '');
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
