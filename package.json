@@ -29,7 +29,7 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push && prisma generate",
     "db:seed": "prisma db seed",
-    "db:reset": "prisma migrate reset --force && prisma migrate deploy && prisma db seed",
+    "db:reset": "prisma migrate reset",
     "db:studio": "prisma studio --browser none",
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build",

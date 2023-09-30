@@ -18,6 +18,11 @@ describe('Content utilities', () => {
           published: true,
           summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
           authorId: '1',
+          author: {
+            id: '1',
+            firstName: 'Kaylee',
+            lastName: 'Rosalina',
+          },
           content: { en: 'Content 1', nl: 'Inhoud 1' },
           categories: [
             {
@@ -29,7 +34,7 @@ describe('Content utilities', () => {
         },
       ];
 
-      const [columns, data] = convertArticleListToTableData(articles);
+      const [columns, data] = convertArticleListToTableData(articles, 'en');
 
       expect(columns).toEqual([
         'Titel',
@@ -44,7 +49,7 @@ describe('Content utilities', () => {
           data: new Map([
             ['Titel', 'Title 1'],
             ['Samenvatting', 'Summary 1'],
-            ['Auteur', '1'],
+            ['Auteur', 'Kaylee Rosalina'],
             ['Categorieën', 'Category 1'],
           ]),
         },

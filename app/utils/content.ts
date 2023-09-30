@@ -1,9 +1,11 @@
 import { type ArticlesWithCategoriesSummaryList } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type ArticleFormValues } from '~/components/ArticleMutationForm';
+import { SupportedLanguages } from '~/i18n';
 
 export function convertArticleListToTableData(
-  articles: ArticlesWithCategoriesSummaryList[]
+  articles: ArticlesWithCategoriesSummaryList[],
+  lang: SupportedLanguages
 ): [Columns, TableData[]] {
   const columns: Columns = ['Titel', 'Samenvatting', 'Auteur', 'Categorieën'];
 
@@ -11,12 +13,12 @@ export function convertArticleListToTableData(
     return {
       id: article.id,
       data: new Map([
-        ['Titel', article.title.en],
-        ['Samenvatting', article.summary.en],
-        ['Auteur', article.authorId],
+        ['Titel', article.title[lang]],
+        ['Samenvatting', article.summary[lang]],
+        ['Auteur', `${article.author.firstName} ${article.author.lastName}`],
         [
           'Categorieën',
-          article.categories.map((category) => category.name.en).join(', '),
+          article.categories.map((category) => category.name[lang]).join(', '),
         ],
       ]),
     };

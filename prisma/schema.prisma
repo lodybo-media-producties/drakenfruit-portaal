@@ -154,13 +154,13 @@ model Category {
   id String @id @default(cuid())
 
   /// [Translated]
-  name String
+  name Json
 
   /// [Translated]
-  description String
+  description Json
 
   /// [Translated]
-  slug String
+  slug Json
 
   Articles Article[]
 

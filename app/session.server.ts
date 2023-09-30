@@ -82,7 +82,7 @@ export async function requireAdmin(request: Request) {
 export async function requireUserWithMinimumRole(
   role: Role,
   request: Request,
-  fallbackRedirect: string
+  fallbackRedirect = '/account'
 ) {
   const user = await requireUser(request);
   if (isAllowedForRole(role, user)) return user;

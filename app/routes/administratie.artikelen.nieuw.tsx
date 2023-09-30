@@ -13,11 +13,7 @@ import { useTranslation } from 'react-i18next';
 import i18next from '~/i18next.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await requireUserWithMinimumRole(
-    'CONSULTANT',
-    request,
-    '/account'
-  );
+  const user = await requireUserWithMinimumRole('CONSULTANT', request);
 
   const users = await getUsers();
   const eligibleAuthors: Author[] = users

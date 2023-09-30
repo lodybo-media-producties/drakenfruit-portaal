@@ -9,6 +9,13 @@ export { Article };
 export type ArticlesWithCategoriesSummaryList = Omit<
   Prisma.ArticleGetPayload<{
     include: {
+      author: {
+        select: {
+          id: true;
+          firstName: true;
+          lastName: true;
+        };
+      };
       categories: {
         select: {
           id: true;
@@ -26,6 +33,7 @@ export function getArticlesSummaryList(): Promise<
   return prisma.article.findMany({
     orderBy: { createdAt: 'desc' },
     include: {
+      author: true,
       categories: true,
     },
   });
