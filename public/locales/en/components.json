@@ -40,7 +40,8 @@
     "Image Label": "Article Image",
     "Save Button Label": "Save",
     "Publish Button Label": "Publish",
-    "Edit Button Label": "Save Changes"
+    "Edit Button Label": "Save",
+    "Edit and Publish Button Label": "Save Changes and Publish"
   },
   "Delete Item Dialog": {
     "Title": "Delete item",

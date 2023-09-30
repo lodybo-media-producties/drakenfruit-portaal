@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Form, useFetcher } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 import slugify from '@sindresorhus/slugify';
 import { type SerializedArticle as Article } from '~/models/articles.server';
 import { type ArticleValidationErrors } from '~/types/Article';
@@ -30,6 +30,7 @@ export type ArticleFormValues = Omit<
 > & {
   id?: string;
   categories: string[];
+  published?: boolean;
 };
 
 type Props = {
@@ -284,36 +285,37 @@ export default function ArticleMutationForm({
 
         <div className="flex flex-row gap-2">
           {mode === 'create' ? (
-            <>
-              <Button
-                disabled={isSubmitting}
-                name="mode"
-                value="draft"
-                type="submit"
-              >
-                {t('ArticleMutationForm.Save Button Label')}
-              </Button>
-              <Button
-                disabled={isSubmitting}
-                name="mode"
-                value="publish"
-                primary
-                type="submit"
-              >
-                {t('ArticleMutationForm.Publish Button Label')}
-              </Button>
-            </>
-          ) : (
             <Button
               disabled={isSubmitting}
               name="mode"
-              value="save"
-              primary
+              value="draft"
+              type="submit"
+            >
+              {t('ArticleMutationForm.Save Button Label')}
+            </Button>
+          ) : null}
+          {mode === 'update' && !initialValues?.published ? (
+            <Button
+              disabled={isSubmitting}
+              name="mode"
+              value="draft"
               type="submit"
             >
               {t('ArticleMutationForm.Edit Button Label')}
             </Button>
-          )}
+          ) : null}
+
+          <Button
+            disabled={isSubmitting}
+            name="mode"
+            value="publish"
+            primary
+            type="submit"
+          >
+            {mode === 'create'
+              ? t('ArticleMutationForm.Publish Button Label')
+              : t('ArticleMutationForm.Edit and Publish Button Label')}
+          </Button>
         </div>
       </div>
     </form>

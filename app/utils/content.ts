@@ -123,5 +123,6 @@ export function convertPrismaArticleToArticleFormValues(
     categories: article.categories.map((category) => category.id),
     authorId: article.author.id,
     image: article.image,
+    published: article.published,
   };
 }

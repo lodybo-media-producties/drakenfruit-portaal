@@ -40,7 +40,8 @@
     "Image Label": "Hoofdafbeelding",
     "Save Button Label": "Opslaan",
     "Publish Button Label": "Publiceren",
-    "Edit Button Label": "Wijzigingen opslaan"
+    "Edit Button Label": "Opslaan",
+    "Edit and Publish Button Label": "Wijzigingen opslaan en publiceren"
   },
   "Delete Item Dialog": {
     "Title": "Verwijderen",

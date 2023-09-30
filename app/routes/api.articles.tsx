@@ -63,6 +63,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'PUT') {
+    const mode = formData.get('mode') as string | undefined;
     const articleFormValues = convertFormDataToArticleFormValues(formData);
 
     const data: Prisma.ArticleUpdateInput = {
@@ -71,7 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
       slug: articleFormValues.slug,
       content: articleFormValues.content,
       summary: articleFormValues.summary,
-      // published: articleFormValues.published,
+      published: mode === 'publish',
       image: articleFormValues.image,
       author: {
         connect: {

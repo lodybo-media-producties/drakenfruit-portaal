@@ -45,6 +45,7 @@ describe('Content utilities', () => {
         'Samenvatting',
         'Auteur',
         'Categorieën',
+        'Gepubliceerd',
       ]);
 
       expect(data).toEqual([
@@ -55,6 +56,7 @@ describe('Content utilities', () => {
             ['Samenvatting', 'Summary 1'],
             ['Auteur', 'Kaylee Rosalina'],
             ['Categorieën', 'Category 1'],
+            ['Gepubliceerd', 'true'],
           ]),
         },
       ]);
@@ -221,7 +223,59 @@ describe('Content utilities', () => {
         categories: ['1'],
         authorId: '1',
         image: null,
+        published: true,
       });
+    });
+  });
+
+  test('Converting the article data of an unpublished article from Prisma to an ArticleFormValue', () => {
+    const articleFromPrisma: Awaited<ReturnType<typeof getArticleById>> = {
+      id: '1',
+      title: { en: 'Title 1', nl: 'Titel 1' },
+      slug: { en: 'title-1', nl: 'titel-1' },
+      published: false,
+      summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+      authorId: '1',
+      author: {
+        id: '1',
+        firstName: 'Kaylee',
+        lastName: 'Rosalina',
+        role: 'ADMIN',
+        locale: 'nl',
+        email: 'kaylee@drakenfruit.com',
+        organisationId: '1',
+        avatarUrl: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      content: { en: 'Content 1', nl: 'Inhoud 1' },
+      categories: [
+        {
+          id: '1',
+          name: { en: 'Category 1', nl: 'Categorie 1' },
+          slug: { en: 'category-1', nl: 'categorie-1' },
+          description: { en: 'Description 1', nl: 'Beschrijving 1' },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      image: null,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const article = convertPrismaArticleToArticleFormValues(articleFromPrisma);
+
+    expect(article).toEqual<ArticleFormValues>({
+      id: '1',
+      title: { en: 'Title 1', nl: 'Titel 1' },
+      slug: { en: 'title-1', nl: 'titel-1' },
+      summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+      content: { en: 'Content 1', nl: 'Inhoud 1' },
+      categories: ['1'],
+      authorId: '1',
+      image: null,
+      published: false,
     });
   });
 });
