@@ -38,3 +38,13 @@ export function getArticlesSummaryList(): Promise<
     },
   });
 }
+
+export function getArticleById(id: string) {
+  return prisma.article.findUniqueOrThrow({
+    where: { id },
+    include: {
+      author: true,
+      categories: true,
+    },
+  });
+}

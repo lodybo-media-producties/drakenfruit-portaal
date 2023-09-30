@@ -13,10 +13,9 @@ type Props = {
   columns: string[];
   tableData: TableData[];
   onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
 };
 
-export default function Table({ tableData, columns, onEdit, onDelete }: Props) {
+export default function Table({ tableData, columns, onEdit }: Props) {
   return (
     <div>
       <table className="table-fixed w-full border-collapse border border-light-pink">

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Form, useFetcher } from '@remix-run/react';
 import slugify from '@sindresorhus/slugify';
@@ -21,6 +21,8 @@ import { type SupportedLanguages } from '~/i18n';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
 import { convertArticleFormValuesToFormData } from '~/utils/content';
 import { type User } from '~/models/user.server';
+import { APIResponse } from '~/types/Responses';
+import Message from '~/components/Message';
 
 export type ArticleFormValues = Omit<
   Article,
@@ -51,8 +53,9 @@ export default function ArticleMutationForm({
   currentUser,
 }: Props) {
   const { t } = useTranslation('components');
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<APIResponse>();
 
+  const [error, setError] = useState('');
   const [lang, setLang] = useState<SupportedLanguages>('nl');
   const [enTitle, setEnTitle] = useState(initialValues?.title.en ?? '');
   const [nlTitle, setNlTitle] = useState(initialValues?.title.nl ?? '');
@@ -69,6 +72,14 @@ export default function ArticleMutationForm({
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
+
+  useEffect(() => {
+    if (fetcher.data) {
+      if (!fetcher.data.ok) {
+        setError(fetcher.data.message);
+      }
+    }
+  }, [fetcher.data]);
 
   const getTitle = () => {
     if (lang === 'en') {
@@ -199,8 +210,12 @@ export default function ArticleMutationForm({
     });
   };
 
+  const isSubmitting = fetcher.state !== 'idle';
+
   return (
     <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
+      <Message variant="error" message={error} />
+
       <Toggle options={languageOptions} onSelect={handleLangSelect} />
 
       <input type="hidden" name="articleID" defaultValue={initialValues?.id} />
@@ -270,15 +285,32 @@ export default function ArticleMutationForm({
         <div className="flex flex-row gap-2">
           {mode === 'create' ? (
             <>
-              <Button name="mode" value="draft" type="submit">
+              <Button
+                disabled={isSubmitting}
+                name="mode"
+                value="draft"
+                type="submit"
+              >
                 {t('ArticleMutationForm.Save Button Label')}
               </Button>
-              <Button name="mode" value="publish" primary type="submit">
+              <Button
+                disabled={isSubmitting}
+                name="mode"
+                value="publish"
+                primary
+                type="submit"
+              >
                 {t('ArticleMutationForm.Publish Button Label')}
               </Button>
             </>
           ) : (
-            <Button name="mode" value="save" primary type="submit">
+            <Button
+              disabled={isSubmitting}
+              name="mode"
+              value="save"
+              primary
+              type="submit"
+            >
               {t('ArticleMutationForm.Edit Button Label')}
             </Button>
           )}

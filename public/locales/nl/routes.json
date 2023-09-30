@@ -7,6 +7,16 @@
           "Message": "Het artikel is aangemaakt."
         }
       },
+      "UPDATE": {
+        "Success": {
+          "Title": "Artikel bijgewerkt",
+          "Message": "Het artikel is bijgewerkt."
+        },
+        "Error": {
+          "No ID": "Geen ID opgegeven",
+          "Article Not Found": "Het artikel kon niet gevonden worden"
+        }
+      },
       "DELETE": {
         "Success": {
           "Title": "Artikel verwijderd",
@@ -26,6 +36,16 @@
   "New": {
     "Meta": {
       "Title": "Nieuw artikel | Drakenfruit"
+    },
+    "Back Link Label": "Terug naar overzicht"
+  },
+  "Edit": {
+    "Meta": {
+      "Title": "Artikel bewerken | Drakenfruit"
+    },
+    "Error": {
+      "No ID": "Geen ID opgegeven",
+      "Article Not Found": "Het artikel kon niet gevonden worden"
     },
     "Back Link Label": "Terug naar overzicht"
   }

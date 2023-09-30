@@ -1,9 +1,13 @@
 import { describe, test } from 'vitest';
-import { type ArticlesWithCategoriesSummaryList } from '~/models/articles.server';
+import {
+  type ArticlesWithCategoriesSummaryList,
+  type getArticleById,
+} from '~/models/articles.server';
 import {
   convertArticleListToTableData,
   convertArticleFormValuesToFormData,
   convertFormDataToArticleFormValues,
+  convertPrismaArticleToArticleFormValues,
 } from '~/utils/content';
 import { type ArticleFormValues } from '~/components/ArticleMutationForm';
 
@@ -137,6 +141,86 @@ describe('Content utilities', () => {
         categories: ['1', '2'],
         authorId: '1',
         image: '/path/to/image.jpg',
+      });
+    });
+
+    test('Convert FormData to ArticleFormValue without categories', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('title.en', 'Title 1');
+      formData.append('title.nl', 'Titel 1');
+      formData.append('slug.en', 'title-1');
+      formData.append('slug.nl', 'titel-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '');
+      formData.append('authorId', '1');
+      formData.append('image', '/path/to/image.jpg');
+
+      const article = convertFormDataToArticleFormValues(formData);
+
+      expect(article).toEqual({
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: [],
+        authorId: '1',
+        image: '/path/to/image.jpg',
+      });
+    });
+
+    test('Converting the article data from Prisma to an ArticleFormValue', () => {
+      const articleFromPrisma: Awaited<ReturnType<typeof getArticleById>> = {
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        published: true,
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        authorId: '1',
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+          role: 'ADMIN',
+          locale: 'nl',
+          email: 'kaylee@drakenfruit.com',
+          organisationId: '1',
+          avatarUrl: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+            description: { en: 'Description 1', nl: 'Beschrijving 1' },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        image: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const article =
+        convertPrismaArticleToArticleFormValues(articleFromPrisma);
+
+      expect(article).toEqual<ArticleFormValues>({
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: ['1'],
+        authorId: '1',
+        image: null,
       });
     });
   });

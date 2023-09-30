@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { requireUserWithMinimumRole } from '~/session.server';
 import { getArticlesSummaryList } from '~/models/articles.server';
 import Button from '~/components/Button';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { convertArticleListToTableData } from '~/utils/content';
 import Table from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
@@ -32,18 +32,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 
 export default function ArticlesIndexRoute() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const { articles } = useLoaderData<typeof loader>();
   const [columns, data] = convertArticleListToTableData(
     articles,
     i18n.language as SupportedLanguages
   );
 
-  const handleDelete = (id: string) => {
-    console.log(`Deleting article with id ${id}`);
-  };
-
   const handleEdit = (id: string) => {
-    console.log(`Editing article with id ${id}`);
+    navigate(`/administratie/artikelen/bewerken/${id}`);
   };
 
   return (
@@ -55,12 +52,7 @@ export default function ArticlesIndexRoute() {
       </div>
 
       {articles.length > 0 ? (
-        <Table
-          columns={columns}
-          tableData={data}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+        <Table columns={columns} tableData={data} onEdit={handleEdit} />
       ) : (
         <p>Er zijn nog geen artikelen aangemaakt.</p>
       )}

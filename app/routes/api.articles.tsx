@@ -9,6 +9,7 @@ import { prisma } from '~/db.server';
 import { type APIResponse } from '~/types/Responses';
 import { getErrorMessage } from '~/utils/utils';
 import i18nextServer from '~/i18next.server';
+import { Prisma } from '@prisma/client';
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireUserWithMinimumRole('CONSULTANT', request);
@@ -62,6 +63,54 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'PUT') {
+    const articleFormValues = convertFormDataToArticleFormValues(formData);
+
+    const data: Prisma.ArticleUpdateInput = {
+      id: articleFormValues.id,
+      title: articleFormValues.title,
+      slug: articleFormValues.slug,
+      content: articleFormValues.content,
+      summary: articleFormValues.summary,
+      // published: articleFormValues.published,
+      image: articleFormValues.image,
+      author: {
+        connect: {
+          id: articleFormValues.authorId,
+        },
+      },
+    };
+
+    if (articleFormValues.categories.length > 0) {
+      data.categories = {
+        set: articleFormValues.categories.map((category) => ({
+          id: category,
+        })),
+      };
+    }
+
+    try {
+      await prisma.article.update({
+        where: {
+          id: articleFormValues.id,
+        },
+        data,
+      });
+
+      const session = await getSession(request);
+      session.flash('toast', {
+        title: t('Articles.API.UPDATE.Success.Title'),
+        description: t('Articles.API.UPDATE.Success.Message'),
+      });
+
+      return redirect('/administratie/artikelen', {
+        headers: {
+          'Set-Cookie': await commitSession(session),
+        },
+      });
+    } catch (error) {
+      const message = getErrorMessage(error);
+      return json<APIResponse>({ ok: false, message }, { status: 500 });
+    }
   }
 
   if (request.method === 'DELETE') {

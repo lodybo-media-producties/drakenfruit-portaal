@@ -1,7 +1,10 @@
-import { type ArticlesWithCategoriesSummaryList } from '~/models/articles.server';
+import {
+  type ArticlesWithCategoriesSummaryList,
+  getArticleById,
+} from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type ArticleFormValues } from '~/components/ArticleMutationForm';
-import { SupportedLanguages } from '~/i18n';
+import { type SupportedLanguages } from '~/i18n';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -74,7 +77,9 @@ export function convertFormDataToArticleFormValues(
       en: formData.get('content.en') as string,
       nl: formData.get('content.nl') as string,
     },
-    categories: (formData.get('categories') as string).split(','),
+    categories: (formData.get('categories') as string)
+      .split(',')
+      .filter(Boolean),
     authorId: formData.get('authorId') as string,
     image: formData.get('image') as string | null,
   };
@@ -85,4 +90,31 @@ export function convertFormDataToArticleFormValues(
   }
 
   return articleFormValues;
+}
+
+export function convertPrismaArticleToArticleFormValues(
+  article: Awaited<ReturnType<typeof getArticleById>>
+): ArticleFormValues {
+  return {
+    id: article.id,
+    title: {
+      en: article.title.en,
+      nl: article.title.nl,
+    },
+    slug: {
+      en: article.slug.en,
+      nl: article.slug.nl,
+    },
+    summary: {
+      en: article.summary.en,
+      nl: article.summary.nl,
+    },
+    content: {
+      en: article.content.en,
+      nl: article.content.nl,
+    },
+    categories: article.categories.map((category) => category.id),
+    authorId: article.author.id,
+    image: article.image,
+  };
 }

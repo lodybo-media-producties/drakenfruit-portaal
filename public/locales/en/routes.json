@@ -7,6 +7,16 @@
           "Message": "The article was created successfully"
         }
       },
+      "UPDATE": {
+        "Success": {
+          "Title": "Article updated",
+          "Message": "The article was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Article Not Found": "The article could not be found"
+        }
+      },
       "DELETE": {
         "Success": {
           "Title": "Article deleted",
@@ -25,6 +35,16 @@
     "New": {
       "Meta": {
         "Title": "New article | Drakenfruit"
+      },
+      "Back Link Label": "Back to articles"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit article | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Article Not Found": "The article could not be found"
       },
       "Back Link Label": "Back to articles"
     }
