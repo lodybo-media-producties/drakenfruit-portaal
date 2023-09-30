@@ -2,6 +2,8 @@ import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
+  id?: string;
+
   /**
    * The initial value of the editor.
    */
@@ -18,12 +20,19 @@ type Props = {
   onChange?: (content: string) => void;
 };
 
-export default function Editor({ initialValue, value, name, onChange }: Props) {
+export default function Editor({
+  id,
+  initialValue,
+  value,
+  name,
+  onChange,
+}: Props) {
   const { i18n } = useTranslation();
 
   return (
     <>
       <TinyMCEEditor
+        id={id}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         textareaName={name}
         initialValue={initialValue}

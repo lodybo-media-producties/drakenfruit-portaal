@@ -246,8 +246,9 @@ export default function ArticleMutationForm({
 
       <Label label={t('ArticleMutationForm.Content Label')}>
         <Editor
+          id="content"
           name="content"
-          initialValue={getContent()}
+          value={getContent()}
           onChange={handleContentChange}
         />
       </Label>

@@ -6,5 +6,5 @@ module.exports = {
   serverModuleFormat: 'cjs',
   devServerPort: 8002,
   tailwind: true,
-  serverDependenciesToBundle: [/@sindresorhus/],
+  serverDependenciesToBundle: [/@sindresorhus/, /remix-utils/],
 };
