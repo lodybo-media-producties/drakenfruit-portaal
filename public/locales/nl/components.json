@@ -27,6 +27,10 @@
     "Image Selected Label_other": "Geselecteerde afbeeldingen: "
   },
   "ArticleMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Nederlands",
+      "English": "Engels"
+    },
     "Title Label": "Titel van het artikel",
     "Slug Label": "Slug van het artikel",
     "Summary Label": "Samenvatting",

@@ -144,11 +144,11 @@ export default function ArticleMutationForm({
 
   const languageOptions: ToggleOption[] = [
     {
-      label: 'Nederlands',
+      label: t('ArticleMutationForm.LanguageToggleLabels.Dutch'),
       value: 'nl',
     },
     {
-      label: 'English',
+      label: t('ArticleMutationForm.LanguageToggleLabels.English'),
       value: 'en',
     },
   ];

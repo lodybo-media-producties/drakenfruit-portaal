@@ -3,12 +3,16 @@ import { Image } from '~/components/Image';
 import Icon from '~/components/Icon';
 import type { User } from '~/models/user.server';
 import { Link } from '@remix-run/react';
+import { useTranslation } from 'react-i18next';
+import Button from '~/components/Button';
 
 type Props = {
   user?: User;
 };
 
 export default function Header({ user }: Props) {
+  const { i18n } = useTranslation();
+
   return (
     <div className="bg-light-blue flex flex-row justify-between gap-2.5 px-5 py-2.5">
       <Image
@@ -31,6 +35,11 @@ export default function Header({ user }: Props) {
       />
 
       <div className="w-1/6 flex place-content-center place-items-center gap-2.5">
+        {i18n.language === 'nl' ? (
+          <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
+        ) : (
+          <Button onClick={() => i18n.changeLanguage('nl')}>Nederlands</Button>
+        )}
         {user ? (
           <form method="post" action="/logout">
             <button>Uitloggen</button>
