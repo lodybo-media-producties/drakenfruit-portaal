@@ -1,11 +1,16 @@
 import ArticleMutationForm from '~/components/ArticleMutationForm';
-import { json, type LoaderFunctionArgs } from '@remix-run/node';
+import {
+  json,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import { requireUserWithMinimumRole } from '~/session.server';
 import { getUsers } from '~/models/user.server';
 import { isAllowedForRole } from '~/utils/roles';
 import { type Author } from '~/components/AuthorSelector';
 import { useLoaderData } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
+import i18next from '~/i18next.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUserWithMinimumRole(
@@ -23,8 +28,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
       lastName,
     }));
 
-  return json({ user, authors: eligibleAuthors, categories: [] });
+  const t = await i18next.getFixedT(request, 'routes');
+  const metaTranslations = {
+    title: t('Articles.New.Meta.Title'),
+  };
+
+  return json({
+    user,
+    authors: eligibleAuthors,
+    categories: [],
+    metaTranslations,
+  });
 }
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => [
+  {
+    title: data?.metaTranslations.title ?? 'Drakenfruit',
+  },
+];
 
 export default function NewArticleRoute() {
   const { t } = useTranslation('routes');

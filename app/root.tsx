@@ -19,6 +19,7 @@ import i18next from '~/i18next.server';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getErrorMessage, useOptionalUser } from '~/utils/utils';
+import { langSessionCookie } from '~/cookies.server';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -27,7 +28,13 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
-  return json({ user: await getUser(request), locale });
+  console.log(locale);
+  return json(
+    { user: await getUser(request), locale },
+    {
+      headers: { 'Set-Cookie': await langSessionCookie.serialize(locale) },
+    }
+  );
 };
 
 export default function App() {

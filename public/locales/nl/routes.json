@@ -1,6 +1,9 @@
 {
   "Articles": {
     "New": {
+      "Meta": {
+        "Title": "Nieuw artikel | Drakenfruit"
+      },
       "Back Link Label": "Terug naar overzicht"
     }
   }

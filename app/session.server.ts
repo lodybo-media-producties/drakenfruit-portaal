@@ -3,7 +3,7 @@ import invariant from 'tiny-invariant';
 
 import type { User } from '~/models/user.server';
 import { getUserById } from '~/models/user.server';
-import { Role } from '@prisma/client';
+import { type Role } from '@prisma/client';
 import { isAllowedForRole } from '~/utils/roles';
 
 invariant(process.env.SESSION_SECRET, 'SESSION_SECRET must be set');

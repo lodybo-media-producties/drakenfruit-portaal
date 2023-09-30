@@ -1,6 +1,9 @@
 {
   "Articles": {
     "New": {
+      "Meta": {
+        "Title": "New article | Drakenfruit"
+      },
       "Back Link Label": "Back to articles"
     }
   }
