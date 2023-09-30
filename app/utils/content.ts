@@ -1,6 +1,6 @@
 import {
   type ArticlesWithCategoriesSummaryList,
-  getArticleById,
+  type getArticleById,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type ArticleFormValues } from '~/components/ArticleMutationForm';
@@ -10,7 +10,13 @@ export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
   lang: SupportedLanguages
 ): [Columns, TableData[]] {
-  const columns: Columns = ['Titel', 'Samenvatting', 'Auteur', 'Categorieën'];
+  const columns: Columns = [
+    'Titel',
+    'Samenvatting',
+    'Auteur',
+    'Categorieën',
+    'Gepubliceerd',
+  ];
 
   const data: TableData[] = articles.map((article) => {
     return {
@@ -23,6 +29,7 @@ export function convertArticleListToTableData(
           'Categorieën',
           article.categories.map((category) => category.name[lang]).join(', '),
         ],
+        ['Gepubliceerd', article.published ? 'true' : 'false'],
       ]),
     };
   });

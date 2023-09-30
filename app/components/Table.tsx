@@ -1,5 +1,6 @@
 import ActionButton from '~/components/ActionButton';
 import DeleteItemDialog from '~/components/DeleteItemDialog';
+import Icon from '~/components/Icon';
 
 export type Columns = string[];
 export type TableDataMap<K extends string, V> = Map<K, V>;
@@ -38,7 +39,14 @@ export default function Table({ tableData, columns, onEdit }: Props) {
             <tr key={`row_${id}`}>
               {columns.map((column) => (
                 <td key={`item_${id}_${column}`} className="border-none p-2">
-                  {data.get(column)}
+                  {data.get(column) === 'true' ||
+                  data.get(column) === 'false' ? (
+                    data.get(column) === 'true' ? (
+                      <Icon name="check" />
+                    ) : null
+                  ) : (
+                    <span>{data.get(column)}</span>
+                  )}
                 </td>
               ))}
               <td className="border-none p-2 flex flex-row gap-2 justify-end">
