@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { isAllowedForRole } from '~/utils/roles';
 import { type User } from '~/models/user.server';
-import { Link, NavLink, useLocation } from '@remix-run/react';
+import { NavLink, useLocation } from '@remix-run/react';
 import Icon, { type Props as IconProps } from '~/components/Icon';
 
 const mainMenuItems: NavItem[] = [

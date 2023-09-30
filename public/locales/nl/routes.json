@@ -1,10 +1,22 @@
 {
   "Articles": {
-    "New": {
+    "API": {
+      "DELETE": {
+        "Error": {
+          "No ID": "Geen ID opgegeven"
+        }
+      }
+    },
+    "Index": {
       "Meta": {
-        "Title": "Nieuw artikel | Drakenfruit"
-      },
-      "Back Link Label": "Terug naar overzicht"
+        "Title": "Artikelen | Drakenfruit"
+      }
     }
+  },
+  "New": {
+    "Meta": {
+      "Title": "Nieuw artikel | Drakenfruit"
+    },
+    "Back Link Label": "Terug naar overzicht"
   }
 }

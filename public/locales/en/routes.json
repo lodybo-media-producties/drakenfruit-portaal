@@ -1,5 +1,17 @@
 {
   "Articles": {
+    "API": {
+      "DELETE": {
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Artikelen | Drakenfruit"
+      }
+    },
     "New": {
       "Meta": {
         "Title": "New article | Drakenfruit"

@@ -41,5 +41,11 @@
     "Save Button Label": "Save",
     "Publish Button Label": "Publish",
     "Edit Button Label": "Save Changes"
+  },
+  "Delete Item Dialog": {
+    "Title": "Delete item",
+    "Message": "Are you sure you want to delete this item?",
+    "Cancel Button Label": "Cancel",
+    "Delete Button Label": "Delete"
   }
 }

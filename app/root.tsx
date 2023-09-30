@@ -28,7 +28,6 @@ export const links: LinksFunction = () => [
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const locale = await i18next.getLocale(request);
-  console.log(locale);
   return json(
     { user: await getUser(request), locale },
     {

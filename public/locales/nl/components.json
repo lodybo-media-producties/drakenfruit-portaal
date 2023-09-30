@@ -41,5 +41,11 @@
     "Save Button Label": "Opslaan",
     "Publish Button Label": "Publiceren",
     "Edit Button Label": "Wijzigingen opslaan"
+  },
+  "Delete Item Dialog": {
+    "Title": "Verwijderen",
+    "Message": "Weet je zeker dat je dit item wilt verwijderen?",
+    "Cancel Button Label": "Annuleren",
+    "Delete Button Label": "Verwijderen"
   }
 }

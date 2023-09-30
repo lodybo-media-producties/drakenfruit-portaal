@@ -1,5 +1,5 @@
-import Icon from '~/components/Icon';
-import { ReactNode } from 'react';
+import ActionButton from '~/components/ActionButton';
+import DeleteItemDialog from '~/components/DeleteItemDialog';
 
 export type Columns = string[];
 export type TableDataMap<K extends string, V> = Map<K, V>;
@@ -43,48 +43,17 @@ export default function Table({ tableData, columns, onEdit, onDelete }: Props) {
                 </td>
               ))}
               <td className="border-none p-2 flex flex-row gap-2 justify-end">
-                <ActionButton
-                  onClick={() => onEdit(id)}
-                  backgroundColor="bg-light-blue"
-                >
-                  <Icon name="pen" />
-                </ActionButton>
+                <ActionButton onClick={() => onEdit(id)} icon="pen" />
 
-                <ActionButton
-                  onClick={() => onDelete(id)}
-                  backgroundColor="bg-dark-pink"
-                  textColor="text-egg-white"
-                >
-                  <Icon name="trash-alt" />
-                </ActionButton>
+                <DeleteItemDialog
+                  itemToDelete={{ id, name: data.get('Titel') ?? '' }}
+                  deletionEndpoint="/api/articles"
+                />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-  );
-}
-
-type ActionButtonProps = {
-  onClick: () => void;
-  children: ReactNode;
-  backgroundColor: string;
-  textColor?: string;
-};
-
-function ActionButton({
-  onClick,
-  children,
-  backgroundColor,
-  textColor = 'text-black',
-}: ActionButtonProps) {
-  return (
-    <button
-      onClick={onClick}
-      className={`rounded-md px-4 py-2 ${backgroundColor} ${textColor} opacity-80 hover:opacity-100 transition-opacity`}
-    >
-      {children}
-    </button>
   );
 }

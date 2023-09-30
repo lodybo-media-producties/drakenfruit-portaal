@@ -23,3 +23,18 @@ export const Primary: Story = {
     primary: true,
   },
 };
+export const Inanimated: Story = {
+  args: {
+    children: 'Button',
+    animated: false,
+    primary: false,
+  },
+};
+
+export const Disabled: Story = {
+  args: {
+    children: 'Button',
+    disabled: true,
+    primary: false,
+  },
+};

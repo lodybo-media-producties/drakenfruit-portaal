@@ -19,4 +19,5 @@ export {
   faSort,
   faTimes,
   faArrowLeft,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
