@@ -18,7 +18,15 @@
     "Not Found Message": "Geen categorie gevonden",
     "Create Option": "Maak een categorie aan",
     "Selected Categories Label_one": "Geselecteerde categorie: {{categories}}",
-    "Selected Categories Label_other": "Geselecteerde categorieën: {{categories}}"
+    "Selected Categories Label_other": "Geselecteerde categorieën: {{categories}}",
+    "Custom Category Option Label": "+ Categorie aanmaken",
+    "Custom Category Dialog": {
+      "Title": "Nieuwe categorie aanmaken",
+      "Description": "Vul de naam van de categorie in en klik op 'Aanmaken' om de categorie aan te maken.",
+      "Input Label": "Naam van de categorie",
+      "Cancel Button Label": "Annuleren",
+      "Create Button Label": "Aanmaken"
+    }
   },
   "ImageInput": {
     "Button Label": "Kies een afbeelding",

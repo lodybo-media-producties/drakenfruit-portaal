@@ -68,6 +68,16 @@ export function Combobox({
   );
 
   const handleSelect = (selectedValue: string) => {
+    if (selectedValue.startsWith('_unselectable')) {
+      if (multiple) {
+        onSelect?.([selectedValue]);
+      } else {
+        onSelect?.(selectedValue);
+      }
+
+      return;
+    }
+
     const newValue = selectedValue === value ? '' : selectedValue;
 
     if (multiple) {

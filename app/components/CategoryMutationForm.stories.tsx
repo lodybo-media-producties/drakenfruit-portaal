@@ -21,7 +21,7 @@ type Story = StoryObj<typeof CategoryMutationForm>;
 export const Default: Story = {
   args: {
     mode: 'create',
-    backLink: '',
+    backLink: '/admin/categories',
     backLinkLabel: 'Back to categories',
   },
 };

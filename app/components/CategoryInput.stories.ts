@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import CategoryInput, { type CategorySelection } from './CategoryInput';
+import { type CategoryErrors } from '~/types/Validations';
 
 const categories: CategorySelection[] = [
   {
@@ -28,6 +29,24 @@ const categories: CategorySelection[] = [
 export default {
   title: 'Components/Category input',
   component: CategoryInput,
+  args: {
+    // @ts-ignore
+    remixStub: {
+      initialEntries: ['/'],
+      routes: [
+        {
+          path: '/',
+        },
+        {
+          path: '/api/categories',
+          action: async () => {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            return { ok: true };
+          },
+        },
+      ],
+    },
+  },
 } satisfies Meta<typeof CategoryInput>;
 
 type Story = StoryObj<typeof CategoryInput>;
@@ -56,5 +75,36 @@ export const WithError: Story = {
   args: {
     categories,
     error: 'Something went wrong',
+  },
+};
+
+export const WithCustoMCategoryError: Story = {
+  args: {
+    categories,
+    // @ts-ignore
+    remixStub: {
+      initialEntries: ['/'],
+      routes: [
+        {
+          path: '/',
+        },
+        {
+          path: '/api/categories',
+          action: async () => {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            const errors: CategoryErrors = {
+              name: {
+                nl: 'Dit is een fout',
+              },
+              description: {
+                en: 'This is an error',
+                nl: 'Dit is een fout',
+              },
+            };
+            return errors;
+          },
+        },
+      ],
+    },
   },
 };

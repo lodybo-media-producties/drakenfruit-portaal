@@ -18,7 +18,15 @@
     "Not Found Message": "No categories found",
     "Create Option": "Create category",
     "Selected Categories Label_one": "Selected category: {{categories}}",
-    "Selected Categories Label_other": "Selected categories: {{categories}}"
+    "Selected Categories Label_other": "Selected categories: {{categories}}",
+    "Custom Category Option Label": "+ Create a new category",
+    "Custom Category Dialog": {
+      "Title": "Create a new category",
+      "Description": "Please enter a name for the new category",
+      "Input Label": "Category name",
+      "Cancel Button Label": "Cancel",
+      "Create Button Label": "Create"
+    }
   },
   "ImageInput": {
     "Button Label": "Choose an image",

@@ -12,6 +12,7 @@ import i18nextServer from '~/i18next.server';
 import { validateCategory } from '~/validations/flows';
 import { type CategoryErrors } from '~/types/Validations';
 import { type Prisma } from '@prisma/client';
+import { type Category } from '~/models/categories.server';
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireUserWithMinimumRole('CONSULTANT', request);
@@ -28,9 +29,10 @@ export async function action({ request }: ActionFunctionArgs) {
       return json<CategoryErrors>(validationResults.errors, { status: 400 });
     } else {
       const data = convertFormDataToCategoryFormValues(formData);
+      const successRedirect = formData.get('successRedirect') as string;
 
       try {
-        await prisma.category.create({
+        const category = await prisma.category.create({
           data: {
             name: data.name,
             slug: data.slug,
@@ -44,11 +46,21 @@ export async function action({ request }: ActionFunctionArgs) {
           description: t('Categories.API.CREATE.Success.Message'),
         });
 
-        return redirect('/administratie/categorieen', {
-          headers: {
-            'Set-Cookie': await commitSession(session),
+        if (successRedirect) {
+          return redirect(successRedirect, {
+            headers: {
+              'Set-Cookie': await commitSession(session),
+            },
+          });
+        }
+
+        return json<APIResponse<Category>>(
+          {
+            ok: true,
+            data: category,
           },
-        });
+          { status: 201 }
+        );
       } catch (error) {
         const message = getErrorMessage(error);
         return json<APIResponse>(

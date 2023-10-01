@@ -125,7 +125,12 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref as React.Ref<HTMLTextAreaElement>}
           {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
         />
-        <Message variant="error" message={error} id={`${props.id}-textarea`} />
+        <Message
+          variant="error"
+          message={error}
+          id={`${props.id}-textarea`}
+          subtle
+        />
       </>
     );
   }
