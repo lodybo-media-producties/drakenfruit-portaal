@@ -28,3 +28,13 @@ export const ThreeOptions: Story = {
     ],
   },
 };
+
+export const WithNotificationCount: Story = {
+  name: 'With notification count',
+  args: {
+    options: [
+      { label: 'Ja', value: 'yes' },
+      { label: 'Nee', value: 'no', notificationCount: 2 },
+    ],
+  },
+};

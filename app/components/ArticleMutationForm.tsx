@@ -21,8 +21,9 @@ import { type SupportedLanguages } from '~/i18n';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
 import { convertArticleFormValuesToFormData } from '~/utils/content';
 import { type User } from '~/models/user.server';
-import { APIResponse } from '~/types/Responses';
+import { type APIResponse } from '~/types/Responses';
 import Message from '~/components/Message';
+import { type ArticleErrors } from '~/types/Validations';
 
 export type ArticleFormValues = Omit<
   Article,
@@ -54,9 +55,11 @@ export default function ArticleMutationForm({
   currentUser,
 }: Props) {
   const { t } = useTranslation('components');
-  const fetcher = useFetcher<APIResponse>();
+  const fetcher = useFetcher<APIResponse | ArticleErrors>();
 
   const [error, setError] = useState('');
+  const [formErrors, setFormErrors] = useState<ArticleErrors>();
+
   const [lang, setLang] = useState<SupportedLanguages>('nl');
   const [enTitle, setEnTitle] = useState(initialValues?.title.en ?? '');
   const [nlTitle, setNlTitle] = useState(initialValues?.title.nl ?? '');
@@ -76,8 +79,15 @@ export default function ArticleMutationForm({
 
   useEffect(() => {
     if (fetcher.data) {
-      if (!fetcher.data.ok) {
-        setError(fetcher.data.message);
+      if ('ok' in fetcher.data) {
+        const data = fetcher.data as APIResponse;
+
+        if (!data.ok) {
+          setError(data.message);
+        }
+      } else {
+        const data = fetcher.data as ArticleErrors;
+        setFormErrors(data);
       }
     }
   }, [fetcher.data]);
@@ -109,6 +119,16 @@ export default function ArticleMutationForm({
       setEnSlug(slug);
     } else {
       setNlSlug(slug);
+    }
+  };
+
+  const getLocalisedError = (key: string) => {
+    if (formErrors && lang === 'en') {
+      return formErrors[key as keyof ArticleErrors]?.en;
+    } else if (formErrors && lang === 'nl') {
+      return formErrors[key as keyof ArticleErrors]?.nl;
+    } else {
+      return '';
     }
   };
 
@@ -153,17 +173,6 @@ export default function ArticleMutationForm({
   const handleCategoriesChange = (categories: string[]) => {
     setSelectedCategoryIDs(categories);
   };
-
-  const languageOptions: ToggleOption[] = [
-    {
-      label: t('ArticleMutationForm.LanguageToggleLabels.Dutch'),
-      value: 'nl',
-    },
-    {
-      label: t('ArticleMutationForm.LanguageToggleLabels.English'),
-      value: 'en',
-    },
-  ];
 
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
@@ -211,13 +220,50 @@ export default function ArticleMutationForm({
     });
   };
 
+  const getLanguageOptions = (): ToggleOption[] => {
+    const languageOptions: ToggleOption[] = [
+      {
+        label: t('ArticleMutationForm.LanguageToggleLabels.Dutch'),
+        value: 'nl',
+      },
+      {
+        label: t('ArticleMutationForm.LanguageToggleLabels.English'),
+        value: 'en',
+      },
+    ];
+
+    if (formErrors) {
+      const dutchErrorCount = Object.keys(formErrors).filter((key) => {
+        return formErrors[key as keyof ArticleErrors]?.nl;
+      }).length;
+
+      const englishErrorCount = Object.keys(formErrors).filter((key) => {
+        return formErrors[key as keyof ArticleErrors]?.en;
+      }).length;
+
+      if (dutchErrorCount > 0) {
+        languageOptions.filter(
+          (option) => option.value === 'nl'
+        )[0].notificationCount = dutchErrorCount;
+      }
+
+      if (englishErrorCount > 0) {
+        languageOptions.filter(
+          (option) => option.value === 'en'
+        )[0].notificationCount = englishErrorCount;
+      }
+    }
+
+    return languageOptions;
+  };
+
   const isSubmitting = fetcher.state !== 'idle';
 
   return (
     <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
       <Message variant="error" message={error} />
 
-      <Toggle options={languageOptions} onSelect={handleLangSelect} />
+      <Toggle options={getLanguageOptions()} onSelect={handleLangSelect} />
 
       <input type="hidden" name="articleID" defaultValue={initialValues?.id} />
 
@@ -228,6 +274,7 @@ export default function ArticleMutationForm({
         value={getTitle()}
         onChange={(e) => handleTitleChange(e.target.value)}
         onBlur={(e) => handleSlugChange(slugify(e.target.value))}
+        error={getLocalisedError('title')}
       />
 
       <SlugInput
@@ -236,6 +283,7 @@ export default function ArticleMutationForm({
         label={t('ArticleMutationForm.Slug Label')}
         value={getSlug()}
         onChange={(e) => handleSlugChange(e.target.value)}
+        error={getLocalisedError('slug')}
       />
 
       <ImageInput
@@ -251,6 +299,7 @@ export default function ArticleMutationForm({
         name="summary"
         value={getSummary()}
         onChange={(e) => handleSummaryChange(e.target.value)}
+        error={getLocalisedError('summary')}
       />
 
       <Label label={t('ArticleMutationForm.Author Label')}>
@@ -258,6 +307,7 @@ export default function ArticleMutationForm({
           authors={authors}
           initialSelectedAuthorID={selectedAuthorID}
           onSelect={handleAuthorChange}
+          error={getLocalisedError('authorId')}
         />
       </Label>
 

@@ -4,6 +4,7 @@ import { inputClasses } from '~/components/ui/input';
 export type ToggleOption = {
   label: string;
   value: string;
+  notificationCount?: number;
 };
 
 type Props = {
@@ -28,7 +29,7 @@ export default function Toggle({ options, onSelect }: Props) {
         <button
           type="button"
           key={option.value}
-          className={`flex-1 py-1 px-6 transition-colors ${
+          className={`flex-1 py-1 px-6 transition-colors relative ${
             inputClasses.focusAndFocusVisible
           } ${
             option.value === selectedOption.value
@@ -38,6 +39,11 @@ export default function Toggle({ options, onSelect }: Props) {
           onClick={() => handleSelect(option)}
         >
           {option.label}
+          {option.notificationCount ? (
+            <div className="absolute top-1 right-1 bg-dark-pink text-egg-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+              {option.notificationCount}
+            </div>
+          ) : null}
         </button>
       ))}
     </div>
