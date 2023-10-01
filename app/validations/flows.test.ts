@@ -81,31 +81,81 @@ describe('Validating user flows', () => {
       nl: 'Waarde is verplicht',
     });
     expect(validationResult.data).toBe(undefined);
+
+    test('Check whether an article request is invalid because of a singular missing slug', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('slug.en', 'title-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '1,2');
+      formData.append('authorId', '1');
+      formData.append('image', '/path/to/image.jpg');
+
+      const request = new Request('http://localhost:3000/api/article', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateArticle(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.slug).toStrictEqual({
+        nl: 'Waarde is verplicht',
+      });
+      expect(validationResult.data).toBe(undefined);
+    });
   });
 
-  test('Check whether an article request is invalid because of a singular missing slug', async () => {
-    const formData = new FormData();
-    formData.append('id', '1');
-    formData.append('slug.en', 'title-1');
-    formData.append('summary.en', 'Summary 1');
-    formData.append('summary.nl', 'Samenvatting 1');
-    formData.append('content.en', 'Content 1');
-    formData.append('content.nl', 'Inhoud 1');
-    formData.append('categories', '1,2');
-    formData.append('authorId', '1');
-    formData.append('image', '/path/to/image.jpg');
+  describe('Category validation', () => {
+    test('Check whether a category request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Name 1');
+      formData.append('name.nl', 'Naam 1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
 
-    const request = new Request('http://localhost:3000/api/article', {
-      method: 'POST',
-      body: formData,
+      const request = new Request('http://localhost:3000/api/category', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateCategory(request);
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual({
+        name: { en: 'Name 1', nl: 'Naam 1' },
+        slug: { en: 'name-1', nl: 'naam-1' },
+        description: { en: 'Description 1', nl: 'Beschrijving 1' },
+      });
     });
 
-    const validationResult = await validationFlows.validateArticle(request);
+    test('Check whether a category request is invalid because of missing names', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
 
-    expect(validationResult.success).toBe(false);
-    expect(validationResult.errors!.slug).toStrictEqual({
-      nl: 'Waarde is verplicht',
+      const request = new Request('http://localhost:3000/api/category', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateCategory(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.name).toStrictEqual({
+        en: 'Waarde is verplicht',
+        nl: 'Waarde is verplicht',
+      });
+      expect(validationResult.data).toBe(undefined);
     });
-    expect(validationResult.data).toBe(undefined);
   });
 });
