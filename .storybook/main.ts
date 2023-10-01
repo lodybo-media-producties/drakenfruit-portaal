@@ -28,6 +28,10 @@ const config: StorybookConfig = {
     defaultName: 'Components',
   },
   viteFinal: async (config) => {
+    if (config.build) {
+      config.build.target = 'esnext';
+    }
+
     config.plugins?.push(tsconfigPaths());
     return config;
   },
