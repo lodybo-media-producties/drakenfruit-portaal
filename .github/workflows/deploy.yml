@@ -138,6 +138,18 @@ jobs:
         with:
           cmd: 'jq .version package.json -r'
 
+      - name: 🐳 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Setup cache
+      - name: ⚡️ Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
@@ -149,7 +161,7 @@ jobs:
           tags: registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}),
             registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest
           secrets: |
-            "PROD_DATABSE_URL=${{ secrets.PROD_DATABSE_URL }}"
+            "PROD_DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
 
