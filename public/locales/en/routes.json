@@ -1,0 +1,52 @@
+{
+  "Articles": {
+    "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Article created",
+          "Message": "The article was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Article updated",
+          "Message": "The article was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Article Not Found": "The article could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Article deleted",
+          "Message": "The article was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Artikelen | Drakenfruit"
+      }
+    },
+    "New": {
+      "Meta": {
+        "Title": "New article | Drakenfruit"
+      },
+      "Back Link Label": "Back to articles"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit article | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Article Not Found": "The article could not be found"
+      },
+      "Back Link Label": "Back to articles"
+    }
+  }
+}

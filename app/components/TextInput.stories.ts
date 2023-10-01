@@ -12,6 +12,20 @@ type Story = StoryObj<typeof TextInput>;
 
 export const Default: Story = {
   args: {
-    label: 'Label for input',
+    label: 'Please enter your name',
+  },
+};
+
+export const Required: Story = {
+  args: {
+    label: 'Please enter your name',
+    required: true,
+  },
+};
+
+export const WithError: Story = {
+  args: {
+    label: 'Please enter your name',
+    error: 'This is a required field',
   },
 };

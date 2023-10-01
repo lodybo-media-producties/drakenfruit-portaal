@@ -10,6 +10,9 @@ const meta: Meta<typeof SearchInput> = {
       action: 'search',
     },
   },
+  parameters: {
+    deepControls: { enabled: false },
+  },
 };
 
 export default meta;

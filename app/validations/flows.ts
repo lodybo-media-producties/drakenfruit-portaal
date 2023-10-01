@@ -1,10 +1,13 @@
 import type {
+  ArticleData,
+  ArticleErrors,
   LoginData,
   LoginErrors,
   ValidationResult,
 } from '~/types/Validations';
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
+import { isDefined } from './checks';
 
 export async function validateLogin(
   request: Request
@@ -53,6 +56,62 @@ export async function validateLogin(
       password: password as string,
       redirectTo,
       remember,
+    },
+  };
+}
+
+export async function validateArticle(
+  request: Request
+): Promise<ValidationResult<ArticleData, ArticleErrors>> {
+  const formData = await request.formData();
+
+  const title = {
+    en: formData.get('title.en') as string,
+    nl: formData.get('title.nl') as string,
+  };
+  const slug = {
+    en: formData.get('slug.en') as string,
+    nl: formData.get('slug.nl') as string,
+  };
+  const summary = {
+    en: formData.get('summary.en') as string,
+    nl: formData.get('summary.nl') as string,
+  };
+  const content = {
+    en: formData.get('content.en') as string,
+    nl: formData.get('content.nl') as string,
+  };
+  const authorId = formData.get('authorId');
+
+  const errors: ArticleErrors = {};
+
+  errors.title = checks.checkLocalisedValue(title);
+  errors.slug = checks.checkLocalisedValue(slug);
+  errors.summary = checks.checkLocalisedValue(summary);
+  errors.content = checks.checkLocalisedValue(content);
+  if (!isDefined(authorId)) {
+    errors.authorId = {
+      en: 'Author is required',
+      nl: 'Auteur is verplicht',
+    };
+  }
+
+  if (Object.keys(errors).some((key) => errors[key as keyof ArticleErrors])) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      title,
+      slug,
+      summary,
+      content,
+      categories: (formData.get('categories') as string)
+        .split(',')
+        .filter(Boolean),
+      authorId: authorId as string,
+      image: formData.get('image') as string,
     },
   };
 }

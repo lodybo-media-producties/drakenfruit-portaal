@@ -1,28 +1,52 @@
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
 import { useTranslation } from 'react-i18next';
+import Message from '~/components/Message';
 
 type Props = {
+  id?: string;
+
   /**
    * The initial value of the editor.
    */
   initialValue?: string;
+
+  value?: string;
 
   /**
    * The name of the textarea that will be used to store the editor's content.
    * This will be used when submitting the form.
    */
   name: string;
+
+  onChange?: (content: string) => void;
+
+  error?: string;
 };
 
-export default function Editor({ initialValue, name }: Props) {
+export default function Editor({
+  id,
+  initialValue,
+  value,
+  name,
+  onChange,
+  error,
+}: Props) {
   const { i18n } = useTranslation();
 
   return (
     <>
+      <Message variant="error" message={error} />
       <TinyMCEEditor
+        id={id}
         tinymceScriptSrc="/tinymce/tinymce.min.js"
         textareaName={name}
         initialValue={initialValue}
+        value={value}
+        onEditorChange={(content) => {
+          if (onChange) {
+            onChange(content);
+          }
+        }}
         init={{
           height: 500,
           width: '100%',

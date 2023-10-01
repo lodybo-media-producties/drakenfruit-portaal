@@ -16,6 +16,13 @@ export const Default: Story = {
   },
 };
 
+export const Required: Story = {
+  args: {
+    label: 'E-mailadres',
+    required: true,
+  },
+};
+
 export const WithError: Story = {
   args: {
     label: 'E-mailadres',

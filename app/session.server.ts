@@ -3,6 +3,8 @@ import invariant from 'tiny-invariant';
 
 import type { User } from '~/models/user.server';
 import { getUserById } from '~/models/user.server';
+import { type Role } from '@prisma/client';
+import { isAllowedForRole } from '~/utils/roles';
 
 invariant(process.env.SESSION_SECRET, 'SESSION_SECRET must be set');
 
@@ -22,6 +24,10 @@ const USER_SESSION_KEY = 'userId';
 export async function getSession(request: Request) {
   const cookie = request.headers.get('Cookie');
   return sessionStorage.getSession(cookie);
+}
+
+export async function commitSession(session: any) {
+  return sessionStorage.commitSession(session);
 }
 
 export async function getUserId(
@@ -63,9 +69,38 @@ export async function requireUser(request: Request) {
   throw await logout(request);
 }
 
+/**
+ * @deprecated Use requireUserWithMinimumRole instead
+ * @param request
+ */
 export async function requireAdmin(request: Request) {
-  // const user = await requireUser(request);
-  // if (user.role === 'ADMIN') return user;
+  console.warn(
+    'requireAdmin is deprecated. Use requireUserWithMinimumRole instead.'
+  );
+  const user = await requireUser(request);
+  if (user.role === 'ADMIN') return user;
+
+  throw redirect('/account');
+}
+
+export async function requireUserWithMinimumRole(
+  role: Role,
+  request: Request,
+  fallbackRedirect = '/account'
+) {
+  const user = await requireUser(request);
+  if (isAllowedForRole(role, user)) return user;
+
+  throw redirect(fallbackRedirect);
+}
+
+// Handy for when you want to allow admins to access a user's data.
+export async function requireAdminOrSelf(
+  request: Request,
+  userId: string
+): Promise<User> {
+  const user = await requireUser(request);
+  if (user.role === 'ADMIN' || user.id === userId) return user;
 
   throw redirect('/account');
 }

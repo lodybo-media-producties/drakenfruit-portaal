@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
 import * as validationChecks from '~/validations/checks';
-import * as validationFlows from '~/validations/flows';
+import { checkLocalisedValue } from '~/validations/checks';
 
 describe('Validations', () => {
   describe('Generic validations', () => {
@@ -52,20 +52,41 @@ describe('Validations', () => {
     });
   });
 
-  describe('Login validation', () => {
-    test('Check whether a login request is valid or not', async () => {
-      const formData = new FormData();
-      formData.append('email', 'lody@drakenfruit.com');
-      formData.append('password', '123456789');
+  describe('Testing localised (form data) values', () => {
+    test('Check whether a localised value is valid', () => {
+      expect(
+        checkLocalisedValue({
+          en: 'English value',
+          nl: 'Nederlandse waarde',
+        })
+      ).toBe(undefined);
+    });
 
-      const loginRequest = new Request('http://localhost:3000/login', {
-        method: 'POST',
-        body: formData,
+    test('Check whether a localised value is invalid because the English test is missing', () => {
+      expect(
+        checkLocalisedValue({
+          nl: 'Nederlandse waarde',
+        })
+      ).toStrictEqual({
+        en: 'Waarde is verplicht',
       });
+    });
 
-      const validationResult =
-        await validationFlows.validateLogin(loginRequest);
-      expect(validationResult.success).toBe(true);
+    test('Check whether a localised value is invalid because the Dutch test is missing', () => {
+      expect(
+        checkLocalisedValue({
+          en: 'English value',
+        })
+      ).toStrictEqual({
+        nl: 'Waarde is verplicht',
+      });
+    });
+
+    test('Check whether a localised value is invalid because both tests are missing', () => {
+      expect(checkLocalisedValue({ title: {} })).toStrictEqual({
+        en: 'Waarde is verplicht',
+        nl: 'Waarde is verplicht',
+      });
     });
   });
 });

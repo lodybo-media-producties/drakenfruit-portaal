@@ -11,6 +11,7 @@ describe('Roles', () => {
     locale: 'en',
     role: 'PROJECTLEADER',
     organisationId: '1',
+    avatarUrl: '',
     createdAt: '',
     updatedAt: '',
   };

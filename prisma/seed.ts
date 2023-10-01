@@ -8,6 +8,8 @@ async function seed() {
   console.log(`Seeding database...`);
 
   await createOrganisations();
+  await createCategories();
+  await createArticles();
 
   console.log(`Database has been seeded. 🌱`);
 }
@@ -72,7 +74,7 @@ async function createOrganisations() {
             email: 'simone@drakenfruit.com',
             locale: 'nl',
             firstName: 'Simone',
-            lastName: faker.person.lastName(),
+            lastName: 'Leenders',
             role: 'OFFICEMANAGER',
             password: {
               create: {
@@ -150,6 +152,135 @@ async function createOrganisations() {
       },
       projects: {
         create: [],
+      },
+    },
+  });
+}
+
+function createCategories() {
+  console.log('Creating categories...');
+  return prisma.category.createMany({
+    data: [
+      {
+        name: {
+          nl: 'Diversiteit',
+          en: 'Diversity',
+        },
+        slug: {
+          nl: 'diversiteit',
+          en: 'diversity',
+        },
+        description: {
+          nl: 'Diversiteit is een belangrijk onderwerp.',
+          en: 'Diversity is an important topic.',
+        },
+      },
+      {
+        name: {
+          nl: 'Inclusie',
+          en: 'Inclusion',
+        },
+        slug: {
+          nl: 'inclusie',
+          en: 'inclusion',
+        },
+        description: {
+          nl: 'Inclusie is een belangrijk onderwerp.',
+          en: 'Inclusion is an important topic.',
+        },
+      },
+    ],
+  });
+}
+
+async function createArticles() {
+  console.log('Creating articles...');
+
+  console.log('Fetching Kaylee from the database...');
+  const kaylee = await prisma.user.findUnique({
+    where: {
+      email: 'kaylee@drakenfruit.com',
+    },
+  });
+
+  console.log('Fetching Simone from the database...');
+  const simone = await prisma.user.findUnique({
+    where: {
+      email: 'simone@drakenfruit.com',
+    },
+  });
+
+  if (!kaylee || !simone) {
+    throw new Error('Kaylee or Simone not found');
+  }
+
+  console.log('Fetching categories from the database...');
+  const categories = await prisma.category.findMany();
+
+  console.log('Creating first article...');
+  await prisma.article.create({
+    data: {
+      title: {
+        nl: 'Diversiteit en Inclusie',
+        en: 'Diversity and Inclusion',
+      },
+      slug: {
+        nl: 'diversiteit-en-inclusie',
+        en: 'diversity-and-inclusion',
+      },
+      summary: {
+        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
+        en: 'Diversity and inclusion are important topics.',
+      },
+      content: {
+        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
+        en: 'Diversity and inclusion are important topics.',
+      },
+      author: {
+        connect: {
+          id: kaylee!.id,
+        },
+      },
+      categories: {
+        connect: [
+          {
+            id: categories[0].id,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Creating second article...');
+  await prisma.article.create({
+    data: {
+      title: {
+        nl: 'Inclusie en Diversiteit',
+        en: 'Inclusion and Diversity',
+      },
+      slug: {
+        nl: 'inclusie-en-diversiteit',
+        en: 'inclusion-and-diversity',
+      },
+      summary: {
+        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
+        en: 'Inclusion and diversity are important topics.',
+      },
+      content: {
+        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
+        en: 'Inclusion and diversity are important topics.',
+      },
+      author: {
+        connect: {
+          id: simone!.id,
+        },
+      },
+      categories: {
+        connect: [
+          {
+            id: categories[1].id,
+          },
+        ],
       },
     },
   });

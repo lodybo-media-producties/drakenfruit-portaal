@@ -12,4 +12,12 @@ export {
   faFileLines,
   faFileVideo,
   faFileZipper,
+  faUserGear,
+  faCircleUser,
+  faPen,
+  faTrashAlt,
+  faSort,
+  faTimes,
+  faArrowLeft,
+  faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
