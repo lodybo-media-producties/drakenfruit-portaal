@@ -7,10 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { requireUserWithMinimumRole } from '~/session.server';
 import Button from '~/components/Button';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import {
-  convertArticleListToTableData,
-  convertCategoryListToTableData,
-} from '~/utils/content';
+import { convertCategoryListToTableData } from '~/utils/content';
 import Table from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
 import i18nextServer from '~/i18next.server';

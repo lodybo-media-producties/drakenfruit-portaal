@@ -1,5 +1,5 @@
-import { ArticleFormValues } from '~/types/Article';
-import { CategoryFormValues } from '~/types/Category';
+import { type ArticleFormValues } from '~/types/Article';
+import { type CategoryFormValues } from '~/types/Category';
 
 interface BaseValidationResult {
   success: boolean;

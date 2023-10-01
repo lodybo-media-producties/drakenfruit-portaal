@@ -14,7 +14,7 @@ import {
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
-import { CategoryFormValues } from '~/types/Category';
+import { type CategoryFormValues } from '~/types/Category';
 
 describe('Content utilities', () => {
   describe('Articles', () => {

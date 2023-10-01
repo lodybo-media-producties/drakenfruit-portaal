@@ -8,13 +8,8 @@ import { useTranslation } from 'react-i18next';
 import invariant from 'tiny-invariant';
 import CategoryMutationForm from '~/components/CategoryMutationForm';
 import { requireUserWithMinimumRole } from '~/session.server';
-import { getUsers } from '~/models/user.server';
-import { type Author } from '~/components/AuthorSelector';
 import i18next from '~/i18next.server';
 import { getCategoryById } from '~/models/categories.server';
-import { convertCategoryFormValuesToFormData } from '~/utils/content';
-import { getEligibleAuthors } from '~/utils/users';
-import { convertPrismaCategoriesToCategorySelection } from '~/utils/categories';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUserWithMinimumRole('CONSULTANT', request);
