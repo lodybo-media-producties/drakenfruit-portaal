@@ -158,7 +158,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}),
+          tags: registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:${{ steps.version.outputs.value }},
             registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest
           secrets: |
             "PROD_DATABASE_URL=${{ secrets.PROD_DATABASE_URL }}"
