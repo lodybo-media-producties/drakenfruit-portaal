@@ -1,0 +1,52 @@
+{
+  "SearchFilters": {
+    "ButtonTitle": "Subjects",
+    "Accessibility": "Accessibility",
+    "Measurements": "Measurements",
+    "Project Management": "Project Management",
+    "Tools": "Tools",
+    "Webinars": "Webinars"
+  },
+  "AuthorSelector": {
+    "Placeholder": "Author",
+    "Trigger Label": "Select an author",
+    "Not Found Message": "No authors found"
+  },
+  "CategoryInput": {
+    "Placeholder": "Category",
+    "Trigger Label": "Select a category",
+    "Not Found Message": "No categories found",
+    "Create Option": "Create category",
+    "Selected Categories Label_one": "Selected category: {{categories}}",
+    "Selected Categories Label_other": "Selected categories: {{categories}}"
+  },
+  "ImageInput": {
+    "Button Label": "Choose an image",
+    "Remove Image Label": "Remove image",
+    "Image Selected Label_one": "Selected image: ",
+    "Image Selected Label_other": "Selected images: "
+  },
+  "ArticleMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Dutch",
+      "English": "English"
+    },
+    "Title Label": "Title",
+    "Slug Label": "Slug",
+    "Summary Label": "Summary",
+    "Author Label": "Written by",
+    "Content Label": "Content",
+    "Category Label": "Select one or more categories",
+    "Image Label": "Article Image",
+    "Save Button Label": "Save",
+    "Publish Button Label": "Publish",
+    "Edit Button Label": "Save",
+    "Edit and Publish Button Label": "Save Changes and Publish"
+  },
+  "Delete Item Dialog": {
+    "Title": "Delete item",
+    "Message": "Are you sure you want to delete this item?",
+    "Cancel Button Label": "Cancel",
+    "Delete Button Label": "Delete"
+  }
+}

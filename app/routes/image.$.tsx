@@ -16,7 +16,7 @@ import type { ReadStream } from 'fs';
 import * as fs from 'fs';
 import path from 'path';
 import { PassThrough } from 'stream';
-import type { LoaderArgs } from '@remix-run/node';
+import type { LoaderFunctionArgs } from '@remix-run/node';
 import type { FitEnum } from 'sharp';
 import sharp from 'sharp';
 
@@ -32,7 +32,7 @@ interface ImageRequestParams {
   root: string;
 }
 
-export const loader = async ({ params, request }: LoaderArgs) => {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // extract all the parameters from the url
   const { src, width, height, fit, root } = extractParams(params, request);
 
@@ -48,7 +48,7 @@ export const loader = async ({ params, request }: LoaderArgs) => {
 };
 
 function extractParams(
-  params: LoaderArgs['params'],
+  params: LoaderFunctionArgs['params'],
   request: Request
 ): ImageRequestParams {
   const src = params['*'] as string;

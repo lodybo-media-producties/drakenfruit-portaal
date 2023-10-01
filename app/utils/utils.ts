@@ -41,7 +41,7 @@ export function useMatchesData(
     () => matchingRoutes.find((route) => route.id === id),
     [matchingRoutes, id]
   );
-  return route?.data;
+  return route?.data as Record<string, unknown>;
 }
 
 function isUser(user: any): user is User {
@@ -67,6 +67,7 @@ export function useUser(): User {
 }
 
 export function validateEmail(email: unknown): email is string {
+  console.warn('deprecated email validation');
   return typeof email === 'string' && email.length > 3 && email.includes('@');
 }
 

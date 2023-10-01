@@ -7,15 +7,68 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id    String @id @default(cuid())
-  email String @unique
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
+enum Role {
+  MAINTAINER
+  ADMIN
+  OFFICEMANAGER
+  CONSULTANT
+  PROJECTLEADER
+}
+
+model Organisation {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+
+  projects Project[]
+
+  users User[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
+model Project {
+  id String @id @default(cuid())
+
+  name        String
+  description String
+
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  organisationId String
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id String @id @default(cuid())
+
+  avatarUrl String?
+
+  email    String    @unique
   password Password?
-  notes    Note[]
+
+  firstName String
+  lastName  String
+  role      Role
+  locale    String
+
+  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  organisationId String
+
+  projects Project[]
+  Article  Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Password {
@@ -25,14 +78,92 @@ model Password {
   userId String @unique
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
+model Article {
+  id String @id @default(cuid())
+
+  image String?
+
+  published Boolean @default(true)
+
+  /// [Translated]
+  title Json
+
+  /// [Translated]
+  content Json
+
+  /// [Translated]
+  summary Json
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String
+
+  categories Category[]
+
+  /// [Translated]
+  slug Json
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+model Tool {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  name Json
+
+  slug String
+
+  /// [Translated]
+  summary Json
+
+  /// [Translated]
+  content Json
+
+  downloadUrl String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Webinar {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  title Json
+
+  /// [Translated]
+  description Json
+
+  link String
+
+  /// [Translated]
+  transcript Json?
+
+  /// [Translated]
+  slides Json?
+
+  /// [Translated]
+  tools Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id String @id @default(cuid())
+
+  /// [Translated]
+  name Json
+
+  /// [Translated]
+  description Json
+
+  /// [Translated]
+  slug Json
+
+  Articles Article[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
