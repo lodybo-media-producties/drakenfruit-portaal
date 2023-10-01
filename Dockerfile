@@ -50,8 +50,8 @@ COPY --from=build /drakenfruit-portaal/public /drakenfruit-portaal/public
 COPY --from=deps /drakenfruit-portaal/public/tinymce /drakenfruit-portaal/public/tinymce
 ADD . .
 
-RUN --mount=type=secret,id=DATABASE_URL \
-  DATABASE_URL=$(cat /run/secrets/DATABASE_URL)
+RUN --mount=type=secret,id=PROD_DATABASE_URL \
+  DATABASE_URL=$(cat /run/secrets/PROD_DATABASE_URL)
 
 RUN npx prisma generate
 RUN npx prisma migrate deploy
