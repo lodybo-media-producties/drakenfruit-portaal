@@ -1,5 +1,6 @@
 {
-  "name": "drakenfruit-portaal-c524",
+  "name": "drakenfruit-portaal",
+  "version": "0.1.0",
   "private": true,
   "sideEffects": false,
   "scripts": {
