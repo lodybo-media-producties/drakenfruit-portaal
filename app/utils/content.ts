@@ -5,6 +5,7 @@ import {
 import { type Columns, type TableData } from '~/components/Table';
 import { type ArticleFormValues } from '~/components/ArticleMutationForm';
 import { type SupportedLanguages } from '~/i18n';
+import { Category } from '~/models/categories.server';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -125,4 +126,24 @@ export function convertPrismaArticleToArticleFormValues(
     image: article.image,
     published: article.published,
   };
+}
+
+export function convertCategoryListToTableData(
+  categories: Category[],
+  lang: SupportedLanguages
+): [Columns, TableData[]] {
+  const columns: Columns = ['Naam', 'Slug', 'Beschrijving'];
+
+  const data: TableData[] = categories.map((category) => {
+    return {
+      id: category.id,
+      data: new Map([
+        ['Naam', category.name[lang]],
+        ['Slug', category.slug[lang]],
+        ['Beschrijving', category.description[lang]],
+      ]),
+    };
+  });
+
+  return [columns, data];
 }

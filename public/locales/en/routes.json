@@ -30,7 +30,10 @@
     "Index": {
       "Meta": {
         "Title": "Artikelen | Drakenfruit"
-      }
+      },
+      "Title": "Articles",
+      "No Articles": "No articles were found",
+      "New Article": "New article"
     },
     "New": {
       "Meta": {
@@ -47,6 +50,43 @@
         "Article Not Found": "The article could not be found"
       },
       "Back Link Label": "Back to articles"
+    }
+  },
+  "Categories": {
+    "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Category created",
+          "Message": "The category was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Category updated",
+          "Message": "The category was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Category Not Found": "The category could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Category deleted",
+          "Message": "The category was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Categories | Drakenfruit"
+      },
+      "Title": "Categories",
+      "No Categories": "No categories were found",
+      "New Category": "New category"
     }
   }
 }
