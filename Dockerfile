@@ -12,7 +12,7 @@ FROM base as deps
 
 WORKDIR /drakenfruit-portaal
 
-ADD package.json package-lock.json .npmrc ./
+ADD package.json package-lock.json .npmrc postinstall.js ./
 RUN npm install --include=dev
 
 # Setup production node_modules
@@ -47,6 +47,7 @@ COPY --from=build /drakenfruit-portaal/node_modules/.prisma /drakenfruit-portaal
 
 COPY --from=build /drakenfruit-portaal/build /drakenfruit-portaal/build
 COPY --from=build /drakenfruit-portaal/public /drakenfruit-portaal/public
+COPY --from=deps /drakenfruit-portaal/public/tinymce /drakenfruit-portaal/public/tinymce
 ADD . .
 
 CMD ["npm", "start"]
