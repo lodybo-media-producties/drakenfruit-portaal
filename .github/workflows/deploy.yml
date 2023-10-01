@@ -138,12 +138,27 @@ jobs:
         with:
           cmd: 'jq .version package.json -r'
 
-
-      - name: Build container image
-        run: docker build -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}) -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest .
-
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
-      - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/lodybo-registry/drakenfruit-portaal --all-tags
+      - name: 🐳 Docker build
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}),
+            registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest
+          secrets: |
+            "PROD_DATABSE_URL=${{ secrets.PROD_DATABSE_URL }}"
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,mode=max,dest=/tmp/.buildx-cache-new
+
+      # This ugly bit is necessary if you don't want your cache to grow forever
+      # till it hits GitHub's limit of 5GB.
+      # Temp fix
+      # https://github.com/docker/build-push-action/issues/252
+      # https://github.com/moby/buildkit/issues/1896
+      - name: 🚚 Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
