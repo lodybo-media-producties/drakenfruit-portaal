@@ -1,5 +1,5 @@
 # base node image
-FROM node:18-bullseye-slim as base
+FROM --platform=linux/amd64 node:18-bullseye-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production

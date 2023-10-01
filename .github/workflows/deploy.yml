@@ -140,10 +140,10 @@ jobs:
 
 
       - name: Build container image
-        run: docker build -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}) .
+        run: docker build -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}) registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest .
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
 
       - name: Push image to DigitalOcean Container Registry
-        run: docker push registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }})
+        run: docker push registry.digitalocean.com/lodybo-registry/drakenfruit-portaal --all-tags
