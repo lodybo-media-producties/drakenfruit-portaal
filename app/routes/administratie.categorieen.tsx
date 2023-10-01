@@ -9,7 +9,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({ user });
 }
 
-export default function ArticlesRoute() {
+export default function CategoriesRoute() {
   const { user } = useLoaderData<typeof loader>();
 
   return <AccountLayout user={user} />;

@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from '@remix-run/react';
 import slugify from '@sindresorhus/slugify';
-import { type SerializedArticle as Article } from '~/models/articles.server';
-import { type ArticleValidationErrors } from '~/types/Article';
+import {
+  type ArticleFormValues,
+  type ArticleValidationErrors,
+} from '~/types/Article';
 import TextInput from '~/components/TextInput';
 import Editor from '~/components/Editor';
 import Label from '~/components/Label';
@@ -24,15 +26,6 @@ import { type User } from '~/models/user.server';
 import { type APIResponse } from '~/types/Responses';
 import Message from '~/components/Message';
 import { type ArticleErrors } from '~/types/Validations';
-
-export type ArticleFormValues = Omit<
-  Article,
-  'id' | 'published' | 'createdAt' | 'updatedAt'
-> & {
-  id?: string;
-  categories: string[];
-  published?: boolean;
-};
 
 type Props = {
   mode: 'create' | 'update';

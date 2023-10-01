@@ -48,5 +48,16 @@
     "Message": "Are you sure you want to delete this item?",
     "Cancel Button Label": "Cancel",
     "Delete Button Label": "Delete"
+  },
+  "CategoryMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Dutch",
+      "English": "English"
+    },
+    "Name Label": "Name",
+    "Slug Label": "Slug",
+    "Description Label": "Description",
+    "Save Button Label": "Save",
+    "Edit Button Label": "Edit"
   }
 }

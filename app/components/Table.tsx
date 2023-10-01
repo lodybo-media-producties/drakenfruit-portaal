@@ -14,9 +14,15 @@ type Props = {
   columns: string[];
   tableData: TableData[];
   onEdit: (id: string) => void;
+  deletionEndpoint: string;
 };
 
-export default function Table({ tableData, columns, onEdit }: Props) {
+export default function Table({
+  tableData,
+  columns,
+  onEdit,
+  deletionEndpoint,
+}: Props) {
   return (
     <div>
       <table className="table-fixed w-full border-collapse border border-light-pink">
@@ -54,7 +60,7 @@ export default function Table({ tableData, columns, onEdit }: Props) {
 
                 <DeleteItemDialog
                   itemToDelete={{ id, name: data.get('Titel') ?? '' }}
-                  deletionEndpoint="/api/articles"
+                  deletionEndpoint={deletionEndpoint}
                 />
               </td>
             </tr>

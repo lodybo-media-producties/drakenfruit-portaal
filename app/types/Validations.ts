@@ -1,4 +1,5 @@
-import { type ArticleFormValues } from '~/components/ArticleMutationForm';
+import { type ArticleFormValues } from '~/types/Article';
+import { type CategoryFormValues } from '~/types/Category';
 
 interface BaseValidationResult {
   success: boolean;
@@ -37,4 +38,10 @@ export type ArticleData = ArticleFormValues;
 
 export type ArticleErrors = Partial<
   Record<keyof ArticleFormValues, { nl?: string; en?: string }>
+>;
+
+export type CategoryData = CategoryFormValues;
+
+export type CategoryErrors = Partial<
+  Record<keyof CategoryFormValues, { nl?: string; en?: string }>
 >;

@@ -20,4 +20,5 @@ export {
   faTimes,
   faArrowLeft,
   faSpinner,
+  faTags,
 } from '@fortawesome/free-solid-svg-icons';

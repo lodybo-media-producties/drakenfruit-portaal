@@ -1,6 +1,8 @@
 import type {
   ArticleData,
   ArticleErrors,
+  CategoryData,
+  CategoryErrors,
   LoginData,
   LoginErrors,
   ValidationResult,
@@ -113,5 +115,39 @@ export async function validateArticle(
       authorId: authorId as string,
       image: formData.get('image') as string,
     },
+  };
+}
+
+export async function validateCategory(
+  request: Request
+): Promise<ValidationResult<CategoryData, CategoryErrors>> {
+  const formData = await request.formData();
+
+  const name = {
+    en: formData.get('name.en') as string,
+    nl: formData.get('name.nl') as string,
+  };
+  const slug = {
+    en: formData.get('slug.en') as string,
+    nl: formData.get('slug.nl') as string,
+  };
+  const description = {
+    en: formData.get('description.en') as string,
+    nl: formData.get('description.nl') as string,
+  };
+
+  const errors: CategoryErrors = {};
+
+  errors.name = checks.checkLocalisedValue(name);
+  errors.slug = checks.checkLocalisedValue(slug);
+  errors.description = checks.checkLocalisedValue(description);
+
+  if (Object.keys(errors).some((key) => errors[key as keyof CategoryErrors])) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: { name, slug, description },
   };
 }
