@@ -3,9 +3,10 @@ import {
   type getArticleById,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
-import { type ArticleFormValues } from '~/components/ArticleMutationForm';
 import { type SupportedLanguages } from '~/i18n';
-import { Category } from '~/models/categories.server';
+import { type Category } from '~/models/categories.server';
+import { type ArticleFormValues } from '~/types/Article';
+import { type CategoryFormValues } from '~/types/Category';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -146,4 +147,49 @@ export function convertCategoryListToTableData(
   });
 
   return [columns, data];
+}
+
+export function convertCategoryFormValuesToFormData(
+  categoryFormValues: CategoryFormValues
+): FormData {
+  const formData = new FormData();
+
+  formData.append('name.en', categoryFormValues.name.en);
+  formData.append('name.nl', categoryFormValues.name.nl);
+  formData.append('slug.en', categoryFormValues.slug.en);
+  formData.append('slug.nl', categoryFormValues.slug.nl);
+  formData.append('description.en', categoryFormValues.description.en);
+  formData.append('description.nl', categoryFormValues.description.nl);
+
+  if (categoryFormValues.id) {
+    formData.append('id', categoryFormValues.id);
+  }
+
+  return formData;
+}
+
+export function convertFormDataToCategoryFormValues(
+  formData: FormData
+): CategoryFormValues {
+  const categoryFormValues: CategoryFormValues = {
+    name: {
+      en: formData.get('name.en') as string,
+      nl: formData.get('name.nl') as string,
+    },
+    slug: {
+      en: formData.get('slug.en') as string,
+      nl: formData.get('slug.nl') as string,
+    },
+    description: {
+      en: formData.get('description.en') as string,
+      nl: formData.get('description.nl') as string,
+    },
+  };
+
+  const id = formData.get('id') as string | null;
+  if (id) {
+    categoryFormValues.id = id;
+  }
+
+  return categoryFormValues;
 }

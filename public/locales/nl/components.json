@@ -48,5 +48,16 @@
     "Message": "Weet je zeker dat je dit item wilt verwijderen?",
     "Cancel Button Label": "Annuleren",
     "Delete Button Label": "Verwijderen"
+  },
+  "CategoryMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Nederlands",
+      "English": "Engels"
+    },
+    "Name Label": "Naam",
+    "Slug Label": "Slug",
+    "Description Label": "Beschrijving",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken"
   }
 }

@@ -11,3 +11,7 @@ export function getCategories() {
     orderBy: { name: 'asc' },
   });
 }
+
+export function getCategoryById(id: Category['id']) {
+  return prisma.category.findUniqueOrThrow({ where: { id } });
+}

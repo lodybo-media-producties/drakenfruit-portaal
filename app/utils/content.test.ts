@@ -9,9 +9,12 @@ import {
   convertFormDataToArticleFormValues,
   convertPrismaArticleToArticleFormValues,
   convertCategoryListToTableData,
+  convertCategoryFormValuesToFormData,
+  convertFormDataToCategoryFormValues,
 } from '~/utils/content';
-import { type ArticleFormValues } from '~/components/ArticleMutationForm';
-import { Category } from '~/models/categories.server';
+import { type Category } from '~/models/categories.server';
+import { type ArticleFormValues } from '~/types/Article';
+import { CategoryFormValues } from '~/types/Category';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -309,6 +312,47 @@ describe('Content utilities', () => {
           ]),
         },
       ]);
+    });
+
+    test('Convert a CategoryFormValue into FormData object', () => {
+      const category: Category = {
+        id: '1',
+        name: { en: 'Category 1', nl: 'Categorie 1' },
+        slug: { en: 'category-1', nl: 'categorie-1' },
+        description: { en: 'Description 1', nl: 'Beschrijving 1' },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const formData = convertCategoryFormValuesToFormData(category);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name.en')).toEqual('Category 1');
+      expect(formData.get('name.nl')).toEqual('Categorie 1');
+      expect(formData.get('slug.en')).toEqual('category-1');
+      expect(formData.get('slug.nl')).toEqual('categorie-1');
+      expect(formData.get('description.en')).toEqual('Description 1');
+      expect(formData.get('description.nl')).toEqual('Beschrijving 1');
+    });
+  });
+
+  test('Convert FormData to CategoryFormValue', () => {
+    const formData = new FormData();
+    formData.append('id', '1');
+    formData.append('name.en', 'Category 1');
+    formData.append('name.nl', 'Categorie 1');
+    formData.append('slug.en', 'category-1');
+    formData.append('slug.nl', 'categorie-1');
+    formData.append('description.en', 'Description 1');
+    formData.append('description.nl', 'Beschrijving 1');
+
+    const category = convertFormDataToCategoryFormValues(formData);
+
+    expect(category).toEqual<CategoryFormValues>({
+      id: '1',
+      name: { en: 'Category 1', nl: 'Categorie 1' },
+      slug: { en: 'category-1', nl: 'categorie-1' },
+      description: { en: 'Description 1', nl: 'Beschrijving 1' },
     });
   });
 });

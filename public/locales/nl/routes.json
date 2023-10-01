@@ -87,6 +87,12 @@
       "Title": "Categorieën",
       "No Categories": "Er zijn nog geen categorieën aangemaakt.",
       "New Category": "Nieuwe categorie"
+    },
+    "New": {
+      "Meta": {
+        "Title": "Nieuwe categorie | Drakenfruit"
+      },
+      "Back Link Label": "Terug naar overzicht"
     }
   }
 }

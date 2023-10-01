@@ -87,6 +87,12 @@
       "Title": "Categories",
       "No Categories": "No categories were found",
       "New Category": "New category"
+    },
+    "New": {
+      "Meta": {
+        "Title": "New category | Drakenfruit"
+      },
+      "Back Link Label": "Back to categories"
     }
   }
 }
