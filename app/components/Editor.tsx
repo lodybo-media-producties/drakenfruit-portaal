@@ -1,5 +1,6 @@
 import { Editor as TinyMCEEditor } from '@tinymce/tinymce-react';
 import { useTranslation } from 'react-i18next';
+import Message from '~/components/Message';
 
 type Props = {
   id?: string;
@@ -18,6 +19,8 @@ type Props = {
   name: string;
 
   onChange?: (content: string) => void;
+
+  error?: string;
 };
 
 export default function Editor({
@@ -26,11 +29,13 @@ export default function Editor({
   value,
   name,
   onChange,
+  error,
 }: Props) {
   const { i18n } = useTranslation();
 
   return (
     <>
+      <Message variant="error" message={error} />
       <TinyMCEEditor
         id={id}
         tinymceScriptSrc="/tinymce/tinymce.min.js"

@@ -37,7 +37,7 @@ export default function ImageInput({
         }
       };
     }
-  }, []);
+  }, [onChange]);
 
   const toggleFilePicker = () => {
     if (ref.current) {

@@ -8,7 +8,6 @@ import type {
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
 import { isDefined } from './checks';
-import { SupportedLanguages } from '~/i18n';
 
 export async function validateLogin(
   request: Request

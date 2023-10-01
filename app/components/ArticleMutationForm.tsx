@@ -317,6 +317,7 @@ export default function ArticleMutationForm({
           name="content"
           value={getContent()}
           onChange={handleContentChange}
+          error={getLocalisedError('content')}
         />
       </Label>
 
