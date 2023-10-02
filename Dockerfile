@@ -51,7 +51,7 @@ COPY --from=deps /drakenfruit-portaal/public/tinymce /drakenfruit-portaal/public
 ADD . .
 
 RUN --mount=type=secret,id=PROD_DATABASE_URL \
-  DATABASE_URL=$(cat /run/secrets/PROD_DATABASE_URL) \
+  export DATABASE_URL=$(cat /run/secrets/PROD_DATABASE_URL)
 
 RUN env
 RUN ls /run/secrets
