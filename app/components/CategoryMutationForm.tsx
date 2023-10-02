@@ -1,7 +1,4 @@
-import {
-  type CategoryFormValues,
-  type CategoryValidationErrors,
-} from '~/types/Category';
+import { type CategoryFormValues } from '~/types/Category';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from '@remix-run/react';
 import { type APIResponse } from '~/types/Responses';
@@ -18,13 +15,17 @@ import TextAreaInput from '~/components/TextAreaInput';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import Button from '~/components/Button';
+import Loader from '~/components/Loader';
+import { type Category } from '~/models/categories.server';
 
 type Props = {
   mode: 'create' | 'update';
   initialValues?: CategoryFormValues;
-  errors?: CategoryValidationErrors;
-  backLink: string;
-  backLinkLabel: string;
+  errors?: CategoryErrors;
+  backLink?: string;
+  backLinkLabel?: string;
+  onCreatedOrEdited?: (category: Category) => void;
+  noSubmit?: boolean;
 };
 
 export default function CategoryMutationForm({
@@ -33,12 +34,16 @@ export default function CategoryMutationForm({
   errors,
   backLink,
   backLinkLabel,
+  onCreatedOrEdited,
+  noSubmit,
 }: Props) {
   const { t } = useTranslation('components');
   const fetcher = useFetcher<APIResponse | CategoryErrors>();
 
   const [error, setError] = useState('');
-  const [formErrors, setFormErrors] = useState<CategoryErrors>();
+  const [formErrors, setFormErrors] = useState<CategoryErrors | undefined>(
+    errors
+  );
   const [lang, setLang] = useState<SupportedLanguages>('nl');
 
   const [enName, setEnName] = useState(initialValues?.name.en ?? '');
@@ -51,21 +56,6 @@ export default function CategoryMutationForm({
   const [nlDescription, setNlDescription] = useState(
     initialValues?.description.nl ?? ''
   );
-
-  useEffect(() => {
-    if (fetcher.data) {
-      if ('ok' in fetcher.data) {
-        const data = fetcher.data as APIResponse;
-
-        if (!data.ok) {
-          setError(data.message);
-        }
-      } else {
-        const data = fetcher.data as CategoryErrors;
-        setFormErrors(data);
-      }
-    }
-  }, [fetcher.data]);
 
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
@@ -146,13 +136,15 @@ export default function CategoryMutationForm({
     return convertCategoryFormValuesToFormData(data);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.MouseEvent
+  ) => {
     e.preventDefault();
 
     const data = generateFormDataFromCategoryValues();
     data.append(
-      'mode',
-      ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement)?.value
+      'successRedirect',
+      onCreatedOrEdited ? '' : '/administratie/categorieen'
     );
 
     fetcher.submit(data, {
@@ -200,8 +192,27 @@ export default function CategoryMutationForm({
 
   const isSubmitting = fetcher.state !== 'idle';
 
+  useEffect(() => {
+    if (fetcher.data) {
+      if ('ok' in fetcher.data) {
+        const data = fetcher.data as APIResponse<Category>;
+
+        if (!data.ok) {
+          setError(data.message);
+        } else {
+          if ('data' in data && onCreatedOrEdited) {
+            onCreatedOrEdited(data.data!);
+          }
+        }
+      } else {
+        const data = fetcher.data as CategoryErrors;
+        setFormErrors(data);
+      }
+    }
+  }, [fetcher.data, onCreatedOrEdited]);
+
   return (
-    <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
       <Message variant="error" message={error} />
 
       <Toggle options={getLanguageOptions()} onSelect={handleLangSelect} />
@@ -236,13 +247,29 @@ export default function CategoryMutationForm({
         error={getLocalisedError('description')}
       />
 
-      <div className="flex flex-row justify-between items-center">
-        <AnchorLink to={backLink}>
-          <Icon className="mr-1" name="arrow-left" /> {backLinkLabel}
-        </AnchorLink>
+      <div
+        className={`flex flex-row items-center ${
+          backLink && backLinkLabel ? 'justify-between' : 'justify-end'
+        }`}
+      >
+        {backLink && backLinkLabel ? (
+          <AnchorLink to={backLink}>
+            <Icon className="mr-1" name="arrow-left" /> {backLinkLabel}
+          </AnchorLink>
+        ) : null}
 
         <div className="flex flex-row gap-2">
-          <Button disabled={isSubmitting} primary type="submit">
+          {isSubmitting ? (
+            <div className="self-center">
+              <Loader />
+            </div>
+          ) : null}
+          <Button
+            disabled={isSubmitting}
+            primary
+            type={noSubmit ? 'button' : 'submit'}
+            onClick={(e) => (noSubmit ? handleSubmit(e) : null)}
+          >
             {mode === 'create'
               ? t('CategoryMutationForm.Save Button Label')
               : t('CategoryMutationForm.Edit Button Label')}
