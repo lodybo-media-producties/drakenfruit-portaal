@@ -53,9 +53,6 @@ ADD . .
 RUN --mount=type=secret,id=PROD_DATABASE_URL \
   export DATABASE_URL=$(cat /run/secrets/PROD_DATABASE_URL)
 
-RUN env
-RUN ls /run/secrets
-
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 
