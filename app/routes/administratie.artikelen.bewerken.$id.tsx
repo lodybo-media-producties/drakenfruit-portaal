@@ -59,7 +59,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
   },
 ];
 
-export default function NewArticleRoute() {
+export default function EditArticleRoute() {
   const { t } = useTranslation('routes');
   const { user, article, authors, categories } = useLoaderData<typeof loader>();
 

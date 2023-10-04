@@ -1,5 +1,6 @@
 import { describe, test } from 'vitest';
 import * as validationFlows from '~/validations/flows';
+import { ToolData } from '~/types/Validations';
 
 describe('Validating user flows', () => {
   describe('Login validation', () => {
@@ -149,6 +150,68 @@ describe('Validating user flows', () => {
       });
 
       const validationResult = await validationFlows.validateCategory(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.name).toStrictEqual({
+        en: 'Waarde is verplicht',
+        nl: 'Waarde is verplicht',
+      });
+      expect(validationResult.data).toBe(undefined);
+    });
+  });
+
+  describe('Tool validation', () => {
+    test('Check whether a tool request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Name 1');
+      formData.append('name.nl', 'Naam 1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
+      formData.append('categories', '1,2');
+      formData.append('downloadUrl', '/path/to/tool.zip');
+
+      const request = new Request('http://localhost:3000/api/tool', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateTool(request);
+
+      console.log(validationResult);
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual<ToolData>({
+        name: { en: 'Name 1', nl: 'Naam 1' },
+        slug: { en: 'name-1', nl: 'naam-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        description: { en: 'Description 1', nl: 'Beschrijving 1' },
+        downloadUrl: '/path/to/tool.zip',
+        categories: ['1', '2'],
+      });
+    });
+
+    test('Check whether a tool request is invalid because of missing names', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
+      formData.append('categories', '1,2');
+      formData.append('image', '/path/to/image.jpg');
+
+      const request = new Request('http://localhost:3000/api/tool', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateTool(request);
 
       expect(validationResult.success).toBe(false);
       expect(validationResult.errors!.name).toStrictEqual({

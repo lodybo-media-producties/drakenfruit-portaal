@@ -78,7 +78,7 @@ export const WithError: Story = {
   },
 };
 
-export const WithCustoMCategoryError: Story = {
+export const WithCustomCategoryError: Story = {
   args: {
     categories,
     // @ts-ignore

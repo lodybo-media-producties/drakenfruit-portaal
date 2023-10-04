@@ -28,12 +28,6 @@
       "Create Button Label": "Aanmaken"
     }
   },
-  "ImageInput": {
-    "Button Label": "Kies een afbeelding",
-    "Remove Image Label": "Verwijder afbeelding",
-    "Image Selected Label_one": "Geselecteerde afbeelding: ",
-    "Image Selected Label_other": "Geselecteerde afbeeldingen: "
-  },
   "ArticleMutationForm": {
     "LanguageToggleLabels": {
       "Dutch": "Nederlands",
@@ -67,5 +61,33 @@
     "Description Label": "Beschrijving",
     "Save Button Label": "Opslaan",
     "Edit Button Label": "Bewerken"
+  },
+  "ToolMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Nederlands",
+      "English": "Engels"
+    },
+    "Name Label": "Naam",
+    "Slug Label": "Slug",
+    "Summary Label": "Samenvatting",
+    "Description Label": "Beschrijving",
+    "Category Label": "Kies een of meerdere categorieën",
+    "File Label": "Kies een tool om up te loaden",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken"
+  },
+  "FileInput": {
+    "File": {
+      "Button Label": "Kies een bestand",
+      "Remove Label": "Verwijder bestand",
+      "Selected Label_one": "Geselecteerd bestand: ",
+      "Selected Label_other": "Geselecteerde bestanden: "
+    },
+    "Image": {
+      "Button Label": "Kies een afbeelding",
+      "Remove Label": "Verwijder afbeelding",
+      "Selected Label_one": "Geselecteerde afbeelding: ",
+      "Selected Label_other": "Geselecteerde afbeeldingen: "
+    }
   }
 }

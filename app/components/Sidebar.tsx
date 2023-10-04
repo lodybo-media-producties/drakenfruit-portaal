@@ -27,8 +27,8 @@ const adminMenuItems: NavItem[] = [
 const contentMenuItems: NavItem[] = [
   { title: 'Categorieën', to: '/administratie/categorieen', icon: 'tags' },
   { title: 'Artikelen', to: '/administratie/artikelen', icon: 'file-lines' },
-  { title: 'Webinars', to: '/administratie/webinars', icon: 'file-video' },
   { title: 'Tools', to: '/administratie/tools', icon: 'file-zipper' },
+  { title: 'Webinars', to: '/administratie/webinars', icon: 'file-video' },
 ];
 
 type Props = {

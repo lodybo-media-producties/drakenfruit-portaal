@@ -3,6 +3,8 @@ import Button from '~/components/Button';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import Icon from '~/components/Icon';
+import Message from '~/components/Message';
+import { cn } from '~/lib/utils';
 
 type Props = {
   label: string;
@@ -11,21 +13,30 @@ type Props = {
   initialValue?: string | null;
   value?: string | null;
   onChange?: (value: string) => void;
+  accept?: string;
+  error?: string;
 };
 
-export default function ImageInput({
+export default function FileInput({
   label,
   name,
   multiple,
   initialValue,
   value,
   onChange,
+  accept,
+  error,
 }: Props) {
   const [fileName, setFileName] = useState<string | null | undefined>(
     initialValue ?? value
   );
   const { t } = useTranslation('components');
   const ref = useRef<HTMLInputElement | null>(null);
+  let fileTypeTranslationGroup = 'File';
+
+  if (accept?.includes('image')) {
+    fileTypeTranslationGroup = 'Image';
+  }
 
   useEffect(() => {
     if (ref.current) {
@@ -73,21 +84,32 @@ export default function ImageInput({
         type="file"
         ref={ref}
         className="hidden"
-        accept="image/*"
+        accept={accept}
       />
       <Label label={label}>
-        <Button className="w-3/4" type="button" onClick={toggleFilePicker}>
-          {t('ImageInput.Button Label')}
+        <Button
+          className={cn({
+            'border-dark-pink': error,
+            'border-2': error,
+            'hover:bg-light-pink': error,
+            'hover:border-dark-pink': error,
+            'hover:border-2': error,
+          })}
+          type="button"
+          onClick={toggleFilePicker}
+        >
+          {t(`FileInput.${fileTypeTranslationGroup}.Button Label`)}
         </Button>
       </Label>
       {fileName?.length ? (
         <small>
-          {t('ImageInput.Image Selected Label', {
+          {t(`FileInput.${fileTypeTranslationGroup}.Selected Label`, {
             count: fileName.length,
           })}
           {getFileNames()}
         </small>
       ) : null}
+      {error ? <Message variant="error" message={error} /> : null}
     </div>
   );
 }

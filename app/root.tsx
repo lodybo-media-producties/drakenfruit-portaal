@@ -106,8 +106,8 @@ export function ErrorBoundary() {
           <h1 className="text-3xl font-heading mb-4">Oh no!</h1>
           <p>Er is iets fout gegaan helaas...</p>
 
-          <pre>
-            <code className="p-6 font-type bg-black text-white">{message}</code>
+          <pre className="p-6 font-type bg-black text-white">
+            <code>{message}</code>
           </pre>
         </div>
         <Scripts />

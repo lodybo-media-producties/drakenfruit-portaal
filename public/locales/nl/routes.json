@@ -93,6 +93,69 @@
         "Title": "Nieuwe categorie | Drakenfruit"
       },
       "Back Link Label": "Terug naar overzicht"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Categorie bewerken | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "Geen ID opgegeven",
+        "Category Not Found": "De categorie kon niet gevonden worden"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    }
+  },
+  "Tools": {
+    "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Tool created",
+          "Message": "The tool was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Tool updated",
+          "Message": "The tool was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Tool Not Found": "The tool could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Tool deleted",
+          "Message": "The tool was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Tools | Drakenfruit"
+      },
+      "Title": "Tools",
+      "No Tools": "Er zijn nog geen tools aangemaakt.",
+      "New Tool": "Nieuwe tool"
+    },
+    "New": {
+      "Meta": {
+        "Title": "Nieuwe tool | Drakenfruit"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Tool bewerken | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "Geen ID opgegeven",
+        "Tool Not Found": "De tool kon niet gevonden worden"
+      },
+      "Back Link Label": "Terug naar overzicht"
     }
   }
 }
