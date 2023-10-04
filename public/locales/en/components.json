@@ -28,12 +28,6 @@
       "Create Button Label": "Create"
     }
   },
-  "ImageInput": {
-    "Button Label": "Choose an image",
-    "Remove Image Label": "Remove image",
-    "Image Selected Label_one": "Selected image: ",
-    "Image Selected Label_other": "Selected images: "
-  },
   "ArticleMutationForm": {
     "LanguageToggleLabels": {
       "Dutch": "Dutch",
@@ -67,5 +61,37 @@
     "Description Label": "Description",
     "Save Button Label": "Save",
     "Edit Button Label": "Edit"
+  },
+  "ToolMutationForm": {
+    "LanguageToggleLabels": {
+      "Dutch": "Dutch",
+      "English": "English"
+    },
+    "Name Label": "Title",
+    "Slug Label": "Slug",
+    "Summary Label": "Summary",
+    "Description Label": "Description",
+    "Category Label": "Select one or more categories",
+    "File Label": "Select a tool for upload",
+    "Save Button Label": "Save",
+    "Edit Button Label": "Edit",
+    "Upload": {
+      "Prepare": "Preparing upload for {{filename}}",
+      "Uploading": "Uploading {{filename}}"
+    }
+  },
+  "FileInput": {
+    "File": {
+      "Button Label": "Choose a file",
+      "Remove Label": "Remove file",
+      "Selected Label_one": "Selected file: ",
+      "Selected Label_other": "Selected files: "
+    },
+    "Image": {
+      "Button Label": "Choose an image",
+      "Remove Label": "Remove image",
+      "Selected Label_one": "Selected image: ",
+      "Selected Label_other": "Selected images: "
+    }
   }
 }

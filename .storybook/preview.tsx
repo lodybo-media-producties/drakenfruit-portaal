@@ -45,7 +45,9 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['Documentation', 'Components'],
+        method: 'alphabetical',
+        order: ['Documentation', ['Drakenfruit Portal', '*'], 'Components'],
+        locale: 'en-US',
       },
     },
   },

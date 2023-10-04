@@ -42,15 +42,16 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
   },
 ];
 
-export default function NewCategoryRoute() {
+export default function EditCategoryRoute() {
   const { t } = useTranslation('routes');
   const { categories } = useLoaderData<typeof loader>();
+  console.log('back link label', t('Categories.Edit.Back Link Label'));
 
   return (
     <CategoryMutationForm
       mode="update"
       initialValues={categories}
-      backLink="/administratie/categories"
+      backLink="/administratie/categorieen"
       backLinkLabel={t('Categories.Edit.Back Link Label')}
     />
   );

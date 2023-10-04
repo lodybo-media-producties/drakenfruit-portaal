@@ -8,7 +8,7 @@ type Props = {
 
 export default function AccountLayout({ user }: Props) {
   return (
-    <div className="flex flex-row gap-0 w-full h-full">
+    <div className="flex flex-row gap-0 w-full min-h-full">
       <div className="w-1/6 bg-light-blue p-4">
         <Sidebar user={user} />
       </div>

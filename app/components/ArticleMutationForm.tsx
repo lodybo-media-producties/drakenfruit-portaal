@@ -14,7 +14,7 @@ import AuthorSelector, { type Author } from '~/components/AuthorSelector';
 import CategoryInput, {
   type CategorySelection,
 } from '~/components/CategoryInput';
-import ImageInput from '~/components/ImageInput';
+import FileInput from '~/components/FileInput';
 import Button from '~/components/Button';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
@@ -279,11 +279,12 @@ export default function ArticleMutationForm({
         error={getLocalisedError('slug')}
       />
 
-      <ImageInput
+      <FileInput
         name="image"
         label={t('ArticleMutationForm.Image Label')}
         value={image}
         onChange={handleImageChange}
+        accept="image/*"
       />
 
       <TextAreaInput

@@ -10,6 +10,7 @@ async function seed() {
   await createOrganisations();
   await createCategories();
   await createArticles();
+  await createTools();
 
   console.log(`Database has been seeded. 🌱`);
 }
@@ -279,6 +280,76 @@ async function createArticles() {
         connect: [
           {
             id: categories[1].id,
+          },
+        ],
+      },
+    },
+  });
+}
+
+async function createTools() {
+  console.log('Creating tools...');
+
+  console.log('Fetching categories from the database...');
+  const categories = await prisma.category.findMany();
+
+  console.log('Creating first tool');
+  await prisma.tool.create({
+    data: {
+      name: {
+        nl: 'Inclusiviteitsscan',
+        en: 'Inclusivity scan',
+      },
+      slug: {
+        nl: 'inclusiviteitsscan',
+        en: 'inclusivity-scan',
+      },
+      summary: {
+        nl: 'De inclusiviteitsscan is een tool om de inclusiviteit van een organisatie te meten.',
+        en: 'The inclusivity scan is a tool to measure the inclusivity of an organisation.',
+      },
+      description: {
+        nl: faker.lorem.paragraph(),
+        en: faker.lorem.paragraph(),
+      },
+      downloadUrl: '/tools/inclusiviteitsscan.pdf',
+      categories: {
+        connect: [
+          {
+            id: categories[1].id,
+          },
+          {
+            id: categories[0].id,
+          },
+        ],
+      },
+    },
+  });
+
+  console.log('Creating second tool');
+  await prisma.tool.create({
+    data: {
+      name: {
+        nl: 'Inclusieve(re) projecten canvas',
+        en: '(More) Inclusive project canvas',
+      },
+      slug: {
+        nl: 'inclusievere-projecten-canvas',
+        en: 'more-inclusive-project-canvas',
+      },
+      summary: {
+        nl: 'Het inclusievere projecten canvas is een tool om de inclusiviteit van een project te meten.',
+        en: 'The more inclusive project canvas is a tool to measure the inclusivity of a project.',
+      },
+      description: {
+        nl: faker.lorem.paragraph(),
+        en: faker.lorem.paragraph(),
+      },
+      downloadUrl: '/tools/inclusievere-projecten-canvas.pdf',
+      categories: {
+        connect: [
+          {
+            id: categories[0].id,
           },
         ],
       },
