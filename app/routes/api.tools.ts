@@ -28,7 +28,7 @@ function setCurrentUpload(progress: UploadState) {
   currentUpload = progress;
 }
 export async function loader({ request }: ActionFunctionArgs) {
-  return eventStream(request.signal, (send) => {
+  return eventStream(request.signal, (send: any) => {
     let timer = setInterval(() => {
       if (currentUpload) {
         send({
