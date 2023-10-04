@@ -7,8 +7,11 @@ import { type SupportedLanguages } from '~/i18n';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
-import { ToolFormValues } from '~/types/Tool';
-import { getToolByID, ToolWithCategories } from '~/models/tools.server';
+import { type ToolFormValues } from '~/types/Tool';
+import {
+  type getToolByID,
+  type ToolWithCategories,
+} from '~/models/tools.server';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],

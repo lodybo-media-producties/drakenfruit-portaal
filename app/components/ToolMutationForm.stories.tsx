@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ToolMutationForm from './ToolMutationForm';
-import { CategorySelection } from '~/components/CategoryInput';
+import { type CategorySelection } from '~/components/CategoryInput';
 
 export default {
   title: 'Forms/Tool',

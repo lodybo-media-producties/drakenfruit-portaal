@@ -74,7 +74,11 @@
     "Category Label": "Select one or more categories",
     "File Label": "Select a tool for upload",
     "Save Button Label": "Save",
-    "Edit Button Label": "Edit"
+    "Edit Button Label": "Edit",
+    "Upload": {
+      "Prepare": "Preparing upload for {{filename}}",
+      "Uploading": "Uploading {{filename}}"
+    }
   },
   "FileInput": {
     "File": {

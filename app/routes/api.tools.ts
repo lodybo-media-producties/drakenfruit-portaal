@@ -18,9 +18,32 @@ import { getErrorMessage } from '~/utils/utils';
 import i18nextServer from '~/i18next.server';
 import { validateTool } from '~/validations/flows';
 import { type ToolErrors } from '~/types/Validations';
-import { type Prisma } from '@prisma/client';
-import { toolUploadHandler } from '~/models/storage.server';
-import { Progress } from '@aws-sdk/lib-storage';
+import { toolUploadHandler, type UploadState } from '~/models/storage.server';
+// @ts-ignore
+import { eventStream } from 'remix-utils/event-stream';
+
+let currentUpload: UploadState | null = null;
+
+function setCurrentUpload(progress: UploadState) {
+  currentUpload = progress;
+}
+export async function loader({ request }: ActionFunctionArgs) {
+  return eventStream(request.signal, (send) => {
+    let timer = setInterval(() => {
+      if (currentUpload) {
+        send({
+          event: 'upload-progress',
+          data: JSON.stringify(currentUpload),
+        });
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(timer);
+      currentUpload = null;
+    };
+  });
+}
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireUserWithMinimumRole('CONSULTANT', request);
@@ -35,20 +58,30 @@ export async function action({ request }: ActionFunctionArgs) {
     if (!validationResults.success) {
       return json<ToolErrors>(validationResults.errors, { status: 400 });
     } else {
-      const callback = (progress: Progress) => {
-        console.log('Progress', progress);
-      };
+      setCurrentUpload({
+        state: 'prepare',
+      });
 
       const uploadHandler = composeUploadHandlers(
-        (args) => toolUploadHandler({ ...args, callback }),
+        (args) =>
+          toolUploadHandler({
+            ...args,
+            callback: (args) => {
+              setCurrentUpload(args);
+            },
+          }),
         createMemoryUploadHandler()
       );
+
       const formData = await parseMultipartFormData(
         clonedRequest,
         uploadHandler
       );
-      const data = convertFormDataIntoToolFormValues(formData);
 
+      console.log(
+        'converting form data into tool form values and creating tool'
+      );
+      const data = convertFormDataIntoToolFormValues(formData);
       try {
         await prisma.tool.create({
           data: {
@@ -90,45 +123,8 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'PUT') {
-    const formData = await clonedRequest.formData();
-    const validationResults = await validateTool(request);
-
-    if (!validationResults.success) {
-      return json<ToolErrors>(validationResults.errors, { status: 400 });
-    } else {
-      const toolFormValues = convertFormDataIntoToolFormValues(formData);
-
-      const data: Prisma.ToolUpdateInput = {
-        id: toolFormValues.id,
-        name: toolFormValues.name,
-        slug: toolFormValues.slug,
-        description: toolFormValues.description,
-      };
-
-      try {
-        await prisma.tool.update({
-          where: {
-            id: toolFormValues.id,
-          },
-          data,
-        });
-
-        const session = await getSession(request);
-        session.flash('toast', {
-          title: t('Tools.API.UPDATE.Success.Title'),
-          description: t('Tools.API.UPDATE.Success.Message'),
-        });
-
-        return redirect('/administratie/tools', {
-          headers: {
-            'Set-Cookie': await commitSession(session),
-          },
-        });
-      } catch (error) {
-        const message = getErrorMessage(error);
-        return json<APIResponse>({ ok: false, message }, { status: 500 });
-      }
-    }
+    // TODO: Implement this.
+    return redirect('/administratie/tools', { status: 501 });
   }
 
   if (request.method === 'DELETE') {

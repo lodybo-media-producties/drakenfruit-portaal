@@ -139,7 +139,9 @@
       },
       "Title": "Tools",
       "No Tools": "Er zijn nog geen tools aangemaakt.",
-      "New Tool": "Nieuwe tool"
+      "New Tool": "Nieuwe tool",
+      "Not Implemented": "Helaas..",
+      "Not Implemented Description": "Deze functionaliteit is nog niet geïmplementeerd."
     },
     "New": {
       "Meta": {

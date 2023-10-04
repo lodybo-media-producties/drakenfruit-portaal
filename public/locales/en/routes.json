@@ -139,7 +139,9 @@
       },
       "Title": "Tools",
       "No Categories": "No tools were found",
-      "New Tool": "New Tool"
+      "New Tool": "New Tool",
+      "Not Implemented": "Alas...",
+      "Not Implemented Description": "This feature is not yet implemented. Please check back later."
     },
     "New": {
       "Meta": {

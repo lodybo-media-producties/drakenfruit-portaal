@@ -74,7 +74,11 @@
     "Category Label": "Kies een of meerdere categorieën",
     "File Label": "Kies een tool om up te loaden",
     "Save Button Label": "Opslaan",
-    "Edit Button Label": "Bewerken"
+    "Edit Button Label": "Bewerken",
+    "Upload": {
+      "Prepare": "Voorbereiden van de upload van {{filename}}",
+      "Uploading": "Bezig met het uploaden van {{filename}}"
+    }
   },
   "FileInput": {
     "File": {

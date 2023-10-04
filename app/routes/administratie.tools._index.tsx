@@ -6,12 +6,13 @@ import {
 import { requireUserWithMinimumRole } from '~/session.server';
 import i18nextServer from '~/i18next.server';
 import { useTranslation } from 'react-i18next';
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 import { convertToolListToTableData } from '~/utils/content';
 import { type SupportedLanguages } from '~/i18n';
 import { getToolsWithCategories } from '~/models/tools.server';
 import Button from '~/components/Button';
 import Table from '~/components/Table';
+import { toast } from '~/components/ui/use-toast';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('CONSULTANT', request);
@@ -33,7 +34,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 
 export default function ToolsIndexRoute() {
   const { t, i18n } = useTranslation('routes');
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { tools } = useLoaderData<typeof loader>();
   const [columns, data] = convertToolListToTableData(
     tools,
@@ -41,7 +42,12 @@ export default function ToolsIndexRoute() {
   );
 
   const handleEdit = (id: string) => {
-    navigate(`/administratie/tools/bewerken/${id}`);
+    // navigate(`/administratie/tools/bewerken/${id}`);
+    toast({
+      title: t('Tools.Index.Not Implemented'),
+      description: t('Tools.Index.Not Implemented Description'),
+      variant: 'destructive',
+    });
   };
 
   return (

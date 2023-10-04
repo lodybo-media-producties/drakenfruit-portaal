@@ -1,12 +1,11 @@
-import { ToolData, type ToolErrors } from '~/types/Validations';
+import { type ToolData, type ToolErrors } from '~/types/Validations';
 import { type ToolFormValues } from '~/types/Tool';
 import { useTranslation } from 'react-i18next';
-import { Form, useFetcher, useNavigation } from '@remix-run/react';
+import { useFetcher } from '@remix-run/react';
 import { type APIResponse } from '~/types/Responses';
 import { useEffect, useState } from 'react';
 import { type SupportedLanguages } from '~/i18n';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
-import { type Tool } from '~/models/tools.server';
 import Message from '~/components/Message';
 import TextInput from '~/components/TextInput';
 import slugify from '@sindresorhus/slugify';
@@ -22,6 +21,10 @@ import CategoryInput, {
 } from '~/components/CategoryInput';
 import FileInput from '~/components/FileInput';
 import { convertToolFormValuesToFormData } from '~/utils/content';
+// @ts-ignore
+import { useEventSource } from 'remix-utils/use-event-source';
+import { type UploadState } from '~/models/storage.server';
+import UploadProgressBar from '~/components/UploadProgressBar';
 
 type Props = {
   mode: 'create' | 'update';
@@ -42,6 +45,9 @@ export default function ToolMutationForm({
 }: Props) {
   const { t } = useTranslation('components');
   const fetcher = useFetcher<APIResponse<ToolData> | ToolErrors>();
+  const uploadProgressData = useEventSource('/api/tools', {
+    event: 'upload-progress',
+  });
 
   const [error, setError] = useState('');
   const [formErrors, setFormErrors] = useState<ToolErrors | undefined>(errors);
@@ -241,6 +247,12 @@ export default function ToolMutationForm({
 
   const isSubmitting = fetcher.state !== 'idle';
 
+  let uploadProgress: UploadState | null = null;
+
+  if (uploadProgressData) {
+    uploadProgress = JSON.parse(uploadProgressData) as UploadState;
+  }
+
   useEffect(() => {
     if (fetcher.data) {
       const { data } = fetcher;
@@ -310,6 +322,38 @@ export default function ToolMutationForm({
         onChange={setDownloadUrl}
         error={getLocalisedError('downloadUrl')}
       />
+
+      {uploadProgress && uploadProgress.state === 'prepare' ? (
+        <div className="w-full">
+          <UploadProgressBar
+            progress={0}
+            subLabels={[
+              t('ToolMutationForm.Upload.Prepare', {
+                filename: uploadProgress.filename,
+              }),
+            ]}
+          />
+        </div>
+      ) : null}
+
+      {uploadProgress && uploadProgress.state === 'uploading' ? (
+        <div className="w-full">
+          <UploadProgressBar
+            progress={Math.round(
+              (uploadProgress.transferred / uploadProgress.total) * 100
+            )}
+            subLabels={[
+              t('ToolMutationForm.Upload.Uploading', {
+                filename: uploadProgress.filename,
+              }),
+              `${uploadProgress.transferred} / ${uploadProgress.total} bytes`,
+              `${Math.round(
+                (uploadProgress.transferred / uploadProgress.total) * 100
+              )}%`,
+            ]}
+          />
+        </div>
+      ) : null}
 
       <div
         className={`flex flex-row items-center ${

@@ -1,11 +1,29 @@
 import { S3 } from '@aws-sdk/client-s3';
-import { type Progress, Upload } from '@aws-sdk/lib-storage';
-import {
-  type UploadHandler,
-  UploadHandlerPart,
-} from '@remix-run/server-runtime';
-import { PassThrough } from 'stream';
-import { writeAsyncIterableToWritable } from '@remix-run/node';
+import { type Progress as AWSProgress, Upload } from '@aws-sdk/lib-storage';
+import { type UploadHandlerPart } from '@remix-run/server-runtime';
+import { PassThrough, type Writable } from 'stream';
+
+interface BaseUploadState {
+  state: 'prepare' | 'uploading';
+}
+
+interface PrepareUploadState extends BaseUploadState {
+  state: 'prepare';
+  transferred?: never;
+  total?: never;
+  filename?: never;
+}
+
+interface UploadingUploadState extends BaseUploadState {
+  state: 'uploading';
+  transferred: number;
+  total: number;
+  filename: string;
+}
+
+export type UploadState = PrepareUploadState | UploadingUploadState;
+
+let currentByteLength = 0;
 
 const client = new S3({
   forcePathStyle: false,
@@ -19,7 +37,7 @@ const client = new S3({
 
 export function uploadTool(
   filename: string,
-  callback: (progress: Progress) => void
+  callback: (progress: UploadState) => void
 ) {
   const pass = new PassThrough();
 
@@ -32,7 +50,14 @@ export function uploadTool(
     },
   });
 
-  upload.on('httpUploadProgress', callback);
+  upload.on('httpUploadProgress', (progress: AWSProgress) => {
+    callback({
+      state: 'uploading',
+      transferred: progress.loaded!,
+      total: currentByteLength,
+      filename,
+    });
+  });
 
   return {
     writeStream: pass,
@@ -41,7 +66,7 @@ export function uploadTool(
 }
 
 type ToolUploadHandlerPart = UploadHandlerPart & {
-  callback: (progress: Progress) => void;
+  callback: (progress: UploadState) => void;
 };
 
 export type ToolUploadHandler = (
@@ -54,10 +79,13 @@ export const toolUploadHandler: ToolUploadHandler = async ({
   data,
   callback,
 }) => {
-  console.log('Uploading tool', name, filename);
   if (name === 'tool') {
+    currentByteLength = 0;
+
     const stream = uploadTool(filename!, callback);
+
     await writeAsyncIterableToWritable(data, stream.writeStream);
+
     const file = await stream.promise;
 
     if ('Location' in file) {
@@ -67,3 +95,19 @@ export const toolUploadHandler: ToolUploadHandler = async ({
 
   return undefined;
 };
+
+async function writeAsyncIterableToWritable(
+  iterable: AsyncIterable<Uint8Array>,
+  writable: Writable
+) {
+  try {
+    for await (let chunk of iterable) {
+      currentByteLength += chunk.byteLength;
+      writable.write(chunk);
+    }
+    writable.end();
+  } catch (error: any) {
+    writable.destroy(error);
+    throw error;
+  }
+}
