@@ -2,6 +2,7 @@ import { useMatches } from '@remix-run/react';
 import { useMemo } from 'react';
 
 import type { User } from '~/models/user.server';
+import { SupportedLanguages } from '~/i18n';
 
 const DEFAULT_REDIRECT = '/';
 
@@ -78,4 +79,18 @@ export function getErrorMessage(err: unknown) {
   else message = String(err);
 
   return message;
+}
+
+export function convertDateToUTC(date: Date): Date {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
+}
+
+export function formatDate(date: Date, lang: SupportedLanguages): string {
+  return date.toLocaleDateString(lang, {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
 }

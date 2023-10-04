@@ -75,6 +75,10 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
       );
     }
 
+    if (src.startsWith('http') || src.startsWith('https')) {
+      return <img ref={forwardedRef} alt={alt} src={src} {...props} />;
+    }
+
     const { width, height, unit = 'px', fit } = props as SingleSrcImageProps;
     const query = new URLSearchParams();
 

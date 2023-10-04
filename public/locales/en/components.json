@@ -93,5 +93,9 @@
       "Selected Label_one": "Selected image: ",
       "Selected Label_other": "Selected images: "
     }
+  },
+  "ArticleCard": {
+    "Author": "By {{author}}",
+    "Read More": "Read more"
   }
 }
