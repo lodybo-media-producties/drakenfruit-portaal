@@ -176,10 +176,12 @@ export async function validateTool(
     en: formData.get('summary.en') as string,
     nl: formData.get('summary.nl') as string,
   };
-  const downloadUrl = formData.get('downloadUrl') as string;
   const categories = (formData.get('categories') as string)
     .split(',')
     .filter(Boolean);
+
+  const tool = formData.get('tool') as File;
+  const downloadUrl = tool.name;
 
   const errors: ToolErrors = {};
 

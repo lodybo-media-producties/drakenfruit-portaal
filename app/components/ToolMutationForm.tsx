@@ -1,11 +1,10 @@
-import { type ToolErrors } from '~/types/Validations';
+import { ToolData, type ToolErrors } from '~/types/Validations';
 import { type ToolFormValues } from '~/types/Tool';
 import { useTranslation } from 'react-i18next';
-import { useFetcher } from '@remix-run/react';
+import { Form, useFetcher, useNavigation } from '@remix-run/react';
 import { type APIResponse } from '~/types/Responses';
 import { useEffect, useState } from 'react';
 import { type SupportedLanguages } from '~/i18n';
-import { convertToolFormValuesToFormData } from '~/utils/content';
 import Toggle, { type ToggleOption } from '~/components/Toggle';
 import { type Tool } from '~/models/tools.server';
 import Message from '~/components/Message';
@@ -22,6 +21,7 @@ import CategoryInput, {
   type CategorySelection,
 } from '~/components/CategoryInput';
 import FileInput from '~/components/FileInput';
+import { convertToolFormValuesToFormData } from '~/utils/content';
 
 type Props = {
   mode: 'create' | 'update';
@@ -41,7 +41,7 @@ export default function ToolMutationForm({
   categories,
 }: Props) {
   const { t } = useTranslation('components');
-  const fetcher = useFetcher<APIResponse | ToolErrors>();
+  const fetcher = useFetcher<APIResponse<ToolData> | ToolErrors>();
 
   const [error, setError] = useState('');
   const [formErrors, setFormErrors] = useState<ToolErrors | undefined>(errors);
@@ -182,13 +182,15 @@ export default function ToolMutationForm({
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
 
     const data = generateFormDataFromToolFormValues();
-    console.log(data);
+    data.append('tool', form.tool.files[0]);
 
     fetcher.submit(data, {
       action: '/api/tools',
       method: mode === 'create' ? 'POST' : 'PUT',
+      encType: 'multipart/form-data',
     });
   };
 
@@ -241,18 +243,17 @@ export default function ToolMutationForm({
 
   useEffect(() => {
     if (fetcher.data) {
-      if ('ok' in fetcher.data) {
-        const data = fetcher.data as APIResponse<Tool>;
+      const { data } = fetcher;
 
+      if ('ok' in data) {
         if (!data.ok) {
           setError(data.message);
         }
       } else {
-        const data = fetcher.data as ToolErrors;
         setFormErrors(data);
       }
     }
-  }, [fetcher.data]);
+  }, [fetcher]);
 
   return (
     <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>

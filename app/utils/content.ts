@@ -221,7 +221,7 @@ export function convertToolListToTableData(
 }
 
 export function convertToolFormValuesToFormData(
-  tool: ToolFormValues
+  tool: Omit<ToolFormValues, 'downloadUrl'>
 ): FormData {
   const formData = new FormData();
 
@@ -233,7 +233,6 @@ export function convertToolFormValuesToFormData(
   formData.append('summary.nl', tool.summary.nl);
   formData.append('description.en', tool.description.en);
   formData.append('description.nl', tool.description.nl);
-  formData.append('downloadUrl', tool.downloadUrl);
   formData.append('categories', tool.categories.join(','));
 
   if (tool.id) {
@@ -263,7 +262,7 @@ export function convertFormDataIntoToolFormValues(
       en: formData.get('description.en') as string,
       nl: formData.get('description.nl') as string,
     },
-    downloadUrl: formData.get('downloadUrl') as string,
+    downloadUrl: formData.get('tool') as string,
     categories: (formData.get('categories') as string)
       .split(',')
       .filter(Boolean),

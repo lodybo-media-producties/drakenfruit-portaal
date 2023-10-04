@@ -1,4 +1,11 @@
-import { type ActionFunctionArgs, json, redirect } from '@remix-run/node';
+import {
+  type ActionFunctionArgs,
+  json,
+  redirect,
+  unstable_createMemoryUploadHandler as createMemoryUploadHandler,
+  unstable_composeUploadHandlers as composeUploadHandlers,
+  unstable_parseMultipartFormData as parseMultipartFormData,
+} from '@remix-run/node';
 import {
   getSession,
   requireUserWithMinimumRole,
@@ -12,6 +19,8 @@ import i18nextServer from '~/i18next.server';
 import { validateTool } from '~/validations/flows';
 import { type ToolErrors } from '~/types/Validations';
 import { type Prisma } from '@prisma/client';
+import { toolUploadHandler } from '~/models/storage.server';
+import { Progress } from '@aws-sdk/lib-storage';
 
 export async function action({ request }: ActionFunctionArgs) {
   await requireUserWithMinimumRole('CONSULTANT', request);
@@ -19,7 +28,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const t = await i18nextServer.getFixedT(request, 'routes');
 
   const clonedRequest = request.clone();
-  const formData = await clonedRequest.formData();
 
   if (request.method === 'POST') {
     const validationResults = await validateTool(request);
@@ -27,9 +35,20 @@ export async function action({ request }: ActionFunctionArgs) {
     if (!validationResults.success) {
       return json<ToolErrors>(validationResults.errors, { status: 400 });
     } else {
+      const callback = (progress: Progress) => {
+        console.log('Progress', progress);
+      };
+
+      const uploadHandler = composeUploadHandlers(
+        (args) => toolUploadHandler({ ...args, callback }),
+        createMemoryUploadHandler()
+      );
+      const formData = await parseMultipartFormData(
+        clonedRequest,
+        uploadHandler
+      );
       const data = convertFormDataIntoToolFormValues(formData);
 
-      console.log(data);
       try {
         await prisma.tool.create({
           data: {
@@ -71,6 +90,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'PUT') {
+    const formData = await clonedRequest.formData();
     const validationResults = await validateTool(request);
 
     if (!validationResults.success) {
@@ -112,6 +132,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'DELETE') {
+    const formData = await clonedRequest.formData();
     const id = (formData.get('id') as string | undefined) ?? '';
 
     if (!id) {

@@ -403,12 +403,11 @@ describe('Content utilities', () => {
     });
 
     test('Convert a ToolFormValue into FormData object', () => {
-      const tool: ToolFormValues = {
+      const tool: Omit<ToolFormValues, 'downloadUrl'> = {
         id: '1',
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       };
@@ -422,10 +421,36 @@ describe('Content utilities', () => {
       expect(formData.get('slug.nl')).toEqual('tool-1');
       expect(formData.get('description.en')).toEqual('Content 1');
       expect(formData.get('description.nl')).toEqual('Inhoud 1');
-      expect(formData.get('downloadUrl')).toEqual('https://example.com');
       expect(formData.get('summary.en')).toEqual('Summary 1');
       expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
       expect(formData.get('categories')).toEqual('1,2');
+    });
+
+    test('Convert FormData to ToolFormValue with empty categories', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', 'tool.pdf');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        downloadUrl: 'tool.pdf',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [],
+      });
     });
 
     test('Convert FormData to ToolFormValue', () => {
@@ -437,7 +462,7 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('downloadUrl', 'https://example.com');
+      formData.append('tool', 'tool.pdf');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
       formData.append('categories', '1,2');
@@ -449,7 +474,7 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
+        downloadUrl: 'tool.pdf',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       });
