@@ -3,19 +3,21 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '~/components/ui/card';
-import { type FullArticle } from '~/models/articles.server';
+import { type SummarisedArticle } from '~/models/articles.server';
 import { type SupportedLanguages } from '~/i18n';
-import { isBefore } from 'date-fns';
+import { isBefore, parseISO } from 'date-fns';
 import { convertDateToUTC, formatDate } from '~/utils/utils';
 import { Image } from '~/components/Image';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
+import { type SerializeFrom } from '@remix-run/server-runtime';
 
 type Props = {
-  article: FullArticle;
+  article: SerializeFrom<SummarisedArticle>;
 };
 
 export default function ArticleCard({ article }: Props) {
@@ -24,14 +26,16 @@ export default function ArticleCard({ article }: Props) {
 
   let recentDate: string;
 
-  if (isBefore(article.updatedAt, article.createdAt)) {
-    recentDate = formatDate(convertDateToUTC(article.createdAt), lang);
+  const updatedAtDate = parseISO(article.updatedAt);
+  const createdAtDate = parseISO(article.createdAt);
+  if (isBefore(updatedAtDate, createdAtDate)) {
+    recentDate = formatDate(convertDateToUTC(createdAtDate), lang);
   } else {
-    recentDate = formatDate(convertDateToUTC(article.updatedAt), lang);
+    recentDate = formatDate(convertDateToUTC(updatedAtDate), lang);
   }
 
   return (
-    <Card className="group cursor-pointer">
+    <Card className="group cursor-pointer grid grid-cols-1 grid-rows-[repeat(3, minmax(0, auto))] gap-3">
       {article.image ? (
         <div className="overflow-hidden w-full h-48">
           <Image
@@ -56,13 +60,16 @@ export default function ArticleCard({ article }: Props) {
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-2">
-        <p className="mb-4">{article.summary[lang]}</p>
+      <CardContent>
+        <p>{article.summary[lang]}</p>
+      </CardContent>
+
+      <CardFooter className="mt-auto flex flex-col gap-2 h-12">
         <AnchorLink className="self-end" to={`/articles/${article.slug[lang]}`}>
           {t('ArticleCard.Read More')}{' '}
           <Icon className="ml-0.5" name="arrow-right" />
         </AnchorLink>
-      </CardContent>
+      </CardFooter>
     </Card>
   );
 }

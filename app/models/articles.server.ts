@@ -31,6 +31,7 @@ export type SummarisedArticle = Prisma.ArticleGetPayload<{
     title: true;
     summary: true;
     slug: true;
+    image: true;
     categories: {
       select: {
         id: true;
@@ -45,6 +46,8 @@ export type SummarisedArticle = Prisma.ArticleGetPayload<{
         lastName: true;
       };
     };
+    createdAt: true;
+    updatedAt: true;
   };
 }>;
 
@@ -77,6 +80,36 @@ export function getArticlesSummaryList(): Promise<
     include: {
       author: true,
       categories: true,
+    },
+  });
+}
+
+export function getSummarisedArticles(): Promise<SummarisedArticle[]> {
+  return prisma.article.findMany({
+    orderBy: { createdAt: 'desc' },
+    where: { published: true },
+    select: {
+      id: true,
+      title: true,
+      summary: true,
+      slug: true,
+      image: true,
+      author: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+      categories: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      },
+      createdAt: true,
+      updatedAt: true,
     },
   });
 }
