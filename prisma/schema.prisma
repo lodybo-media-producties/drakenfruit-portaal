@@ -81,7 +81,7 @@ model Password {
 model Article {
   id String @id @default(cuid())
 
-  image String?
+  image String
 
   published Boolean @default(true)
 

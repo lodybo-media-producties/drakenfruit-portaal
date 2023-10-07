@@ -15,6 +15,7 @@ import { Image } from '~/components/Image';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import { type SerializeFrom } from '@remix-run/server-runtime';
+import { Link } from '@remix-run/react';
 
 type Props = {
   article: SerializeFrom<SummarisedArticle>;
@@ -34,6 +35,9 @@ export default function ArticleCard({ article }: Props) {
     recentDate = formatDate(convertDateToUTC(updatedAtDate), lang);
   }
 
+  const linkArticlePrefix = lang === 'en' ? 'article' : 'artikel';
+  const link = `/${linkArticlePrefix}/${article.slug[lang]}`;
+
   return (
     <Card className="group cursor-pointer grid grid-cols-1 grid-rows-[repeat(3, minmax(0, auto))] gap-3">
       {article.image ? (
@@ -44,10 +48,12 @@ export default function ArticleCard({ article }: Props) {
             alt={article.title[lang]}
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="h-48" />
+      )}
       <CardHeader>
         <CardTitle className="text-black group-hover:text-dark-pink transition duration">
-          {article.title[lang]}
+          <Link to={link}>{article.title[lang]}</Link>
         </CardTitle>
         <CardDescription>
           {t('ArticleCard.Author', {
@@ -55,7 +61,7 @@ export default function ArticleCard({ article }: Props) {
           })}
           {' | '}
           {recentDate}
-          {' | '}
+          {article.categories.length ? ' | ' : ''}
           {article.categories.map((category) => category.name[lang]).join(', ')}
         </CardDescription>
       </CardHeader>
@@ -65,7 +71,7 @@ export default function ArticleCard({ article }: Props) {
       </CardContent>
 
       <CardFooter className="mt-auto flex flex-col gap-2 h-12">
-        <AnchorLink className="self-end" to={`/articles/${article.slug[lang]}`}>
+        <AnchorLink className="self-end" to={link}>
           {t('ArticleCard.Read More')}{' '}
           <Icon className="ml-0.5" name="arrow-right" />
         </AnchorLink>

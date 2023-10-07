@@ -38,7 +38,12 @@ export type LoginErrors = {
 export type ArticleData = ArticleFormValues;
 
 export type ArticleErrors = Partial<
-  Record<keyof ArticleFormValues, { nl?: string; en?: string }>
+  Omit<
+    Record<keyof ArticleFormValues, { nl?: string; en?: string }>,
+    'image'
+  > & {
+    image?: string;
+  }
 >;
 
 export type CategoryData = CategoryFormValues;

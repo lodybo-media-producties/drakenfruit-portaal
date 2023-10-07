@@ -239,7 +239,7 @@ async function createArticles() {
           nl: faker.lorem.paragraphs(),
           en: faker.lorem.paragraphs(),
         },
-        image: faker.image.urlPicsumPhotos({ width: 800, height: 600 }),
+        image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
         slug: {
           nl: faker.lorem.slug(),
           en: faker.lorem.slug(),
