@@ -96,7 +96,7 @@ export function convertFormDataToArticleFormValues(
       .split(',')
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
-    image: formData.get('image') as string | null,
+    image: formData.get('image') as string,
   };
 
   const id = formData.get('id') as string | null;

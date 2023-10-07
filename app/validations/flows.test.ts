@@ -128,7 +128,10 @@ describe('Validating user flows', () => {
       const validationResult = await validationFlows.validateArticle(request);
 
       expect(validationResult.success).toBe(false);
-      expect(validationResult.errors!.image).toEqual('Afbeelding is verplicht');
+      expect(validationResult.errors!.image).toStrictEqual({
+        en: 'Image is required',
+        nl: 'Afbeelding is verplicht',
+      });
       expect(validationResult.data).toBe(undefined);
     });
   });

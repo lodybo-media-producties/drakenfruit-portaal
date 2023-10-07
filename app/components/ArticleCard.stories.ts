@@ -21,22 +21,16 @@ export const Default: Story = {
         nl: faker.lorem.paragraph(),
         en: faker.lorem.paragraph(),
       },
-      content: {
-        nl: faker.lorem.paragraphs(3),
-        en: faker.lorem.paragraphs(3),
-      },
       slug: {
         nl: faker.lorem.slug(),
         en: faker.lorem.slug(),
       },
-      published: true,
       image: 'https://source.unsplash.com/LQ1t-8Ms5PY',
       author: {
         id: faker.string.uuid(),
         firstName: 'Kaylee',
         lastName: 'Rosalina',
       },
-      authorId: faker.string.uuid(),
       categories: [
         {
           id: faker.string.uuid(),
@@ -50,8 +44,8 @@ export const Default: Story = {
           },
         },
       ],
-      createdAt: faker.date.past(),
-      updatedAt: faker.date.past(),
+      createdAt: faker.date.past().toString(),
+      updatedAt: faker.date.past().toString(),
     },
   },
 };

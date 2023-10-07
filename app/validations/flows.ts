@@ -104,7 +104,10 @@ export async function validateArticle(
   }
 
   if (!isDefined(image)) {
-    errors.image = 'Afbeelding is verplicht';
+    errors.image = {
+      en: 'Image is required',
+      nl: 'Afbeelding is verplicht',
+    };
   }
 
   if (Object.keys(errors).some((key) => errors[key as keyof ArticleErrors])) {
