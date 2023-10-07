@@ -1,4 +1,4 @@
-import { Category, Prisma, PrismaClient } from '@prisma/client';
+import { type Category, Prisma, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
 import CategoryWhereUniqueInput = Prisma.CategoryWhereUniqueInput;
