@@ -54,34 +54,34 @@ describe('Validating user flows', () => {
         image: '/path/to/image.jpg',
       });
     });
-  });
 
-  test('Check whether an article request is invalid because of missing titles', async () => {
-    const formData = new FormData();
-    formData.append('id', '1');
-    formData.append('slug.en', 'title-1');
-    formData.append('slug.nl', 'titel-1');
-    formData.append('summary.en', 'Summary 1');
-    formData.append('summary.nl', 'Samenvatting 1');
-    formData.append('content.en', 'Content 1');
-    formData.append('content.nl', 'Inhoud 1');
-    formData.append('categories', '1,2');
-    formData.append('authorId', '1');
-    formData.append('image', '/path/to/image.jpg');
+    test('Check whether an article request is invalid because of missing titles', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('slug.en', 'title-1');
+      formData.append('slug.nl', 'titel-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '1,2');
+      formData.append('authorId', '1');
+      formData.append('image', '/path/to/image.jpg');
 
-    const request = new Request('http://localhost:3000/api/article', {
-      method: 'POST',
-      body: formData,
+      const request = new Request('http://localhost:3000/api/article', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateArticle(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.title).toStrictEqual({
+        en: 'Waarde is verplicht',
+        nl: 'Waarde is verplicht',
+      });
+      expect(validationResult.data).toBe(undefined);
     });
-
-    const validationResult = await validationFlows.validateArticle(request);
-
-    expect(validationResult.success).toBe(false);
-    expect(validationResult.errors!.title).toStrictEqual({
-      en: 'Waarde is verplicht',
-      nl: 'Waarde is verplicht',
-    });
-    expect(validationResult.data).toBe(undefined);
 
     test('Check whether an article request is invalid because of a singular missing slug', async () => {
       const formData = new FormData();
@@ -105,6 +105,32 @@ describe('Validating user flows', () => {
       expect(validationResult.success).toBe(false);
       expect(validationResult.errors!.slug).toStrictEqual({
         nl: 'Waarde is verplicht',
+      });
+      expect(validationResult.data).toBe(undefined);
+    });
+
+    test('Check whether an article request is invalid because of a missing image', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('slug.en', 'title-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '1,2');
+      formData.append('authorId', '1');
+
+      const request = new Request('http://localhost:3000/api/article', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateArticle(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.image).toStrictEqual({
+        en: 'Image is required',
+        nl: 'Afbeelding is verplicht',
       });
       expect(validationResult.data).toBe(undefined);
     });

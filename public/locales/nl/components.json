@@ -93,5 +93,9 @@
       "Selected Label_one": "Geselecteerde afbeelding: ",
       "Selected Label_other": "Geselecteerde afbeeldingen: "
     }
+  },
+  "ArticleCard": {
+    "Author": "Door {{author}}",
+    "Read More": "Lees meer"
   }
 }

@@ -1,6 +1,7 @@
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
+  getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
@@ -95,7 +96,7 @@ export function convertFormDataToArticleFormValues(
       .split(',')
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
-    image: formData.get('image') as string | null,
+    image: formData.get('image') as string,
   };
 
   const id = formData.get('id') as string | null;
@@ -131,6 +132,34 @@ export function convertPrismaArticleToArticleFormValues(
     authorId: article.author.id,
     image: article.image,
     published: article.published,
+  };
+}
+
+export function convertPrismaArticleToLocalisedArticle(
+  article: Awaited<ReturnType<typeof getLocalisedArticleBySlug>>,
+  lang: SupportedLanguages
+) {
+  return {
+    id: article.id,
+    title: article.title[lang],
+    slug: article.slug[lang],
+    summary: article.summary[lang],
+    content: article.content[lang],
+    image: article.image,
+    author: {
+      id: article.author.id,
+      firstName: article.author.firstName,
+      lastName: article.author.lastName,
+      avatarUrl: article.author.avatarUrl,
+    },
+    categories: article.categories.map((category) => ({
+      id: category.id,
+      name: category.name[lang],
+      slug: category.slug[lang],
+    })),
+    published: article.published,
+    createdAt: article.createdAt,
+    updatedAt: article.updatedAt,
   };
 }
 

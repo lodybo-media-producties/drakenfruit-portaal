@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { Category, Prisma, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
+import CategoryWhereUniqueInput = Prisma.CategoryWhereUniqueInput;
 
 const prisma = new PrismaClient();
 
@@ -218,73 +219,44 @@ async function createArticles() {
   console.log('Fetching categories from the database...');
   const categories = await prisma.category.findMany();
 
-  console.log('Creating first article...');
-  await prisma.article.create({
-    data: {
-      title: {
-        nl: 'Diversiteit en Inclusie',
-        en: 'Diversity and Inclusion',
-      },
-      slug: {
-        nl: 'diversiteit-en-inclusie',
-        en: 'diversity-and-inclusion',
-      },
-      summary: {
-        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
-        en: 'Diversity and inclusion are important topics.',
-      },
-      content: {
-        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
-        en: 'Diversity and inclusion are important topics.',
-      },
-      author: {
-        connect: {
-          id: kaylee!.id,
+  console.log('Creating articles...');
+  const max = 20;
+  for (let i = 0; i < max; i++) {
+    console.log(`Creating article ${i + 1} of ${max}`);
+    const creationDate = faker.date.past();
+    await prisma.article.create({
+      data: {
+        title: {
+          nl: faker.lorem.sentence(),
+          en: faker.lorem.sentence(),
         },
-      },
-      categories: {
-        connect: [
-          {
-            id: categories[0].id,
-          },
-        ],
-      },
-    },
-  });
-
-  console.log('Creating second article...');
-  await prisma.article.create({
-    data: {
-      title: {
-        nl: 'Inclusie en Diversiteit',
-        en: 'Inclusion and Diversity',
-      },
-      slug: {
-        nl: 'inclusie-en-diversiteit',
-        en: 'inclusion-and-diversity',
-      },
-      summary: {
-        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
-        en: 'Inclusion and diversity are important topics.',
-      },
-      content: {
-        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
-        en: 'Inclusion and diversity are important topics.',
-      },
-      author: {
-        connect: {
-          id: simone!.id,
+        summary: {
+          nl: faker.lorem.paragraph(),
+          en: faker.lorem.paragraph(),
         },
-      },
-      categories: {
-        connect: [
-          {
-            id: categories[1].id,
+        content: {
+          nl: faker.lorem.paragraphs(),
+          en: faker.lorem.paragraphs(),
+        },
+        image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+        slug: {
+          nl: faker.lorem.slug(),
+          en: faker.lorem.slug(),
+        },
+        author: {
+          connect: {
+            id: randomItem([kaylee.id, simone.id]),
           },
-        ],
+        },
+        categories: {
+          connect: getRandomAmountOfCategories(categories),
+        },
+        published: faker.datatype.boolean(),
+        createdAt: creationDate,
+        updatedAt: randomItem([creationDate, faker.date.past()]),
       },
-    },
-  });
+    });
+  }
 }
 
 async function createTools() {
@@ -355,4 +327,18 @@ async function createTools() {
       },
     },
   });
+}
+
+function randomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function getRandomAmountOfCategories(
+  categories: Category[]
+): CategoryWhereUniqueInput[] {
+  return Array.from({
+    length: Math.floor(Math.random() * categories.length),
+  }).map(() => ({
+    id: randomItem(categories).id,
+  }));
 }

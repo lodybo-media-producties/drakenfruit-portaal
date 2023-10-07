@@ -87,6 +87,7 @@ export async function validateArticle(
     nl: formData.get('content.nl') as string,
   };
   const authorId = formData.get('authorId');
+  const image = formData.get('image') as string;
 
   const errors: ArticleErrors = {};
 
@@ -94,10 +95,18 @@ export async function validateArticle(
   errors.slug = checks.checkLocalisedValue(slug);
   errors.summary = checks.checkLocalisedValue(summary);
   errors.content = checks.checkLocalisedValue(content);
+
   if (!isDefined(authorId)) {
     errors.authorId = {
       en: 'Author is required',
       nl: 'Auteur is verplicht',
+    };
+  }
+
+  if (!isDefined(image)) {
+    errors.image = {
+      en: 'Image is required',
+      nl: 'Afbeelding is verplicht',
     };
   }
 
@@ -116,7 +125,7 @@ export async function validateArticle(
         .split(',')
         .filter(Boolean),
       authorId: authorId as string,
-      image: formData.get('image') as string,
+      image,
     },
   };
 }
