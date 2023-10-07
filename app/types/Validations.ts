@@ -1,5 +1,6 @@
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
+import { type ToolFormValues } from '~/types/Tool';
 
 interface BaseValidationResult {
   success: boolean;
@@ -44,4 +45,17 @@ export type CategoryData = CategoryFormValues;
 
 export type CategoryErrors = Partial<
   Record<keyof CategoryFormValues, { nl?: string; en?: string }>
+>;
+
+export type ToolData = ToolFormValues;
+
+export type ToolErrors = Partial<
+  Record<
+    keyof Omit<ToolFormValues, 'downloadUrl' | 'id'>,
+    { nl?: string; en?: string }
+  > & {
+    downloadUrl?: string;
+    id?: string;
+    categories?: string;
+  }
 >;

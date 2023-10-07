@@ -90,7 +90,7 @@ const TriggerButton = forwardRef<HTMLButtonElement, TriggerButtonProps>(
   (props, ref) => (
     <button
       ref={ref}
-      className="w-44 group relative rounded border-2 px-4 py-2 font-type text-lg transition-all motion-reduce:transition-none border-dark-blue bg-transparent text-black hover:border-light-blue/25 hover:bg-light-blue/25 data-[state=open]:border-light-blue/25 data-[state=open]:bg-light-blue/25"
+      className="w-44 flex flex-row gap-2 justify-between group relative rounded border-2 px-4 py-2 font-type text-lg transition-all motion-reduce:transition-none border-dark-blue bg-transparent text-black hover:border-light-blue/25 hover:bg-light-blue/25 data-[state=open]:border-light-blue/25 data-[state=open]:bg-light-blue/25"
       {...props}
     >
       {props.label}

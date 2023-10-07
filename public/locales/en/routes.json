@@ -93,6 +93,71 @@
         "Title": "New category | Drakenfruit"
       },
       "Back Link Label": "Back to categories"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit category | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Category Not Found": "The category could not be found"
+      },
+      "Back Link Label": "Back to categories"
+    }
+  },
+  "Tools": {
+    "API": {
+      "CREATE": {
+        "Success": {
+          "Title": "Tool created",
+          "Message": "The tool was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Tool updated",
+          "Message": "The tool was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Category Not Found": "The tool could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Tool deleted",
+          "Message": "The tool was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Tools | Drakenfruit"
+      },
+      "Title": "Tools",
+      "No Categories": "No tools were found",
+      "New Tool": "New Tool",
+      "Not Implemented": "Alas...",
+      "Not Implemented Description": "This feature is not yet implemented. Please check back later."
+    },
+    "New": {
+      "Meta": {
+        "Title": "New tool | Drakenfruit"
+      },
+      "Back Link Label": "Back to tools"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit tool | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Tool Not Found": "The tool could not be found"
+      },
+      "Back Link Label": "Back to tools"
     }
   }
 }

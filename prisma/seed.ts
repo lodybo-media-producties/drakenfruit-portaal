@@ -1,6 +1,7 @@
-import { PrismaClient } from '@prisma/client';
+import { Category, Prisma, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';
+import CategoryWhereUniqueInput = Prisma.CategoryWhereUniqueInput;
 
 const prisma = new PrismaClient();
 
@@ -10,6 +11,7 @@ async function seed() {
   await createOrganisations();
   await createCategories();
   await createArticles();
+  await createTools();
 
   console.log(`Database has been seeded. 🌱`);
 }
@@ -217,30 +219,105 @@ async function createArticles() {
   console.log('Fetching categories from the database...');
   const categories = await prisma.category.findMany();
 
-  console.log('Creating first article...');
-  await prisma.article.create({
+  console.log('Creating articles...');
+  const max = 20;
+  for (let i = 0; i < max; i++) {
+    console.log(`Creating article ${i + 1} of ${max}`);
+    const creationDate = faker.date.past();
+    await prisma.article.create({
+      data: {
+        title: {
+          nl: faker.lorem.sentence(),
+          en: faker.lorem.sentence(),
+        },
+        summary: {
+          nl: faker.lorem.paragraph(),
+          en: faker.lorem.paragraph(),
+        },
+        content: {
+          nl: faker.lorem.paragraphs(),
+          en: faker.lorem.paragraphs(),
+        },
+        image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+        slug: {
+          nl: faker.lorem.slug(),
+          en: faker.lorem.slug(),
+        },
+        author: {
+          connect: {
+            id: randomItem([kaylee.id, simone.id]),
+          },
+        },
+        categories: {
+          connect: getRandomAmountOfCategories(categories),
+        },
+        published: faker.datatype.boolean(),
+        createdAt: creationDate,
+        updatedAt: randomItem([creationDate, faker.date.past()]),
+      },
+    });
+  }
+}
+
+async function createTools() {
+  console.log('Creating tools...');
+
+  console.log('Fetching categories from the database...');
+  const categories = await prisma.category.findMany();
+
+  console.log('Creating first tool');
+  await prisma.tool.create({
     data: {
-      title: {
-        nl: 'Diversiteit en Inclusie',
-        en: 'Diversity and Inclusion',
+      name: {
+        nl: 'Inclusiviteitsscan',
+        en: 'Inclusivity scan',
       },
       slug: {
-        nl: 'diversiteit-en-inclusie',
-        en: 'diversity-and-inclusion',
+        nl: 'inclusiviteitsscan',
+        en: 'inclusivity-scan',
       },
       summary: {
-        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
-        en: 'Diversity and inclusion are important topics.',
+        nl: 'De inclusiviteitsscan is een tool om de inclusiviteit van een organisatie te meten.',
+        en: 'The inclusivity scan is a tool to measure the inclusivity of an organisation.',
       },
-      content: {
-        nl: 'Diversiteit en inclusie zijn belangrijke onderwerpen.',
-        en: 'Diversity and inclusion are important topics.',
+      description: {
+        nl: faker.lorem.paragraph(),
+        en: faker.lorem.paragraph(),
       },
-      author: {
-        connect: {
-          id: kaylee!.id,
-        },
+      downloadUrl: '/tools/inclusiviteitsscan.pdf',
+      categories: {
+        connect: [
+          {
+            id: categories[1].id,
+          },
+          {
+            id: categories[0].id,
+          },
+        ],
       },
+    },
+  });
+
+  console.log('Creating second tool');
+  await prisma.tool.create({
+    data: {
+      name: {
+        nl: 'Inclusieve(re) projecten canvas',
+        en: '(More) Inclusive project canvas',
+      },
+      slug: {
+        nl: 'inclusievere-projecten-canvas',
+        en: 'more-inclusive-project-canvas',
+      },
+      summary: {
+        nl: 'Het inclusievere projecten canvas is een tool om de inclusiviteit van een project te meten.',
+        en: 'The more inclusive project canvas is a tool to measure the inclusivity of a project.',
+      },
+      description: {
+        nl: faker.lorem.paragraph(),
+        en: faker.lorem.paragraph(),
+      },
+      downloadUrl: '/tools/inclusievere-projecten-canvas.pdf',
       categories: {
         connect: [
           {
@@ -250,38 +327,18 @@ async function createArticles() {
       },
     },
   });
+}
 
-  console.log('Creating second article...');
-  await prisma.article.create({
-    data: {
-      title: {
-        nl: 'Inclusie en Diversiteit',
-        en: 'Inclusion and Diversity',
-      },
-      slug: {
-        nl: 'inclusie-en-diversiteit',
-        en: 'inclusion-and-diversity',
-      },
-      summary: {
-        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
-        en: 'Inclusion and diversity are important topics.',
-      },
-      content: {
-        nl: 'Inclusie en diversiteit zijn belangrijke onderwerpen.',
-        en: 'Inclusion and diversity are important topics.',
-      },
-      author: {
-        connect: {
-          id: simone!.id,
-        },
-      },
-      categories: {
-        connect: [
-          {
-            id: categories[1].id,
-          },
-        ],
-      },
-    },
-  });
+function randomItem<T>(items: T[]): T {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function getRandomAmountOfCategories(
+  categories: Category[]
+): CategoryWhereUniqueInput[] {
+  return Array.from({
+    length: Math.floor(Math.random() * categories.length),
+  }).map(() => ({
+    id: randomItem(categories).id,
+  }));
 }

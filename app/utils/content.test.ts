@@ -2,6 +2,7 @@ import { describe, test } from 'vitest';
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
+  getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -11,10 +12,20 @@ import {
   convertCategoryListToTableData,
   convertCategoryFormValuesToFormData,
   convertFormDataToCategoryFormValues,
+  convertToolFormValuesToFormData,
+  convertFormDataIntoToolFormValues,
+  convertToolListToTableData,
+  convertPrismaToolDataToToolFormValues,
+  convertPrismaArticleToLocalisedArticle,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
+import {
+  type getToolByID,
+  type ToolWithCategories,
+} from '~/models/tools.server';
+import { type ToolFormValues } from '~/types/Tool';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -39,7 +50,7 @@ describe('Content utilities', () => {
               name: { en: 'Category 1', nl: 'Categorie 1' },
             },
           ],
-          image: null,
+          image: '/path/to/image',
         },
       ];
 
@@ -104,7 +115,7 @@ describe('Content utilities', () => {
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: ['1', '2'],
         authorId: '1',
-        image: null,
+        image: '/path/to/image',
       };
 
       const formData = convertArticleFormValuesToFormData(article);
@@ -211,7 +222,7 @@ describe('Content utilities', () => {
             updatedAt: new Date(),
           },
         ],
-        image: null,
+        image: '/path/to/image',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -227,7 +238,7 @@ describe('Content utilities', () => {
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: ['1'],
         authorId: '1',
-        image: null,
+        image: '/path/to/image',
         published: true,
       });
     });
@@ -263,7 +274,7 @@ describe('Content utilities', () => {
             updatedAt: new Date(),
           },
         ],
-        image: null,
+        image: '/path/to/image',
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -279,8 +290,97 @@ describe('Content utilities', () => {
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: ['1'],
         authorId: '1',
-        image: null,
+        image: '/path/to/image',
         published: false,
+      });
+    });
+
+    test('Converting a full Prisma article dataset to a localised article', () => {
+      const articleFromPrisma: Awaited<
+        ReturnType<typeof getLocalisedArticleBySlug>
+      > = {
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        published: true,
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        authorId: '1',
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+          avatarUrl: '/path/to/image',
+        },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        image: '/path/to/image',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const dutchArticle = convertPrismaArticleToLocalisedArticle(
+        articleFromPrisma,
+        'nl'
+      );
+      const englishArticle = convertPrismaArticleToLocalisedArticle(
+        articleFromPrisma,
+        'en'
+      );
+
+      expect(dutchArticle).toEqual({
+        id: '1',
+        title: 'Titel 1',
+        slug: 'titel-1',
+        published: true,
+        image: '/path/to/image',
+        summary: 'Samenvatting 1',
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+          avatarUrl: '/path/to/image',
+        },
+        content: 'Inhoud 1',
+        categories: [
+          {
+            id: '1',
+            name: 'Categorie 1',
+            slug: 'categorie-1',
+          },
+        ],
+        createdAt: articleFromPrisma.createdAt,
+        updatedAt: articleFromPrisma.updatedAt,
+      });
+
+      expect(englishArticle).toEqual({
+        id: '1',
+        title: 'Title 1',
+        slug: 'title-1',
+        published: true,
+        image: '/path/to/image',
+        summary: 'Summary 1',
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+          avatarUrl: '/path/to/image',
+        },
+        content: 'Content 1',
+        categories: [
+          {
+            id: '1',
+            name: 'Category 1',
+            slug: 'category-1',
+          },
+        ],
+        createdAt: articleFromPrisma.createdAt,
+        updatedAt: articleFromPrisma.updatedAt,
       });
     });
   });
@@ -334,25 +434,187 @@ describe('Content utilities', () => {
       expect(formData.get('description.en')).toEqual('Description 1');
       expect(formData.get('description.nl')).toEqual('Beschrijving 1');
     });
+
+    test('Convert FormData to CategoryFormValue', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Category 1');
+      formData.append('name.nl', 'Categorie 1');
+      formData.append('slug.en', 'category-1');
+      formData.append('slug.nl', 'categorie-1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
+
+      const category = convertFormDataToCategoryFormValues(formData);
+
+      expect(category).toEqual<CategoryFormValues>({
+        id: '1',
+        name: { en: 'Category 1', nl: 'Categorie 1' },
+        slug: { en: 'category-1', nl: 'categorie-1' },
+        description: { en: 'Description 1', nl: 'Beschrijving 1' },
+      });
+    });
   });
 
-  test('Convert FormData to CategoryFormValue', () => {
-    const formData = new FormData();
-    formData.append('id', '1');
-    formData.append('name.en', 'Category 1');
-    formData.append('name.nl', 'Categorie 1');
-    formData.append('slug.en', 'category-1');
-    formData.append('slug.nl', 'categorie-1');
-    formData.append('description.en', 'Description 1');
-    formData.append('description.nl', 'Beschrijving 1');
+  describe('Tools', () => {
+    test('Convert a list of tools from the database into table data', () => {
+      const tools: ToolWithCategories[] = [
+        {
+          id: '1',
+          name: { en: 'Tool 1', nl: 'Tool 1' },
+          slug: { en: 'tool-1', nl: 'tool-1' },
+          description: { en: 'Content 1', nl: 'Inhoud 1' },
+          downloadUrl: 'https://example.com',
+          summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+          categories: [
+            {
+              id: '1',
+              name: { en: 'Category 1', nl: 'Categorie 1' },
+            },
+            {
+              id: '2',
+              name: { en: 'Category 2', nl: 'Categorie 2' },
+            },
+          ],
+        },
+      ];
 
-    const category = convertFormDataToCategoryFormValues(formData);
+      const [columns, data] = convertToolListToTableData(tools, 'en');
 
-    expect(category).toEqual<CategoryFormValues>({
-      id: '1',
-      name: { en: 'Category 1', nl: 'Categorie 1' },
-      slug: { en: 'category-1', nl: 'categorie-1' },
-      description: { en: 'Description 1', nl: 'Beschrijving 1' },
+      expect(columns).toEqual(['Naam', 'Slug', 'Samenvatting', 'Categorieën']);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Tool 1'],
+            ['Slug', 'tool-1'],
+            ['Samenvatting', 'Summary 1'],
+            ['Categorieën', 'Category 1, Category 2'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert a ToolFormValue into FormData object', () => {
+      const tool: Omit<ToolFormValues, 'downloadUrl'> = {
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: ['1', '2'],
+      };
+
+      const formData = convertToolFormValuesToFormData(tool);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name.en')).toEqual('Tool 1');
+      expect(formData.get('name.nl')).toEqual('Tool 1');
+      expect(formData.get('slug.en')).toEqual('tool-1');
+      expect(formData.get('slug.nl')).toEqual('tool-1');
+      expect(formData.get('description.en')).toEqual('Content 1');
+      expect(formData.get('description.nl')).toEqual('Inhoud 1');
+      expect(formData.get('summary.en')).toEqual('Summary 1');
+      expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
+      expect(formData.get('categories')).toEqual('1,2');
+    });
+
+    test('Convert FormData to ToolFormValue with empty categories', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', 'tool.pdf');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        downloadUrl: 'tool.pdf',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [],
+      });
+    });
+
+    test('Convert FormData to ToolFormValue', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', 'tool.pdf');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '1,2');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        downloadUrl: 'tool.pdf',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: ['1', '2'],
+      });
+    });
+
+    test('Converting the tool data from Prisma to a ToolFormValue', () => {
+      const toolFromPrisma: Awaited<ReturnType<typeof getToolByID>> = {
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        downloadUrl: 'https://example.com',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+            description: { en: 'Description 1', nl: 'Beschrijving 1' },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            id: '2',
+            name: { en: 'Category 2', nl: 'Categorie 2' },
+            slug: { en: 'category-2', nl: 'categorie-2' },
+            description: { en: 'Description 2', nl: 'Beschrijving 2' },
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const tool = convertPrismaToolDataToToolFormValues(toolFromPrisma);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        downloadUrl: 'https://example.com',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: ['1', '2'],
+      });
     });
   });
 });

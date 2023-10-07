@@ -1,12 +1,18 @@
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
+  getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
+import { type ToolFormValues } from '~/types/Tool';
+import {
+  type getToolByID,
+  type ToolWithCategories,
+} from '~/models/tools.server';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -90,7 +96,7 @@ export function convertFormDataToArticleFormValues(
       .split(',')
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
-    image: formData.get('image') as string | null,
+    image: formData.get('image') as string,
   };
 
   const id = formData.get('id') as string | null;
@@ -126,6 +132,34 @@ export function convertPrismaArticleToArticleFormValues(
     authorId: article.author.id,
     image: article.image,
     published: article.published,
+  };
+}
+
+export function convertPrismaArticleToLocalisedArticle(
+  article: Awaited<ReturnType<typeof getLocalisedArticleBySlug>>,
+  lang: SupportedLanguages
+) {
+  return {
+    id: article.id,
+    title: article.title[lang],
+    slug: article.slug[lang],
+    summary: article.summary[lang],
+    content: article.content[lang],
+    image: article.image,
+    author: {
+      id: article.author.id,
+      firstName: article.author.firstName,
+      lastName: article.author.lastName,
+      avatarUrl: article.author.avatarUrl,
+    },
+    categories: article.categories.map((category) => ({
+      id: category.id,
+      name: category.name[lang],
+      slug: category.slug[lang],
+    })),
+    published: article.published,
+    createdAt: article.createdAt,
+    updatedAt: article.updatedAt,
   };
 }
 
@@ -192,4 +226,110 @@ export function convertFormDataToCategoryFormValues(
   }
 
   return categoryFormValues;
+}
+
+export function convertToolListToTableData(
+  tools: ToolWithCategories[],
+  lang: SupportedLanguages
+): [Columns, TableData[]] {
+  const columns: Columns = ['Naam', 'Slug', 'Samenvatting', 'Categorieën'];
+
+  const data: TableData[] = tools.map((tool) => {
+    return {
+      id: tool.id,
+      data: new Map([
+        ['Naam', tool.name[lang]],
+        ['Slug', tool.slug[lang]],
+        ['Samenvatting', tool.summary[lang]],
+        [
+          'Categorieën',
+          tool.categories.map((category) => category.name[lang]).join(', '),
+        ],
+      ]),
+    };
+  });
+
+  return [columns, data];
+}
+
+export function convertToolFormValuesToFormData(
+  tool: Omit<ToolFormValues, 'downloadUrl'>
+): FormData {
+  const formData = new FormData();
+
+  formData.append('name.en', tool.name.en);
+  formData.append('name.nl', tool.name.nl);
+  formData.append('slug.en', tool.slug.en);
+  formData.append('slug.nl', tool.slug.nl);
+  formData.append('summary.en', tool.summary.en);
+  formData.append('summary.nl', tool.summary.nl);
+  formData.append('description.en', tool.description.en);
+  formData.append('description.nl', tool.description.nl);
+  formData.append('categories', tool.categories.join(','));
+
+  if (tool.id) {
+    formData.append('id', tool.id);
+  }
+
+  return formData;
+}
+
+export function convertFormDataIntoToolFormValues(
+  formData: FormData
+): ToolFormValues {
+  const toolFormValues: ToolFormValues = {
+    name: {
+      en: formData.get('name.en') as string,
+      nl: formData.get('name.nl') as string,
+    },
+    slug: {
+      en: formData.get('slug.en') as string,
+      nl: formData.get('slug.nl') as string,
+    },
+    summary: {
+      en: formData.get('summary.en') as string,
+      nl: formData.get('summary.nl') as string,
+    },
+    description: {
+      en: formData.get('description.en') as string,
+      nl: formData.get('description.nl') as string,
+    },
+    downloadUrl: formData.get('tool') as string,
+    categories: (formData.get('categories') as string)
+      .split(',')
+      .filter(Boolean),
+  };
+
+  const id = formData.get('id') as string | null;
+  if (id) {
+    toolFormValues.id = id;
+  }
+
+  return toolFormValues;
+}
+
+export function convertPrismaToolDataToToolFormValues(
+  tool: Awaited<ReturnType<typeof getToolByID>>
+): ToolFormValues {
+  return {
+    id: tool.id,
+    name: {
+      en: tool.name.en,
+      nl: tool.name.nl,
+    },
+    slug: {
+      en: tool.slug.en,
+      nl: tool.slug.nl,
+    },
+    summary: {
+      en: tool.summary.en,
+      nl: tool.summary.nl,
+    },
+    description: {
+      en: tool.description.en,
+      nl: tool.description.nl,
+    },
+    downloadUrl: tool.downloadUrl,
+    categories: tool.categories.map((category) => category.id),
+  };
 }

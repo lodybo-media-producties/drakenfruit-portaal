@@ -81,7 +81,7 @@ model Password {
 model Article {
   id String @id @default(cuid())
 
-  image String?
+  image String
 
   published Boolean @default(true)
 
@@ -112,15 +112,18 @@ model Tool {
   /// [Translated]
   name Json
 
-  slug String
+  /// [Translated]
+  slug Json
 
   /// [Translated]
   summary Json
 
   /// [Translated]
-  content Json
+  description Json
 
   downloadUrl String
+
+  categories Category[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -146,6 +149,8 @@ model Webinar {
   /// [Translated]
   tools Json?
 
+  categories Category[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -163,6 +168,8 @@ model Category {
   slug Json
 
   Articles Article[]
+  Tools    Tool[]
+  Webinars Webinar[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import type { ComponentPropsWithRef } from 'react';
 import type { FitEnum } from 'sharp';
+import { cn } from '~/lib/utils';
 
 // Inspired by https://github.com/remix-run/examples/blob/main/image-resize/app/components/image.tsx
 interface BaseImageProps extends ComponentPropsWithRef<'img'> {
@@ -71,6 +72,33 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
           srcSet={srcSet}
           sizes={sizes}
           {...props}
+        />
+      );
+    }
+
+    if (src.startsWith('http') || src.startsWith('https')) {
+      const {
+        className,
+        fit,
+        alt: imgAlt,
+        src: imgSrc,
+        ...restProps
+      } = props as SingleSrcImageProps;
+      return (
+        <img
+          className={cn(
+            {
+              'w-full': true,
+              'object-cover': fit === 'cover',
+              'object-contain': fit === 'contain',
+              'object-fill': fit === 'fill',
+            },
+            className
+          )}
+          ref={forwardedRef}
+          alt={alt}
+          src={src}
+          {...restProps}
         />
       );
     }

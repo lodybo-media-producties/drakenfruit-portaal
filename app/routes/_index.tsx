@@ -1,13 +1,23 @@
-import type { MetaFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useTranslation } from 'react-i18next';
 import type { Filter } from '~/components/SearchFilters';
 import SearchFilters from '~/components/SearchFilters';
-import Button from '~/components/Button';
+import { getSummarisedArticles } from '~/models/articles.server';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
+import ArticleCard from '~/components/ArticleCard';
 
 export const meta: MetaFunction = () => [{ title: 'Drakenfruit' }];
 
+export async function loader({ request }: LoaderFunctionArgs) {
+  const articles = await getSummarisedArticles();
+
+  return json({ articles });
+}
+
 export default function Index() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { articles } = useLoaderData<typeof loader>();
 
   const filters: Filter[] = [
     {
@@ -24,17 +34,15 @@ export default function Index() {
     { slug: 'webinars', label: t('SearchFilters.Webinars') },
   ];
 
-  const handleChangeLanguage = () => {
-    const locale = i18n.language === 'nl' ? 'en' : 'nl';
-    i18n.changeLanguage(locale);
-  };
-
   return (
     <div className="px-8 pt-12">
       <SearchFilters filters={filters} onSelectedFiltersChange={() => {}} />
 
-      <Button onClick={handleChangeLanguage}>{t('change language')}</Button>
-      <h1 className="mt-5 text-4xl font-bold">{t('greeting')}</h1>
+      <div className="max-w-full w-[75vw] mx-auto grid grid-cols-3 gap-3">
+        {articles.map((article) => (
+          <ArticleCard key={article.id} article={article} />
+        ))}
+      </div>
     </div>
   );
 }
