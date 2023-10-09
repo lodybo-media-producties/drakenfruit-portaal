@@ -22,6 +22,7 @@ import { toolUploadHandler, type UploadState } from '~/models/storage.server';
 // @ts-ignore
 import { eventStream } from 'remix-utils/event-stream';
 
+// TODO: Instead of rewriting this in other api's, make this reusable.
 let currentUpload: UploadState | null = null;
 
 function setCurrentUpload(progress: UploadState) {

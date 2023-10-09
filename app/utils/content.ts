@@ -46,7 +46,7 @@ export function convertArticleListToTableData(
 }
 
 export function convertArticleFormValuesToFormData(
-  articleFormValues: ArticleFormValues
+  articleFormValues: Omit<ArticleFormValues, 'image'>
 ): FormData {
   const formData = new FormData();
 
@@ -63,10 +63,6 @@ export function convertArticleFormValuesToFormData(
 
   if (articleFormValues.id) {
     formData.append('id', articleFormValues.id);
-  }
-
-  if (articleFormValues.image) {
-    formData.append('image', articleFormValues.image);
   }
 
   return formData;

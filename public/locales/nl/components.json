@@ -43,7 +43,11 @@
     "Save Button Label": "Opslaan",
     "Publish Button Label": "Publiceren",
     "Edit Button Label": "Opslaan",
-    "Edit and Publish Button Label": "Wijzigingen opslaan en publiceren"
+    "Edit and Publish Button Label": "Wijzigingen opslaan en publiceren",
+    "Upload": {
+      "Prepare": "Voorbereiden van de upload van {{filename}}",
+      "Uploading": "Bezig met het uploaden van {{filename}}"
+    }
   },
   "Delete Item Dialog": {
     "Title": "Verwijderen",

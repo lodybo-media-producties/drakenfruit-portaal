@@ -43,7 +43,11 @@
     "Save Button Label": "Save",
     "Publish Button Label": "Publish",
     "Edit Button Label": "Save",
-    "Edit and Publish Button Label": "Save Changes and Publish"
+    "Edit and Publish Button Label": "Save Changes and Publish",
+    "Upload": {
+      "Prepare": "Preparing upload for {{filename}}",
+      "Uploading": "Uploading {{filename}}"
+    }
   },
   "Delete Item Dialog": {
     "Title": "Delete item",

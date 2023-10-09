@@ -103,7 +103,7 @@ describe('Content utilities', () => {
       expect(formData.get('content.nl')).toEqual('Inhoud 1');
       expect(formData.get('categories')).toEqual('1,2');
       expect(formData.get('authorId')).toEqual('1');
-      expect(formData.get('image')).toEqual('/path/to/image.jpg');
+      expect(formData.get('image')).toBeNull();
     });
 
     test('Convert an ArticleFormValue object into FormData without an image', () => {

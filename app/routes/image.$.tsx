@@ -2,7 +2,7 @@
  * An on the fly image resizer, taken from https://github.com/remix-run/examples/blob/main/image-resize/app/routes/assets/resize/%24.ts
  *
  * Since most of our images are served via a CDN, we don't have to save the resized images.
- * Instead we set cache headers for them and let the cdn cache them for us.
+ * Instead, we set cache headers for them and let the cdn cache them for us.
  *
  * sharp uses a highly performant native package called libvips.
  * it's written in C and is extremely fast.
@@ -19,9 +19,9 @@ import { PassThrough } from 'stream';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import type { FitEnum } from 'sharp';
 import sharp from 'sharp';
+import { retrieveFromDO } from '~/models/storage.server';
 
 const PUBLIC_ROOT = 'public';
-const IMAGES_ROOT = 'images';
 const { createReadStream, statSync } = fs;
 
 interface ImageRequestParams {
@@ -29,16 +29,18 @@ interface ImageRequestParams {
   width: number | undefined;
   height: number | undefined;
   fit: keyof FitEnum;
-  root: string;
 }
+
+// http://localhost:3000/image/portal/article/iwbs.png?fit=cover&root=images
+// http://localhost:3000/image/logo/horizontal-icon-name-smaller.png?root=public&w=1200w
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
   // extract all the parameters from the url
-  const { src, width, height, fit, root } = extractParams(params, request);
+  const { src, width, height, fit } = extractParams(params, request);
 
   try {
     // read the image as a stream of bytes
-    const readStream = readFileAsStream(src, root);
+    const readStream = await readFileAsStream(src);
     // read the image from the file system and stream it through the sharp pipeline
     return streamingResize(readStream, width, height, fit);
   } catch (error: unknown) {
@@ -70,12 +72,7 @@ function extractParams(
     }
   }
 
-  let root = IMAGES_ROOT;
-  if (searchParams.has('root') && searchParams.get('root') === 'public') {
-    root = PUBLIC_ROOT;
-  }
-
-  return { src, width, height, fit, root };
+  return { src, width, height, fit };
 }
 
 function streamingResize(
@@ -124,37 +121,29 @@ function streamingResize(
   });
 }
 
-function readFileAsStream(src: string, root: string): ReadStream {
-  // Local filesystem
+async function readFileAsStream(src: string): Promise<ReadStream> {
+  if (src.startsWith('portal/')) {
+    // Spaces storage
+    const stream = await retrieveFromDO(src);
 
-  // check that file exists
-  const srcPath = path.join(root, src);
-  const fileStat = statSync(srcPath);
-  if (!fileStat.isFile()) {
-    throw new Error(`${srcPath} is not a file`);
+    if (!stream) {
+      throw new Error(`${src} is not a file`);
+    }
+
+    return stream;
+  } else {
+    // Local filesystem
+
+    // check that file exists
+    const srcPath = path.join(PUBLIC_ROOT, src);
+    const fileStat = statSync(srcPath);
+    if (!fileStat.isFile()) {
+      throw new Error(`${srcPath} is not a file`);
+    }
+
+    // create a readable stream from the image file
+    return createReadStream(path.join(PUBLIC_ROOT, src));
   }
-
-  // create a readable stream from the image file
-  return createReadStream(path.join(root, src));
-
-  // Other implementations that you could look into
-
-  // Google Cloud Storage
-  // we could also create a stream directly from a bucket file
-  // import { Storage } from '@google-cloud/storage'
-  // const storage = new Storage();
-  // const bucketName = 'my-gcp-bucket'
-  // const bucketPath = src // the bucket path /dogs/cute/dog-1.jpg'
-  // return storage.bucket(bucketName).file(src).createReadStream()
-
-  // AWS S3 / Digital Ocean Spaces
-  // import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"
-  // const s3 = new S3Client({...})
-  // const bucketName = 'my-s3-bucket'
-  // const bucketKey = src // 'dogs/cute/dog-1.jpg'
-  // const fileResult = await s3.send(new GetObjectCommand({ Bucket: bucketName, Key: bucketKey }));
-  // s3 GetObjectCommand result.Body is a ReadableStream
-  // return fileResult.Body
 }
 
 function handleError(error: unknown) {
