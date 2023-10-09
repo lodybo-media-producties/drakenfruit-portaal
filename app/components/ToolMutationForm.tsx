@@ -65,8 +65,10 @@ export default function ToolMutationForm({
   );
   const [enSummary, setEnSummary] = useState(initialValues?.summary.en ?? '');
   const [nlSummary, setNlSummary] = useState(initialValues?.summary.nl ?? '');
-  const [filename, setfilename] = useState(initialValues?.filename ?? '');
+  const [filename, setFilename] = useState(initialValues?.filename ?? '');
+  const [filenameHasBeenEdited, setFilenameHasBeenEdited] = useState(false);
   const [image, setImage] = useState(initialValues?.image ?? '');
+  const [imageHasBeenEdited, setImageHasBeenEdited] = useState(false);
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
@@ -159,6 +161,20 @@ export default function ToolMutationForm({
     setSelectedCategoryIDs(categories);
   };
 
+  const handleFilenameChange = (filename: string) => {
+    setFilename(filename);
+    if (mode === 'update') {
+      setFilenameHasBeenEdited(true);
+    }
+  };
+
+  const handleImageChange = (image: string) => {
+    setImage(image);
+    if (mode === 'update') {
+      setImageHasBeenEdited(true);
+    }
+  };
+
   const generateFormDataFromToolFormValues = () => {
     const data: Omit<ToolFormValues, 'filename' | 'image'> = {
       id: initialValues?.id,
@@ -191,6 +207,15 @@ export default function ToolMutationForm({
     const data = generateFormDataFromToolFormValues();
     data.append('tool', form.tool.files[0]);
     data.append('image', form.image.files[0]);
+    if (mode === 'update') {
+      if (filenameHasBeenEdited) {
+        data.append('filenameHasBeenEdited', 'true');
+      }
+
+      if (imageHasBeenEdited) {
+        data.append('imageHasBeenEdited', 'true');
+      }
+    }
 
     fetcher.submit(data, {
       action: '/api/tools',
@@ -319,7 +344,7 @@ export default function ToolMutationForm({
         label={t('ToolMutationForm.File Label')}
         name="tool"
         value={filename}
-        onChange={setfilename}
+        onChange={handleFilenameChange}
         error={getLocalisedError('filename')}
       />
 
@@ -327,7 +352,7 @@ export default function ToolMutationForm({
         name="image"
         label={t('ToolMutationForm.Image Label')}
         value={image}
-        onChange={setImage}
+        onChange={handleImageChange}
         accept="image/*"
       />
 

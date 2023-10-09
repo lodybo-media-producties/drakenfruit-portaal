@@ -73,6 +73,7 @@ export default function ArticleMutationForm({
     initialValues?.authorId ?? currentUser?.id ?? ''
   );
   const [image, setImage] = useState(initialValues?.image ?? '');
+  const [imageHasBeenEdited, setImageHasBeenEdited] = useState(false);
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
@@ -168,6 +169,7 @@ export default function ArticleMutationForm({
 
   const handleImageChange = (image: string) => {
     setImage(image);
+    if (mode === 'update') setImageHasBeenEdited(true);
   };
 
   const handleCategoriesChange = (categories: string[]) => {
@@ -214,6 +216,9 @@ export default function ArticleMutationForm({
       ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement)?.value
     );
     data.append('image', form.image.files[0]);
+    if (mode === 'update' && imageHasBeenEdited) {
+      data.append('imageHasBeenEdited', 'true');
+    }
 
     fetcher.submit(data, {
       action: '/api/articles',

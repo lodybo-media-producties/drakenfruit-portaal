@@ -101,6 +101,7 @@ async function writeAsyncIterableToWritable(
 
 type StorageUploadHandlerPart = UploadHandlerPart & {
   callback: (progress: UploadState) => void;
+  runHandler?: boolean;
 };
 
 export type StorageUploadHandler = (
@@ -112,18 +113,21 @@ export const toolUploadHandler: StorageUploadHandler = async ({
   filename,
   data,
   callback,
+  runHandler = true,
 }) => {
-  if (name === 'tool' || name === 'image') {
-    currentByteLength = 0;
+  if (runHandler) {
+    if (name === 'tool' || name === 'image') {
+      currentByteLength = 0;
 
-    const stream = uploadToDO(filename!, 'tool', callback);
+      const stream = uploadToDO(filename!, 'tool', callback);
 
-    await writeAsyncIterableToWritable(data, stream.writeStream);
+      await writeAsyncIterableToWritable(data, stream.writeStream);
 
-    const file = await stream.promise;
+      const file = await stream.promise;
 
-    if ('Key' in file) {
-      return file.Key;
+      if ('Key' in file) {
+        return file.Key;
+      }
     }
   }
 

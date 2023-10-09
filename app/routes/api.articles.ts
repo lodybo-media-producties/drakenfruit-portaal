@@ -29,6 +29,7 @@ let currentUpload: UploadState | null = null;
 function setCurrentUpload(progress: UploadState) {
   currentUpload = progress;
 }
+
 export async function loader({ request }: ActionFunctionArgs) {
   return eventStream(request.signal, (send: any) => {
     let timer = setInterval(() => {
@@ -125,39 +126,68 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   if (request.method === 'PUT') {
-    const formData = await clonedRequest.formData();
-    const mode = formData.get('mode') as string | undefined;
+    const imageEditedRequest = request.clone();
     const validationResults = await validateArticle(request);
 
     if (!validationResults.success) {
       return json<ArticleErrors>(validationResults.errors, { status: 400 });
     } else {
-      const articleFormValues = convertFormDataToArticleFormValues(formData);
-
-      const data: Prisma.ArticleUpdateInput = {
-        id: articleFormValues.id,
-        title: articleFormValues.title,
-        slug: articleFormValues.slug,
-        content: articleFormValues.content,
-        summary: articleFormValues.summary,
-        published: mode === 'publish',
-        image: articleFormValues.image,
-        author: {
-          connect: {
-            id: articleFormValues.authorId,
-          },
-        },
-      };
-
-      if (articleFormValues.categories.length > 0) {
-        data.categories = {
-          set: articleFormValues.categories.map((category) => ({
-            id: category,
-          })),
-        };
-      }
+      setCurrentUpload({
+        state: 'prepare',
+      });
 
       try {
+        const imageEditedFormData = await imageEditedRequest.formData();
+        const imageHasBeenEdited =
+          imageEditedFormData.get('imageHasBeenEdited');
+        let formData: FormData;
+
+        if (imageHasBeenEdited && imageHasBeenEdited === 'true') {
+          const uploadHandler = composeUploadHandlers(
+            (args) =>
+              articleUploadHandler({
+                ...args,
+                callback: (args) => {
+                  setCurrentUpload(args);
+                },
+              }),
+            createMemoryUploadHandler()
+          );
+
+          formData = await parseMultipartFormData(clonedRequest, uploadHandler);
+        } else {
+          formData = await clonedRequest.formData();
+        }
+
+        const articleFormValues = convertFormDataToArticleFormValues(formData);
+        const mode = formData.get('mode') as string | undefined;
+
+        const data: Prisma.ArticleUpdateInput = {
+          id: articleFormValues.id,
+          title: articleFormValues.title,
+          slug: articleFormValues.slug,
+          content: articleFormValues.content,
+          summary: articleFormValues.summary,
+          published: mode === 'publish',
+          author: {
+            connect: {
+              id: articleFormValues.authorId,
+            },
+          },
+        };
+
+        if (articleFormValues.image) {
+          data.image = articleFormValues.image;
+        }
+
+        if (articleFormValues.categories.length > 0) {
+          data.categories = {
+            set: articleFormValues.categories.map((category) => ({
+              id: category,
+            })),
+          };
+        }
+
         await prisma.article.update({
           where: {
             id: articleFormValues.id,

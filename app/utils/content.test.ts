@@ -191,6 +191,35 @@ describe('Content utilities', () => {
       });
     });
 
+    test('Convert FormData to ArticleFormValue without an image', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('title.en', 'Title 1');
+      formData.append('title.nl', 'Titel 1');
+      formData.append('slug.en', 'title-1');
+      formData.append('slug.nl', 'titel-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '');
+      formData.append('authorId', '1');
+      formData.append('image', 'undefined');
+
+      const article = convertFormDataToArticleFormValues(formData);
+
+      expect(article).toEqual({
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: [],
+        authorId: '1',
+        image: '',
+      });
+    });
+
     test('Converting the article data from Prisma to an ArticleFormValue', () => {
       const articleFromPrisma: Awaited<ReturnType<typeof getArticleById>> = {
         id: '1',
@@ -525,6 +554,35 @@ describe('Content utilities', () => {
       expect(formData.get('image')).toBeNull();
     });
 
+    test('Convert FormData to ToolFormValue', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', '/portal/tools/tool.pdf');
+      formData.append('image', '/portal/tools/tool.jpg');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '1,2');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: ['1', '2'],
+      });
+    });
+
     test('Convert FormData to ToolFormValue with empty categories', () => {
       const formData = new FormData();
       formData.append('id', '1');
@@ -554,7 +612,7 @@ describe('Content utilities', () => {
       });
     });
 
-    test('Convert FormData to ToolFormValue', () => {
+    test('Convert FormData to ToolFormValue without image or tool', () => {
       const formData = new FormData();
       formData.append('id', '1');
       formData.append('name.en', 'Tool 1');
@@ -563,11 +621,11 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('tool', '/portal/tools/tool.pdf');
-      formData.append('image', '/portal/tools/tool.jpg');
+      formData.append('tool', 'undefined');
+      formData.append('image', 'undefined');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
-      formData.append('categories', '1,2');
+      formData.append('categories', '');
 
       const tool = convertFormDataIntoToolFormValues(formData);
 
@@ -576,10 +634,10 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        filename: '/portal/tools/tool.pdf',
-        image: '/portal/tools/tool.jpg',
+        filename: '',
+        image: '',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
-        categories: ['1', '2'],
+        categories: [],
       });
     });
 

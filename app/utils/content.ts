@@ -92,12 +92,16 @@ export function convertFormDataToArticleFormValues(
       .split(',')
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
-    image: formData.get('image') as string,
+    image: '',
   };
 
   const id = formData.get('id') as string | null;
   if (id) {
     articleFormValues.id = id;
+  }
+
+  if (formData.has('image') && formData.get('image') !== 'undefined') {
+    articleFormValues.image = formData.get('image') as string;
   }
 
   return articleFormValues;
@@ -290,8 +294,8 @@ export function convertFormDataIntoToolFormValues(
       en: formData.get('description.en') as string,
       nl: formData.get('description.nl') as string,
     },
-    filename: formData.get('tool') as string,
-    image: formData.get('image') as string,
+    filename: '',
+    image: '',
     categories: (formData.get('categories') as string)
       .split(',')
       .filter(Boolean),
@@ -300,6 +304,14 @@ export function convertFormDataIntoToolFormValues(
   const id = formData.get('id') as string | null;
   if (id) {
     toolFormValues.id = id;
+  }
+
+  if (formData.has('tool') && formData.get('tool') !== 'undefined') {
+    toolFormValues.filename = formData.get('tool') as string;
+  }
+
+  if (formData.has('image') && formData.get('image') !== 'undefined') {
+    toolFormValues.image = formData.get('image') as string;
   }
 
   return toolFormValues;
