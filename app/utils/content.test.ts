@@ -2,7 +2,7 @@ import { describe, test } from 'vitest';
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
-  getLocalisedArticleBySlug,
+  type getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -534,7 +534,7 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('filename', '/portal/tools/tool.pdf');
+      formData.append('tool', '/portal/tools/tool.pdf');
       formData.append('image', '/portal/tools/tool.jpg');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
@@ -563,7 +563,7 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('filename', '/portal/tools/tool.pdf');
+      formData.append('tool', '/portal/tools/tool.pdf');
       formData.append('image', '/portal/tools/tool.jpg');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');

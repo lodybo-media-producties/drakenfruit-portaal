@@ -1,7 +1,7 @@
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
-  getLocalisedArticleBySlug,
+  type getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
