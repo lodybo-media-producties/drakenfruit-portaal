@@ -253,7 +253,7 @@ export function convertToolListToTableData(
 }
 
 export function convertToolFormValuesToFormData(
-  tool: Omit<ToolFormValues, 'downloadUrl'>
+  tool: Omit<ToolFormValues, 'filename' | 'image'>
 ): FormData {
   const formData = new FormData();
 
@@ -294,7 +294,8 @@ export function convertFormDataIntoToolFormValues(
       en: formData.get('description.en') as string,
       nl: formData.get('description.nl') as string,
     },
-    downloadUrl: formData.get('tool') as string,
+    filename: formData.get('tool') as string,
+    image: formData.get('image') as string,
     categories: (formData.get('categories') as string)
       .split(',')
       .filter(Boolean),
@@ -329,7 +330,8 @@ export function convertPrismaToolDataToToolFormValues(
       en: tool.description.en,
       nl: tool.description.nl,
     },
-    downloadUrl: tool.downloadUrl,
+    filename: tool.filename,
+    image: tool.image,
     categories: tool.categories.map((category) => category.id),
   };
 }

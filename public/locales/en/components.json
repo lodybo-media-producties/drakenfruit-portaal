@@ -73,6 +73,7 @@
     "Description Label": "Description",
     "Category Label": "Select one or more categories",
     "File Label": "Select a tool for upload",
+    "Image Label": "Select an image to display as the tool's preview",
     "Save Button Label": "Save",
     "Edit Button Label": "Edit",
     "Upload": {

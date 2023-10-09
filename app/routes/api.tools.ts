@@ -53,6 +53,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const clonedRequest = request.clone();
 
   if (request.method === 'POST') {
+    // TODO: We parse formData twice, once here during validate and once during multipart. This is not ideal.
     const validationResults = await validateTool(request);
 
     if (!validationResults.success) {
@@ -62,34 +63,32 @@ export async function action({ request }: ActionFunctionArgs) {
         state: 'prepare',
       });
 
-      const uploadHandler = composeUploadHandlers(
-        (args) =>
-          toolUploadHandler({
-            ...args,
-            callback: (args) => {
-              setCurrentUpload(args);
-            },
-          }),
-        createMemoryUploadHandler()
-      );
-
-      const formData = await parseMultipartFormData(
-        clonedRequest,
-        uploadHandler
-      );
-
-      console.log(
-        'converting form data into tool form values and creating tool'
-      );
-      const data = convertFormDataIntoToolFormValues(formData);
       try {
+        const uploadHandler = composeUploadHandlers(
+          (args) =>
+            toolUploadHandler({
+              ...args,
+              callback: (args) => {
+                setCurrentUpload(args);
+              },
+            }),
+          createMemoryUploadHandler()
+        );
+
+        const formData = await parseMultipartFormData(
+          clonedRequest,
+          uploadHandler
+        );
+
+        const data = convertFormDataIntoToolFormValues(formData);
         await prisma.tool.create({
           data: {
             name: data.name,
             slug: data.slug,
             description: data.description,
             summary: data.summary,
-            downloadUrl: data.downloadUrl,
+            filename: data.filename,
+            image: data.image,
             categories: {
               connect: data.categories.map((category) => ({
                 id: category,

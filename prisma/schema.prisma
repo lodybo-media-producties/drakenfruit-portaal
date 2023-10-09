@@ -121,7 +121,9 @@ model Tool {
   /// [Translated]
   description Json
 
-  downloadUrl String
+  filename String
+
+  image String
 
   categories Category[]
 

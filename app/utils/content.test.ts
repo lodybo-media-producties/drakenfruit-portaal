@@ -464,7 +464,8 @@ describe('Content utilities', () => {
           name: { en: 'Tool 1', nl: 'Tool 1' },
           slug: { en: 'tool-1', nl: 'tool-1' },
           description: { en: 'Content 1', nl: 'Inhoud 1' },
-          downloadUrl: 'https://example.com',
+          filename: '/portal/tools/tool.pdf',
+          image: '/portal/tools/tool.jpg',
           summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
           categories: [
             {
@@ -497,11 +498,13 @@ describe('Content utilities', () => {
     });
 
     test('Convert a ToolFormValue into FormData object', () => {
-      const tool: Omit<ToolFormValues, 'downloadUrl'> = {
+      const tool: ToolFormValues = {
         id: '1',
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       };
@@ -518,6 +521,8 @@ describe('Content utilities', () => {
       expect(formData.get('summary.en')).toEqual('Summary 1');
       expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
       expect(formData.get('categories')).toEqual('1,2');
+      expect(formData.get('filename')).toBeNull();
+      expect(formData.get('image')).toBeNull();
     });
 
     test('Convert FormData to ToolFormValue with empty categories', () => {
@@ -529,7 +534,8 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('tool', 'tool.pdf');
+      formData.append('filename', '/portal/tools/tool.pdf');
+      formData.append('image', '/portal/tools/tool.jpg');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
       formData.append('categories', '');
@@ -541,7 +547,8 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'tool.pdf',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: [],
       });
@@ -556,7 +563,8 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('tool', 'tool.pdf');
+      formData.append('filename', '/portal/tools/tool.pdf');
+      formData.append('image', '/portal/tools/tool.jpg');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
       formData.append('categories', '1,2');
@@ -568,7 +576,8 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'tool.pdf',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       });
@@ -580,7 +589,8 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: [
           {
@@ -611,7 +621,8 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       });

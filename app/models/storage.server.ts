@@ -23,6 +23,8 @@ interface UploadingUploadState extends BaseUploadState {
 
 export type UploadState = PrepareUploadState | UploadingUploadState;
 
+export type StorageType = 'article' | 'tool' | 'webinar';
+
 let currentByteLength = 0;
 
 const client = new S3({
@@ -35,8 +37,9 @@ const client = new S3({
   },
 });
 
-export function uploadTool(
+export function uploadToDO(
   filename: string,
+  type: StorageType,
   callback: (progress: UploadState) => void
 ) {
   const pass = new PassThrough();
@@ -45,7 +48,7 @@ export function uploadTool(
     client,
     params: {
       Bucket: 'drakenfruit-storage',
-      Key: `tools/${filename}`,
+      Key: `portal/${type}/${filename}`,
       Body: pass,
     },
   });
@@ -79,17 +82,17 @@ export const toolUploadHandler: ToolUploadHandler = async ({
   data,
   callback,
 }) => {
-  if (name === 'tool') {
+  if (name === 'tool' || name === 'image') {
     currentByteLength = 0;
 
-    const stream = uploadTool(filename!, callback);
+    const stream = uploadToDO(filename!, 'tool', callback);
 
     await writeAsyncIterableToWritable(data, stream.writeStream);
 
     const file = await stream.promise;
 
-    if ('Location' in file) {
-      return file.Location;
+    if ('Key' in file) {
+      return file.Key;
     }
   }
 

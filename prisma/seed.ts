@@ -284,7 +284,8 @@ async function createTools() {
         nl: faker.lorem.paragraph(),
         en: faker.lorem.paragraph(),
       },
-      downloadUrl: '/tools/inclusiviteitsscan.pdf',
+      filename: 'portal/tools/inclusiviteitsscan.pdf',
+      image: 'portal/tools/inclusiviteitsscan.png',
       categories: {
         connect: [
           {
@@ -317,7 +318,8 @@ async function createTools() {
         nl: faker.lorem.paragraph(),
         en: faker.lorem.paragraph(),
       },
-      downloadUrl: '/tools/inclusievere-projecten-canvas.pdf',
+      filename: 'portal/tools/inclusievere-projecten-canvas.pdf',
+      image: 'portal/tools/inclusievere-projecten-canvas.png',
       categories: {
         connect: [
           {

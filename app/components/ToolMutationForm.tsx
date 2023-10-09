@@ -65,9 +65,8 @@ export default function ToolMutationForm({
   );
   const [enSummary, setEnSummary] = useState(initialValues?.summary.en ?? '');
   const [nlSummary, setNlSummary] = useState(initialValues?.summary.nl ?? '');
-  const [downloadUrl, setDownloadUrl] = useState(
-    initialValues?.downloadUrl ?? ''
-  );
+  const [filename, setfilename] = useState(initialValues?.filename ?? '');
+  const [image, setImage] = useState(initialValues?.image ?? '');
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
@@ -161,7 +160,7 @@ export default function ToolMutationForm({
   };
 
   const generateFormDataFromToolFormValues = () => {
-    const data: ToolFormValues = {
+    const data: Omit<ToolFormValues, 'filename' | 'image'> = {
       id: initialValues?.id,
       name: {
         en: enName,
@@ -179,7 +178,6 @@ export default function ToolMutationForm({
         en: enDescription,
         nl: nlDescription,
       },
-      downloadUrl,
       categories: selectedCategoryIDs,
     };
 
@@ -192,6 +190,7 @@ export default function ToolMutationForm({
 
     const data = generateFormDataFromToolFormValues();
     data.append('tool', form.tool.files[0]);
+    data.append('image', form.image.files[0]);
 
     fetcher.submit(data, {
       action: '/api/tools',
@@ -260,6 +259,7 @@ export default function ToolMutationForm({
       if ('ok' in data) {
         if (!data.ok) {
           setError(data.message);
+          window.scrollTo(0, 0);
         }
       } else {
         setFormErrors(data);
@@ -318,9 +318,17 @@ export default function ToolMutationForm({
       <FileInput
         label={t('ToolMutationForm.File Label')}
         name="tool"
-        value={downloadUrl}
-        onChange={setDownloadUrl}
-        error={getLocalisedError('downloadUrl')}
+        value={filename}
+        onChange={setfilename}
+        error={getLocalisedError('filename')}
+      />
+
+      <FileInput
+        name="image"
+        label={t('ToolMutationForm.Image Label')}
+        value={image}
+        onChange={setImage}
+        accept="image/*"
       />
 
       {uploadProgress && uploadProgress.state === 'prepare' ? (

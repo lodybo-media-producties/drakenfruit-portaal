@@ -190,7 +190,9 @@ export async function validateTool(
     .filter(Boolean);
 
   const tool = formData.get('tool') as File;
-  const downloadUrl = tool.name;
+  const filename = tool.name;
+  const imageData = formData.get('image') as File;
+  const image = imageData.name;
 
   const errors: ToolErrors = {};
 
@@ -198,8 +200,11 @@ export async function validateTool(
   errors.slug = checks.checkLocalisedValue(slug);
   errors.description = checks.checkLocalisedValue(description);
   errors.summary = checks.checkLocalisedValue(summary);
-  if (!isDefined(downloadUrl)) {
-    errors.downloadUrl = 'Bestand is verplicht';
+  if (!isDefined(filename)) {
+    errors.filename = 'Bestand is verplicht';
+  }
+  if (!isDefined(image)) {
+    errors.image = 'Afbeelding is verplicht';
   }
 
   if (Object.keys(errors).some((key) => errors[key as keyof ToolErrors])) {
@@ -213,7 +218,8 @@ export async function validateTool(
       slug,
       description,
       summary,
-      downloadUrl,
+      filename,
+      image,
       categories,
     },
   };
