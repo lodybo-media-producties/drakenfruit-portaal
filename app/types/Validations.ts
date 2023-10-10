@@ -51,10 +51,11 @@ export type ToolData = ToolFormValues;
 
 export type ToolErrors = Partial<
   Record<
-    keyof Omit<ToolFormValues, 'downloadUrl' | 'id'>,
+    keyof Omit<ToolFormValues, 'filename' | 'image' | 'id'>,
     { nl?: string; en?: string }
   > & {
-    downloadUrl?: string;
+    filename?: string;
+    image?: string;
     id?: string;
     categories?: string;
   }

@@ -65,9 +65,10 @@ export default function ToolMutationForm({
   );
   const [enSummary, setEnSummary] = useState(initialValues?.summary.en ?? '');
   const [nlSummary, setNlSummary] = useState(initialValues?.summary.nl ?? '');
-  const [downloadUrl, setDownloadUrl] = useState(
-    initialValues?.downloadUrl ?? ''
-  );
+  const [filename, setFilename] = useState(initialValues?.filename ?? '');
+  const [filenameHasBeenEdited, setFilenameHasBeenEdited] = useState(false);
+  const [image, setImage] = useState(initialValues?.image ?? '');
+  const [imageHasBeenEdited, setImageHasBeenEdited] = useState(false);
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
@@ -160,8 +161,22 @@ export default function ToolMutationForm({
     setSelectedCategoryIDs(categories);
   };
 
+  const handleFilenameChange = (filename: string) => {
+    setFilename(filename);
+    if (mode === 'update') {
+      setFilenameHasBeenEdited(true);
+    }
+  };
+
+  const handleImageChange = (image: string) => {
+    setImage(image);
+    if (mode === 'update') {
+      setImageHasBeenEdited(true);
+    }
+  };
+
   const generateFormDataFromToolFormValues = () => {
-    const data: ToolFormValues = {
+    const data: Omit<ToolFormValues, 'filename' | 'image'> = {
       id: initialValues?.id,
       name: {
         en: enName,
@@ -179,7 +194,6 @@ export default function ToolMutationForm({
         en: enDescription,
         nl: nlDescription,
       },
-      downloadUrl,
       categories: selectedCategoryIDs,
     };
 
@@ -192,6 +206,16 @@ export default function ToolMutationForm({
 
     const data = generateFormDataFromToolFormValues();
     data.append('tool', form.tool.files[0]);
+    data.append('image', form.image.files[0]);
+    if (mode === 'update') {
+      if (filenameHasBeenEdited) {
+        data.append('filenameHasBeenEdited', 'true');
+      }
+
+      if (imageHasBeenEdited) {
+        data.append('imageHasBeenEdited', 'true');
+      }
+    }
 
     fetcher.submit(data, {
       action: '/api/tools',
@@ -260,6 +284,7 @@ export default function ToolMutationForm({
       if ('ok' in data) {
         if (!data.ok) {
           setError(data.message);
+          window.scrollTo(0, 0);
         }
       } else {
         setFormErrors(data);
@@ -318,9 +343,17 @@ export default function ToolMutationForm({
       <FileInput
         label={t('ToolMutationForm.File Label')}
         name="tool"
-        value={downloadUrl}
-        onChange={setDownloadUrl}
-        error={getLocalisedError('downloadUrl')}
+        value={filename}
+        onChange={handleFilenameChange}
+        error={getLocalisedError('filename')}
+      />
+
+      <FileInput
+        name="image"
+        label={t('ToolMutationForm.Image Label')}
+        value={image}
+        onChange={handleImageChange}
+        accept="image/*"
       />
 
       {uploadProgress && uploadProgress.state === 'prepare' ? (

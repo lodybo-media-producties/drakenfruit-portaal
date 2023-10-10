@@ -1,7 +1,7 @@
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
-  getLocalisedArticleBySlug,
+  type getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
@@ -46,7 +46,7 @@ export function convertArticleListToTableData(
 }
 
 export function convertArticleFormValuesToFormData(
-  articleFormValues: ArticleFormValues
+  articleFormValues: Omit<ArticleFormValues, 'image'>
 ): FormData {
   const formData = new FormData();
 
@@ -63,10 +63,6 @@ export function convertArticleFormValuesToFormData(
 
   if (articleFormValues.id) {
     formData.append('id', articleFormValues.id);
-  }
-
-  if (articleFormValues.image) {
-    formData.append('image', articleFormValues.image);
   }
 
   return formData;
@@ -96,12 +92,16 @@ export function convertFormDataToArticleFormValues(
       .split(',')
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
-    image: formData.get('image') as string,
+    image: '',
   };
 
   const id = formData.get('id') as string | null;
   if (id) {
     articleFormValues.id = id;
+  }
+
+  if (formData.has('image') && formData.get('image') !== 'undefined') {
+    articleFormValues.image = formData.get('image') as string;
   }
 
   return articleFormValues;
@@ -253,7 +253,7 @@ export function convertToolListToTableData(
 }
 
 export function convertToolFormValuesToFormData(
-  tool: Omit<ToolFormValues, 'downloadUrl'>
+  tool: Omit<ToolFormValues, 'filename' | 'image'>
 ): FormData {
   const formData = new FormData();
 
@@ -294,7 +294,8 @@ export function convertFormDataIntoToolFormValues(
       en: formData.get('description.en') as string,
       nl: formData.get('description.nl') as string,
     },
-    downloadUrl: formData.get('tool') as string,
+    filename: '',
+    image: '',
     categories: (formData.get('categories') as string)
       .split(',')
       .filter(Boolean),
@@ -303,6 +304,14 @@ export function convertFormDataIntoToolFormValues(
   const id = formData.get('id') as string | null;
   if (id) {
     toolFormValues.id = id;
+  }
+
+  if (formData.has('tool') && formData.get('tool') !== 'undefined') {
+    toolFormValues.filename = formData.get('tool') as string;
+  }
+
+  if (formData.has('image') && formData.get('image') !== 'undefined') {
+    toolFormValues.image = formData.get('image') as string;
   }
 
   return toolFormValues;
@@ -329,7 +338,8 @@ export function convertPrismaToolDataToToolFormValues(
       en: tool.description.en,
       nl: tool.description.nl,
     },
-    downloadUrl: tool.downloadUrl,
+    filename: tool.filename,
+    image: tool.image,
     categories: tool.categories.map((category) => category.id),
   };
 }

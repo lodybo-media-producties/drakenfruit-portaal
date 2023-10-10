@@ -1,7 +1,8 @@
-import { S3 } from '@aws-sdk/client-s3';
+import { S3, GetObjectCommand } from '@aws-sdk/client-s3';
 import { type Progress as AWSProgress, Upload } from '@aws-sdk/lib-storage';
 import { type UploadHandlerPart } from '@remix-run/server-runtime';
 import { PassThrough, type Writable } from 'stream';
+import { ReadStream } from 'fs';
 
 interface BaseUploadState {
   state: 'prepare' | 'uploading';
@@ -23,9 +24,11 @@ interface UploadingUploadState extends BaseUploadState {
 
 export type UploadState = PrepareUploadState | UploadingUploadState;
 
+export type StorageType = 'article' | 'tool' | 'webinar';
+
 let currentByteLength = 0;
 
-const client = new S3({
+export const client = new S3({
   forcePathStyle: false,
   endpoint: 'https://ams3.digitaloceanspaces.com',
   region: 'us-east-1',
@@ -35,8 +38,9 @@ const client = new S3({
   },
 });
 
-export function uploadTool(
+export function uploadToDO(
   filename: string,
+  type: StorageType,
   callback: (progress: UploadState) => void
 ) {
   const pass = new PassThrough();
@@ -45,8 +49,9 @@ export function uploadTool(
     client,
     params: {
       Bucket: 'drakenfruit-storage',
-      Key: `tools/${filename}`,
+      Key: `portal/${type}/${filename}`,
       Body: pass,
+      // ACL: 'public-read', // Turned off for privacy. Use signed urls instead if needed.
     },
   });
 
@@ -65,36 +70,18 @@ export function uploadTool(
   };
 }
 
-type ToolUploadHandlerPart = UploadHandlerPart & {
-  callback: (progress: UploadState) => void;
-};
+export async function retrieveFromDO(src: string) {
+  const data = await client.send(
+    new GetObjectCommand({
+      Bucket: 'drakenfruit-storage',
+      Key: src,
+    })
+  );
 
-export type ToolUploadHandler = (
-  part: ToolUploadHandlerPart
-) => Promise<File | string | null | undefined>;
-
-export const toolUploadHandler: ToolUploadHandler = async ({
-  name,
-  filename,
-  data,
-  callback,
-}) => {
-  if (name === 'tool') {
-    currentByteLength = 0;
-
-    const stream = uploadTool(filename!, callback);
-
-    await writeAsyncIterableToWritable(data, stream.writeStream);
-
-    const file = await stream.promise;
-
-    if ('Location' in file) {
-      return file.Location;
-    }
-  }
-
-  return undefined;
-};
+  // Casting to ReadStream is safe because we know the data is a stream.
+  // The type is a union of Browser and NodeJS streams but, we only work with NodeJs here.
+  return data.Body as unknown as ReadStream;
+}
 
 async function writeAsyncIterableToWritable(
   iterable: AsyncIterable<Uint8Array>,
@@ -111,3 +98,61 @@ async function writeAsyncIterableToWritable(
     throw error;
   }
 }
+
+type StorageUploadHandlerPart = UploadHandlerPart & {
+  callback: (progress: UploadState) => void;
+  runHandler?: boolean;
+};
+
+export type StorageUploadHandler = (
+  part: StorageUploadHandlerPart
+) => Promise<File | string | null | undefined>;
+
+export const toolUploadHandler: StorageUploadHandler = async ({
+  name,
+  filename,
+  data,
+  callback,
+  runHandler = true,
+}) => {
+  if (runHandler) {
+    if (name === 'tool' || name === 'image') {
+      currentByteLength = 0;
+
+      const stream = uploadToDO(filename!, 'tool', callback);
+
+      await writeAsyncIterableToWritable(data, stream.writeStream);
+
+      const file = await stream.promise;
+
+      if ('Key' in file) {
+        return file.Key;
+      }
+    }
+  }
+
+  return undefined;
+};
+
+export const articleUploadHandler: StorageUploadHandler = async ({
+  name,
+  filename,
+  data,
+  callback,
+}) => {
+  if (name === 'image') {
+    currentByteLength = 0;
+
+    const stream = uploadToDO(filename!, 'article', callback);
+
+    await writeAsyncIterableToWritable(data, stream.writeStream);
+
+    const file = await stream.promise;
+
+    if ('Key' in file) {
+      return file.Key;
+    }
+  }
+
+  return undefined;
+};

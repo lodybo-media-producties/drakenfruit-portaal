@@ -26,6 +26,10 @@ import { type User } from '~/models/user.server';
 import { type APIResponse } from '~/types/Responses';
 import Message from '~/components/Message';
 import { type ArticleErrors } from '~/types/Validations';
+// @ts-ignore
+import { useEventSource } from 'remix-utils/use-event-source';
+import { type UploadState } from '~/models/storage.server';
+import UploadProgressBar from '~/components/UploadProgressBar';
 
 type Props = {
   mode: 'create' | 'update';
@@ -49,6 +53,9 @@ export default function ArticleMutationForm({
 }: Props) {
   const { t } = useTranslation('components');
   const fetcher = useFetcher<APIResponse | ArticleErrors>();
+  const uploadProgressData = useEventSource('/api/articles', {
+    event: 'upload-progress',
+  });
 
   const [error, setError] = useState('');
   const [formErrors, setFormErrors] = useState<ArticleErrors>();
@@ -66,6 +73,7 @@ export default function ArticleMutationForm({
     initialValues?.authorId ?? currentUser?.id ?? ''
   );
   const [image, setImage] = useState(initialValues?.image ?? '');
+  const [imageHasBeenEdited, setImageHasBeenEdited] = useState(false);
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
@@ -161,6 +169,7 @@ export default function ArticleMutationForm({
 
   const handleImageChange = (image: string) => {
     setImage(image);
+    if (mode === 'update') setImageHasBeenEdited(true);
   };
 
   const handleCategoriesChange = (categories: string[]) => {
@@ -172,7 +181,7 @@ export default function ArticleMutationForm({
   };
 
   const generateFormDataFromArticleValues = (): FormData => {
-    const data: ArticleFormValues = {
+    const data: Omit<ArticleFormValues, 'image'> = {
       id: initialValues?.id ?? '',
       authorId: selectedAuthorID,
       title: {
@@ -191,7 +200,6 @@ export default function ArticleMutationForm({
         en: enContent,
         nl: nlContent,
       },
-      image,
       categories: selectedCategoryIDs,
     };
 
@@ -200,16 +208,22 @@ export default function ArticleMutationForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
 
     const data = generateFormDataFromArticleValues();
     data.append(
       'mode',
       ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement)?.value
     );
+    data.append('image', form.image.files[0]);
+    if (mode === 'update' && imageHasBeenEdited) {
+      data.append('imageHasBeenEdited', 'true');
+    }
 
     fetcher.submit(data, {
       action: '/api/articles',
       method: mode === 'create' ? 'POST' : 'PUT',
+      encType: 'multipart/form-data',
     });
   };
 
@@ -251,6 +265,12 @@ export default function ArticleMutationForm({
   };
 
   const isSubmitting = fetcher.state !== 'idle';
+
+  let uploadProgress: UploadState | null = null;
+
+  if (uploadProgressData) {
+    uploadProgress = JSON.parse(uploadProgressData) as UploadState;
+  }
 
   return (
     <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
@@ -322,6 +342,38 @@ export default function ArticleMutationForm({
           onSelect={handleCategoriesChange}
         />
       </Label>
+
+      {uploadProgress && uploadProgress.state === 'prepare' ? (
+        <div className="w-full">
+          <UploadProgressBar
+            progress={0}
+            subLabels={[
+              t('ArticleMutationForm.Upload.Prepare', {
+                filename: uploadProgress.filename,
+              }),
+            ]}
+          />
+        </div>
+      ) : null}
+
+      {uploadProgress && uploadProgress.state === 'uploading' ? (
+        <div className="w-full">
+          <UploadProgressBar
+            progress={Math.round(
+              (uploadProgress.transferred / uploadProgress.total) * 100
+            )}
+            subLabels={[
+              t('ArticleMutationForm.Upload.Uploading', {
+                filename: uploadProgress.filename,
+              }),
+              `${uploadProgress.transferred} / ${uploadProgress.total} bytes`,
+              `${Math.round(
+                (uploadProgress.transferred / uploadProgress.total) * 100
+              )}%`,
+            ]}
+          />
+        </div>
+      ) : null}
 
       <div className="flex flex-row justify-between items-center">
         <AnchorLink to={backLink}>
