@@ -26,34 +26,8 @@ seed()
   });
 
 async function createOrganisations() {
-  console.log('Creating Lodybo...');
-  await prisma.organisation.create({
-    data: {
-      name: 'Lodybo',
-      description: 'Lodybo, for all your software needs.',
-      users: {
-        create: [
-          {
-            email: 'hi@lodybo.nl',
-            locale: 'nl',
-            firstName: 'Lody',
-            lastName: 'Borgers',
-            role: 'MAINTAINER',
-            password: {
-              create: {
-                hash: await bcrypt.hash('lodyiscool', 10),
-              },
-            },
-          },
-        ],
-      },
-      projects: {
-        create: [],
-      },
-    },
-  });
-
-  console.log('Creating Drakenfruit...');
+  console.log('Creating organisations, starting with known organisations');
+  console.log('> Creating Drakenfruit...');
   await prisma.organisation.create({
     data: {
       name: 'Drakenfruit',
@@ -69,6 +43,18 @@ async function createOrganisations() {
             password: {
               create: {
                 hash: await bcrypt.hash('kayleeiscool', 10),
+              },
+            },
+          },
+          {
+            email: 'hi@lodybo.nl',
+            locale: 'nl',
+            firstName: 'Lody',
+            lastName: 'Borgers',
+            role: 'MAINTAINER',
+            password: {
+              create: {
+                hash: await bcrypt.hash('lodyiscool', 10),
               },
             },
           },
@@ -104,59 +90,32 @@ async function createOrganisations() {
     },
   });
 
-  console.log('Creating Ministerie van Huisvesting...');
-  await prisma.organisation.create({
-    data: {
-      name: 'Ministerie van Huisvesting',
-      description: 'Ministerie van Huisvesting, voor al uw huisvesting.',
-      users: {
-        create: [
-          {
-            email: 'silvia@ministerie.nl',
-            locale: 'nl',
-            firstName: 'Silvia',
-            lastName: faker.person.lastName(),
-            role: 'PROJECTLEADER',
-            password: {
-              create: {
-                hash: await bcrypt.hash('silviaiscool', 10),
+  const totalOrgs = getRandomNumber();
+  console.log(`> Creating ${totalOrgs} random organisations...`);
+  for (let i = 0; i < totalOrgs; i++) {
+    await prisma.organisation.create({
+      data: {
+        name: faker.company.name(),
+        description: faker.company.catchPhrase(),
+        users: {
+          create: [
+            {
+              email: faker.internet.email(),
+              locale: randomItem(['nl', 'en']),
+              firstName: faker.person.firstName(),
+              lastName: faker.person.lastName(),
+              role: 'PROJECTLEADER',
+              password: {
+                create: {
+                  hash: await bcrypt.hash('password', 10),
+                },
               },
             },
-          },
-        ],
+          ],
+        },
       },
-      projects: {
-        create: [],
-      },
-    },
-  });
-
-  console.log('Creating Agency For Ambition...');
-  await prisma.organisation.create({
-    data: {
-      name: 'Agency For Ambition',
-      description: 'Agency For Ambition, for all your ambitions.',
-      users: {
-        create: [
-          {
-            email: faker.internet.email(),
-            locale: 'en',
-            firstName: faker.person.firstName(),
-            lastName: faker.person.lastName(),
-            role: 'PROJECTLEADER',
-            password: {
-              create: {
-                hash: await bcrypt.hash('password', 10),
-              },
-            },
-          },
-        ],
-      },
-      projects: {
-        create: [],
-      },
-    },
-  });
+    });
+  }
 }
 
 function createCategories() {
@@ -343,4 +302,8 @@ function getRandomAmountOfCategories(
   }).map(() => ({
     id: randomItem(categories).id,
   }));
+}
+
+function getRandomNumber() {
+  return Math.floor(Math.random() * 10);
 }

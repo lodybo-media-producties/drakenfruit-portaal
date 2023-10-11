@@ -159,5 +159,62 @@
       },
       "Back Link Label": "Terug naar overzicht"
     }
+  },
+  "Organisations": {
+    "API": {
+      "Error": {
+        "Invalid Method": "Ongeldige methode"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "Organisatie aangemaakt",
+          "Message": "De organisatie is aangemaakt."
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Organisatie bijgewerkt",
+          "Message": "De organisatie is bijgewerkt."
+        },
+        "Error": {
+          "No ID": "Geen ID opgegeven",
+          "Organisation Not Found": "De organisatie kon niet gevonden worden"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Organisatie verwijderd",
+          "Message": "De organisatie is verwijderd."
+        },
+        "Error": {
+          "No ID": "Geen ID opgegeven"
+        },
+        "Confirmation": "<strong>LET OP</strong>: Als je deze organisatie verwijderd zullen ook de bijbehorende gebruikers en projecten worden verwijderd. Het verwijderen van een organisatie kan niet ongedaan gemaakt worden. Weet je zeker dat je deze organisatie wilt verwijderen?"
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Organisaties | Drakenfruit"
+      },
+      "Title": "Organisaties",
+      "No Organisations": "Er zijn nog geen organisaties aangemaakt.",
+      "New Organisation": "Nieuwe organisatie"
+    },
+    "New": {
+      "Meta": {
+        "Title": "Nieuwe organisatie | Drakenfruit"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Organisatie bewerken | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "Geen ID opgegeven",
+        "Organisation Not Found": "De organisatie kon niet gevonden worden"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    }
   }
 }

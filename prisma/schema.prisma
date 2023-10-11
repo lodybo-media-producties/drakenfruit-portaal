@@ -39,7 +39,7 @@ model Project {
   name        String
   description String
 
-  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   organisationId String
 
   users User[]
@@ -61,7 +61,7 @@ model User {
   role      Role
   locale    String
 
-  organisation   Organisation @relation(fields: [organisationId], references: [id])
+  organisation   Organisation @relation(fields: [organisationId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   organisationId String
 
   projects Project[]
