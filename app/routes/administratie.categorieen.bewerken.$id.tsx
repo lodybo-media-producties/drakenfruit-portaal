@@ -17,7 +17,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const t = await i18next.getFixedT(request, 'routes');
 
   const { id } = params;
-  invariant(id != null, t('Categories.Edit.Error.No ID'));
+  invariant(id, t('Categories.Edit.Error.No ID'));
 
   try {
     const categories = await getCategoryById(id);
@@ -45,7 +45,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 export default function EditCategoryRoute() {
   const { t } = useTranslation('routes');
   const { categories } = useLoaderData<typeof loader>();
-  console.log('back link label', t('Categories.Edit.Back Link Label'));
 
   return (
     <CategoryMutationForm

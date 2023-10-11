@@ -1,4 +1,5 @@
 import { describe, test } from 'vitest';
+import { type SerializeFrom } from '@remix-run/node';
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
@@ -17,6 +18,9 @@ import {
   convertToolListToTableData,
   convertPrismaToolDataToToolFormValues,
   convertPrismaArticleToLocalisedArticle,
+  convertOrganisationListToTableData,
+  convertOrganisationFormValuesToFormData,
+  convertFormDataToOrganisationFormValues,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -26,6 +30,7 @@ import {
   type ToolWithCategories,
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
+import { type OrganisationsWithUserCount } from '~/types/Organisations';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -683,6 +688,65 @@ describe('Content utilities', () => {
         image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+      });
+    });
+  });
+
+  describe('Organisations', () => {
+    test('Convert a list of organisations from the database into table data', () => {
+      const organisations: SerializeFrom<OrganisationsWithUserCount>[] = [
+        {
+          id: '1',
+          name: 'Organisation 1',
+          description: 'Description 1',
+          createdAt: '',
+          updatedAt: '',
+          _count: { users: 2 },
+        },
+      ];
+
+      const [columns, data] = convertOrganisationListToTableData(organisations);
+
+      expect(columns).toEqual(['Naam', 'Beschrijving', 'Aantal gebruikers']);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Organisation 1'],
+            ['Beschrijving', 'Description 1'],
+            ['Aantal gebruikers', '2'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert an organisation form value to form data', () => {
+      const organisation = {
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
+      };
+
+      const formData = convertOrganisationFormValuesToFormData(organisation);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name')).toEqual('Organisation 1');
+      expect(formData.get('description')).toEqual('Description 1');
+    });
+
+    test('Convert form data to organisation form values', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Organisation 1');
+      formData.append('description', 'Description 1');
+
+      const organisation = convertFormDataToOrganisationFormValues(formData);
+
+      expect(organisation).toEqual({
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
       });
     });
   });

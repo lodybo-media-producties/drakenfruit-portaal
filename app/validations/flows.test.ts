@@ -257,4 +257,46 @@ describe('Validating user flows', () => {
       expect(validationResult.data).toBe(undefined);
     });
   });
+
+  describe('Organisation validation', () => {
+    test('Check whether an organisation request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Naam 1');
+      formData.append('description', 'Beschrijving 1');
+
+      const request = new Request('http://localhost:3000/api/organisation', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult =
+        await validationFlows.validateOrganisation(request);
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual({
+        id: '1',
+        name: 'Naam 1',
+        description: 'Beschrijving 1',
+      });
+    });
+
+    test('Check whether an organisation request is invalid because of missing name', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('description', 'Beschrijving 1');
+
+      const request = new Request('http://localhost:3000/api/organisation', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult =
+        await validationFlows.validateOrganisation(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.name).toBe('Naam is verplicht');
+      expect(validationResult.data).toBe(undefined);
+    });
+  });
 });
