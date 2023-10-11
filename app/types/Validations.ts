@@ -1,6 +1,7 @@
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
 import { type ToolFormValues } from '~/types/Tool';
+import { type OrganisationFormValues } from '~/types/Organisations';
 
 interface BaseValidationResult {
   success: boolean;
@@ -59,4 +60,10 @@ export type ToolErrors = Partial<
     id?: string;
     categories?: string;
   }
+>;
+
+export type OrganisationData = OrganisationFormValues;
+
+export type OrganisationErrors = Partial<
+  Record<keyof OrganisationFormValues, string>
 >;

@@ -122,7 +122,9 @@ export default function OrganisationIndexRoute() {
           tableData={data}
           onEdit={handleEdit}
           deletionEndpoint="/administratie/organisaties?index"
-          customDeleteMessageKey="Organisations.API.DELETE.Confirmation"
+          customDeleteMessage={t(
+            'routes:Organisations.API.DELETE.Confirmation'
+          )}
         />
       ) : (
         <p>{t('Organisations.Index.No Organisations')}</p>

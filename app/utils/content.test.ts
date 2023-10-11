@@ -1,4 +1,5 @@
 import { describe, test } from 'vitest';
+import { type SerializeFrom } from '@remix-run/node';
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
@@ -18,7 +19,8 @@ import {
   convertPrismaToolDataToToolFormValues,
   convertPrismaArticleToLocalisedArticle,
   convertOrganisationListToTableData,
-  OrganisationsWithUserCount,
+  convertOrganisationFormValuesToFormData,
+  convertFormDataToOrganisationFormValues,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -28,8 +30,7 @@ import {
   type ToolWithCategories,
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
-import { Organisation } from '@prisma/client';
-import { SerializeFrom } from '@remix-run/node';
+import { type OrganisationsWithUserCount } from '~/types/Organisations';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -718,6 +719,35 @@ describe('Content utilities', () => {
           ]),
         },
       ]);
+    });
+
+    test('Convert an organisation form value to form data', () => {
+      const organisation = {
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
+      };
+
+      const formData = convertOrganisationFormValuesToFormData(organisation);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name')).toEqual('Organisation 1');
+      expect(formData.get('description')).toEqual('Description 1');
+    });
+
+    test('Convert form data to organisation form values', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Organisation 1');
+      formData.append('description', 'Description 1');
+
+      const organisation = convertFormDataToOrganisationFormValues(formData);
+
+      expect(organisation).toEqual({
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
+      });
     });
   });
 });

@@ -5,6 +5,8 @@ import type {
   CategoryErrors,
   LoginData,
   LoginErrors,
+  OrganisationData,
+  OrganisationErrors,
   ToolData,
   ToolErrors,
   ValidationResult,
@@ -221,6 +223,40 @@ export async function validateTool(
       filename,
       image,
       categories,
+    },
+  };
+}
+
+export async function validateOrganisation(
+  request: Request
+): Promise<ValidationResult<OrganisationData, OrganisationErrors>> {
+  const formData = await request.formData();
+  const id = formData.get('id') as string | undefined;
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+
+  const errors: OrganisationErrors = {};
+
+  if (!isDefined(name)) {
+    errors.name = 'Naam is verplicht';
+  }
+
+  if (!isDefined(description)) {
+    errors.description = 'Beschrijving is verplicht';
+  }
+
+  if (
+    Object.keys(errors).some((key) => errors[key as keyof OrganisationErrors])
+  ) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      id,
+      name,
+      description,
     },
   };
 }

@@ -102,5 +102,11 @@
   "ArticleCard": {
     "Author": "Door {{author}}",
     "Read More": "Lees meer"
+  },
+  "OrganisationMutationForm": {
+    "Name Label": "Naam van de organisatie",
+    "Description Label": "Beschrijving van de organisatie",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken"
   }
 }

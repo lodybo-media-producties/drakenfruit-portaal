@@ -15,7 +15,7 @@ type Props = {
   tableData: TableData[];
   onEdit: (id: string) => void;
   deletionEndpoint: string;
-  customDeleteMessageKey?: string;
+  customDeleteMessage?: string;
 };
 
 export default function Table({
@@ -23,7 +23,7 @@ export default function Table({
   columns,
   onEdit,
   deletionEndpoint,
-  customDeleteMessageKey,
+  customDeleteMessage,
 }: Props) {
   return (
     <div>
@@ -63,7 +63,7 @@ export default function Table({
                 <DeleteItemDialog
                   itemToDelete={{ id, name: data.get('Titel') ?? '' }}
                   deletionEndpoint={deletionEndpoint}
-                  additionalMessageKey={customDeleteMessageKey}
+                  additionalMessage={customDeleteMessage}
                 />
               </td>
             </tr>

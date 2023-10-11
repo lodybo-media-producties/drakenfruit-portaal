@@ -13,8 +13,12 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { Organisation, Prisma } from '@prisma/client';
-import { SerializeFrom } from '@remix-run/node';
+import { type Organisation } from '@prisma/client';
+import { type SerializeFrom } from '@remix-run/node';
+import {
+  type OrganisationFormValues,
+  type OrganisationsWithUserCount,
+} from '~/types/Organisations';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -346,16 +350,6 @@ export function convertPrismaToolDataToToolFormValues(
   };
 }
 
-export type OrganisationsWithUserCount = Prisma.OrganisationGetPayload<{
-  include: {
-    _count: {
-      select: {
-        users: boolean;
-      };
-    };
-  };
-}>;
-
 export function convertOrganisationListToTableData(
   organisations: SerializeFrom<OrganisationsWithUserCount>[]
 ): [Columns, TableData[]] {
@@ -373,4 +367,48 @@ export function convertOrganisationListToTableData(
   });
 
   return [columns, data];
+}
+
+// Create a function that converts a FormData object into an object that can be used to create a new organisation.
+// Then, create a function that converts an organisation object into a FormData object.
+// And lastly, create a function that converts an organisation object into an object that can be used to update an existing organisation.
+export function convertOrganisationFormValuesToFormData(
+  organisationFormValues: OrganisationFormValues
+): FormData {
+  const formData = new FormData();
+
+  formData.append('name', organisationFormValues.name);
+  formData.append('description', organisationFormValues.description);
+
+  if (organisationFormValues.id) {
+    formData.append('id', organisationFormValues.id);
+  }
+
+  return formData;
+}
+
+export function convertFormDataToOrganisationFormValues(
+  formData: FormData
+): OrganisationFormValues {
+  const organisationFormValues: OrganisationFormValues = {
+    name: formData.get('name') as string,
+    description: formData.get('description') as string,
+  };
+
+  const id = formData.get('id') as string | null;
+  if (id) {
+    organisationFormValues.id = id;
+  }
+
+  return organisationFormValues;
+}
+
+export function convertPrismaOrganisationToOrganisationFormValues(
+  organisation: Organisation
+): OrganisationFormValues {
+  return {
+    id: organisation.id,
+    name: organisation.name,
+    description: organisation.description,
+  };
 }

@@ -162,6 +162,25 @@
   },
   "Organisations": {
     "API": {
+      "Error": {
+        "Invalid Method": "Method not allowed"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "Organisation created",
+          "Message": "The organisation was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Organisation updated",
+          "Message": "The organisation was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Organisation Not Found": "The organisation could not be found"
+        }
+      },
       "DELETE": {
         "Success": {
           "Title": "Organisation deleted",
@@ -180,6 +199,22 @@
       "Title": "Organisations",
       "No Organisations": "No organisations were found",
       "New Organisation": "New organisation"
+    },
+    "New": {
+      "Meta": {
+        "Title": "New organisation | Drakenfruit"
+      },
+      "Back Link Label": "Back to organisations"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit organisation | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Organisation Not Found": "The organisation could not be found"
+      },
+      "Back Link Label": "Back to organisations"
     }
   }
 }

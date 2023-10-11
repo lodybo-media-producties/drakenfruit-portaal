@@ -2,7 +2,7 @@ import { S3, GetObjectCommand } from '@aws-sdk/client-s3';
 import { type Progress as AWSProgress, Upload } from '@aws-sdk/lib-storage';
 import { type UploadHandlerPart } from '@remix-run/server-runtime';
 import { PassThrough, type Writable } from 'stream';
-import { ReadStream } from 'fs';
+import { type ReadStream } from 'node:fs';
 
 interface BaseUploadState {
   state: 'prepare' | 'uploading';

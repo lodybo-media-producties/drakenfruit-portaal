@@ -25,13 +25,13 @@ type ItemToDelete = {
 type Props = {
   itemToDelete: ItemToDelete;
   deletionEndpoint: string;
-  additionalMessageKey?: string;
+  additionalMessage?: string;
 };
 
 export default function DeleteItemDialog({
   itemToDelete,
   deletionEndpoint,
-  additionalMessageKey,
+  additionalMessage,
 }: Props) {
   const { t } = useTranslation('components');
   const fetcher = useFetcher<APIResponse>();
@@ -78,10 +78,11 @@ export default function DeleteItemDialog({
           <DialogTitle>{t('Delete Item Dialog.Title')}</DialogTitle>
           <DialogDescription className="space-y-6">
             <span className="block">{t('Delete Item Dialog.Message')}</span>
-            {additionalMessageKey ? (
-              <span className="block">
-                {t('routes:Organisations.API.DELETE.Confirmation')}
-              </span>
+            {additionalMessage ? (
+              <span
+                className="block"
+                dangerouslySetInnerHTML={{ __html: additionalMessage }}
+              />
             ) : null}
             {itemToDelete.name ? (
               <span className="font-type text-lg block">
