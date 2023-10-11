@@ -19,6 +19,11 @@ import {
   type OrganisationFormValues,
   type OrganisationsWithUserCount,
 } from '~/types/Organisations';
+import { ProjectData } from '~/types/Validations';
+import {
+  ProjectFormValues,
+  ProjectsWithOrganisationAndUsers,
+} from '~/types/Project';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -369,9 +374,6 @@ export function convertOrganisationListToTableData(
   return [columns, data];
 }
 
-// Create a function that converts a FormData object into an object that can be used to create a new organisation.
-// Then, create a function that converts an organisation object into a FormData object.
-// And lastly, create a function that converts an organisation object into an object that can be used to update an existing organisation.
 export function convertOrganisationFormValuesToFormData(
   organisationFormValues: OrganisationFormValues
 ): FormData {
@@ -403,12 +405,65 @@ export function convertFormDataToOrganisationFormValues(
   return organisationFormValues;
 }
 
-export function convertPrismaOrganisationToOrganisationFormValues(
-  organisation: Organisation
-): OrganisationFormValues {
-  return {
-    id: organisation.id,
-    name: organisation.name,
-    description: organisation.description,
+export function convertProjectListToTableData(
+  projects: SerializeFrom<ProjectsWithOrganisationAndUsers>[]
+): [Columns, TableData[]] {
+  const columns: Columns = [
+    'Naam',
+    'Beschrijving',
+    'Organisatie',
+    'Deelnemers',
+  ];
+
+  const data: TableData[] = projects.map((project) => {
+    return {
+      id: project.id,
+      data: new Map([
+        ['Naam', project.name],
+        ['Beschrijving', project.description],
+        ['Organisatie', project.organisation.name],
+        [
+          'Deelnemers',
+          project.users
+            .map((user) => `${user.firstName} ${user.lastName}`)
+            .join(', '),
+        ],
+      ]),
+    };
+  });
+
+  return [columns, data];
+}
+
+export function convertProjectFormValuesToFormData(
+  projectFormValues: ProjectFormValues
+): FormData {
+  const formData = new FormData();
+
+  formData.append('name', projectFormValues.name);
+  formData.append('description', projectFormValues.description);
+  formData.append('organisationId', projectFormValues.organisationId);
+
+  if (projectFormValues.id) {
+    formData.append('id', projectFormValues.id);
+  }
+
+  return formData;
+}
+
+export function convertFormDataToProjectFormValues(
+  formData: FormData
+): ProjectFormValues {
+  const projectFormValues: ProjectFormValues = {
+    name: formData.get('name') as string,
+    description: formData.get('description') as string,
+    organisationId: formData.get('organisationId') as string,
   };
+
+  const id = formData.get('id') as string | null;
+  if (id) {
+    projectFormValues.id = id;
+  }
+
+  return projectFormValues;
 }

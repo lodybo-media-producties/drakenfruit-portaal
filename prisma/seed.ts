@@ -12,6 +12,7 @@ async function seed() {
   await createCategories();
   await createArticles();
   await createTools();
+  await createProjects();
 
   console.log(`Database has been seeded. 🌱`);
 }
@@ -288,6 +289,38 @@ async function createTools() {
       },
     },
   });
+}
+
+async function createProjects() {
+  console.log('Creating projects...');
+
+  const organisations = await prisma.organisation.findMany({
+    include: {
+      users: true,
+    },
+  });
+
+  const totalProjects = getRandomNumber();
+  console.log(`> Creating ${totalProjects} random projects...`);
+  for (let i = 0; i < totalProjects; i++) {
+    const organisation = randomItem(organisations);
+    await prisma.project.create({
+      data: {
+        name: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        organisation: {
+          connect: {
+            id: organisation.id,
+          },
+        },
+        users: {
+          connect: {
+            id: organisation.users[0].id,
+          },
+        },
+      },
+    });
+  }
 }
 
 function randomItem<T>(items: T[]): T {

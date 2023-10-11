@@ -7,6 +7,8 @@ import type {
   LoginErrors,
   OrganisationData,
   OrganisationErrors,
+  ProjectData,
+  ProjectErrors,
   ToolData,
   ToolErrors,
   ValidationResult,
@@ -257,6 +259,44 @@ export async function validateOrganisation(
       id,
       name,
       description,
+    },
+  };
+}
+
+export async function validateProject(
+  request: Request
+): Promise<ValidationResult<ProjectData, ProjectErrors>> {
+  const formData = await request.formData();
+  const id = formData.get('id') as string | undefined;
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+  const organisationId = formData.get('organisationId') as string;
+
+  const errors: ProjectErrors = {};
+
+  if (!isDefined(name)) {
+    errors.name = 'Naam is verplicht';
+  }
+
+  if (!isDefined(description)) {
+    errors.description = 'Beschrijving is verplicht';
+  }
+
+  if (!isDefined(organisationId)) {
+    errors.organisationId = 'Organisatie is verplicht';
+  }
+
+  if (Object.keys(errors).some((key) => errors[key as keyof ProjectErrors])) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      id,
+      name,
+      description,
+      organisationId,
     },
   };
 }
