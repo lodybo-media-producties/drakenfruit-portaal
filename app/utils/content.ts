@@ -13,6 +13,8 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
+import { Organisation, Prisma } from '@prisma/client';
+import { SerializeFrom } from '@remix-run/node';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -342,4 +344,33 @@ export function convertPrismaToolDataToToolFormValues(
     image: tool.image,
     categories: tool.categories.map((category) => category.id),
   };
+}
+
+export type OrganisationsWithUserCount = Prisma.OrganisationGetPayload<{
+  include: {
+    _count: {
+      select: {
+        users: boolean;
+      };
+    };
+  };
+}>;
+
+export function convertOrganisationListToTableData(
+  organisations: SerializeFrom<OrganisationsWithUserCount>[]
+): [Columns, TableData[]] {
+  const columns: Columns = ['Naam', 'Beschrijving', 'Aantal gebruikers'];
+
+  const data: TableData[] = organisations.map((organisation) => {
+    return {
+      id: organisation.id,
+      data: new Map([
+        ['Naam', organisation.name],
+        ['Beschrijving', organisation.description],
+        ['Aantal gebruikers', organisation._count.users.toString()],
+      ]),
+    };
+  });
+
+  return [columns, data];
 }

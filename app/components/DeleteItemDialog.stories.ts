@@ -59,3 +59,30 @@ export const FailedRequest: Story = {
     },
   },
 };
+
+export const CustomMessage: Story = {
+  args: {
+    deletionEndpoint: '/api/articles',
+    itemToDelete: {
+      id: '1',
+      name: 'Article 1',
+    },
+    additionalMessageKey: '[ ==> Add your custom message key here]',
+    // @ts-ignore
+    remixStub: {
+      initialEntries: ['/'],
+      routes: [
+        {
+          path: '/',
+        },
+        {
+          path: '/api/articles',
+          action: async () => {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            return { ok: true };
+          },
+        },
+      ],
+    },
+  },
+};

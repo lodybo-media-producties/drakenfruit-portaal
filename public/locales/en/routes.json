@@ -159,5 +159,27 @@
       },
       "Back Link Label": "Back to tools"
     }
+  },
+  "Organisations": {
+    "API": {
+      "DELETE": {
+        "Success": {
+          "Title": "Organisation deleted",
+          "Message": "The organisation was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        },
+        "Confirmation": "<strong>WARNING</strong>: If you delete this organisation, all associated users and projects will be deleted as well. Deleting an organisation cannot be undone. Are you sure you want to delete this organisation?"
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Organisations | Drakenfruit"
+      },
+      "Title": "Organisations",
+      "No Organisations": "No organisations were found",
+      "New Organisation": "New organisation"
+    }
   }
 }

@@ -17,6 +17,8 @@ import {
   convertToolListToTableData,
   convertPrismaToolDataToToolFormValues,
   convertPrismaArticleToLocalisedArticle,
+  convertOrganisationListToTableData,
+  OrganisationsWithUserCount,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -26,6 +28,8 @@ import {
   type ToolWithCategories,
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
+import { Organisation } from '@prisma/client';
+import { SerializeFrom } from '@remix-run/node';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -684,6 +688,36 @@ describe('Content utilities', () => {
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       });
+    });
+  });
+
+  describe('Organisations', () => {
+    test('Convert a list of organisations from the database into table data', () => {
+      const organisations: SerializeFrom<OrganisationsWithUserCount>[] = [
+        {
+          id: '1',
+          name: 'Organisation 1',
+          description: 'Description 1',
+          createdAt: '',
+          updatedAt: '',
+          _count: { users: 2 },
+        },
+      ];
+
+      const [columns, data] = convertOrganisationListToTableData(organisations);
+
+      expect(columns).toEqual(['Naam', 'Beschrijving', 'Aantal gebruikers']);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Organisation 1'],
+            ['Beschrijving', 'Description 1'],
+            ['Aantal gebruikers', '2'],
+          ]),
+        },
+      ]);
     });
   });
 });
