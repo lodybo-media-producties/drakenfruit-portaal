@@ -1,8 +1,9 @@
 import { describe, test } from 'vitest';
+import { type SerializeFrom } from '@remix-run/node';
 import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
-  getLocalisedArticleBySlug,
+  type getLocalisedArticleBySlug,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -17,6 +18,9 @@ import {
   convertToolListToTableData,
   convertPrismaToolDataToToolFormValues,
   convertPrismaArticleToLocalisedArticle,
+  convertOrganisationListToTableData,
+  convertOrganisationFormValuesToFormData,
+  convertFormDataToOrganisationFormValues,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -26,6 +30,7 @@ import {
   type ToolWithCategories,
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
+import { type OrganisationsWithUserCount } from '~/types/Organisations';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -103,7 +108,7 @@ describe('Content utilities', () => {
       expect(formData.get('content.nl')).toEqual('Inhoud 1');
       expect(formData.get('categories')).toEqual('1,2');
       expect(formData.get('authorId')).toEqual('1');
-      expect(formData.get('image')).toEqual('/path/to/image.jpg');
+      expect(formData.get('image')).toBeNull();
     });
 
     test('Convert an ArticleFormValue object into FormData without an image', () => {
@@ -188,6 +193,35 @@ describe('Content utilities', () => {
         categories: [],
         authorId: '1',
         image: '/path/to/image.jpg',
+      });
+    });
+
+    test('Convert FormData to ArticleFormValue without an image', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('title.en', 'Title 1');
+      formData.append('title.nl', 'Titel 1');
+      formData.append('slug.en', 'title-1');
+      formData.append('slug.nl', 'titel-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('content.en', 'Content 1');
+      formData.append('content.nl', 'Inhoud 1');
+      formData.append('categories', '');
+      formData.append('authorId', '1');
+      formData.append('image', 'undefined');
+
+      const article = convertFormDataToArticleFormValues(formData);
+
+      expect(article).toEqual({
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: [],
+        authorId: '1',
+        image: '',
       });
     });
 
@@ -464,7 +498,8 @@ describe('Content utilities', () => {
           name: { en: 'Tool 1', nl: 'Tool 1' },
           slug: { en: 'tool-1', nl: 'tool-1' },
           description: { en: 'Content 1', nl: 'Inhoud 1' },
-          downloadUrl: 'https://example.com',
+          filename: '/portal/tools/tool.pdf',
+          image: '/portal/tools/tool.jpg',
           summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
           categories: [
             {
@@ -497,11 +532,13 @@ describe('Content utilities', () => {
     });
 
     test('Convert a ToolFormValue into FormData object', () => {
-      const tool: Omit<ToolFormValues, 'downloadUrl'> = {
+      const tool: ToolFormValues = {
         id: '1',
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
       };
@@ -518,33 +555,8 @@ describe('Content utilities', () => {
       expect(formData.get('summary.en')).toEqual('Summary 1');
       expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
       expect(formData.get('categories')).toEqual('1,2');
-    });
-
-    test('Convert FormData to ToolFormValue with empty categories', () => {
-      const formData = new FormData();
-      formData.append('id', '1');
-      formData.append('name.en', 'Tool 1');
-      formData.append('name.nl', 'Tool 1');
-      formData.append('slug.en', 'tool-1');
-      formData.append('slug.nl', 'tool-1');
-      formData.append('description.en', 'Content 1');
-      formData.append('description.nl', 'Inhoud 1');
-      formData.append('tool', 'tool.pdf');
-      formData.append('summary.en', 'Summary 1');
-      formData.append('summary.nl', 'Samenvatting 1');
-      formData.append('categories', '');
-
-      const tool = convertFormDataIntoToolFormValues(formData);
-
-      expect(tool).toEqual<ToolFormValues>({
-        id: '1',
-        name: { en: 'Tool 1', nl: 'Tool 1' },
-        slug: { en: 'tool-1', nl: 'tool-1' },
-        description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'tool.pdf',
-        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
-        categories: [],
-      });
+      expect(formData.get('filename')).toBeNull();
+      expect(formData.get('image')).toBeNull();
     });
 
     test('Convert FormData to ToolFormValue', () => {
@@ -556,7 +568,8 @@ describe('Content utilities', () => {
       formData.append('slug.nl', 'tool-1');
       formData.append('description.en', 'Content 1');
       formData.append('description.nl', 'Inhoud 1');
-      formData.append('tool', 'tool.pdf');
+      formData.append('tool', '/portal/tools/tool.pdf');
+      formData.append('image', '/portal/tools/tool.jpg');
       formData.append('summary.en', 'Summary 1');
       formData.append('summary.nl', 'Samenvatting 1');
       formData.append('categories', '1,2');
@@ -568,9 +581,68 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'tool.pdf',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+      });
+    });
+
+    test('Convert FormData to ToolFormValue with empty categories', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', '/portal/tools/tool.pdf');
+      formData.append('image', '/portal/tools/tool.jpg');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [],
+      });
+    });
+
+    test('Convert FormData to ToolFormValue without image or tool', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Tool 1');
+      formData.append('name.nl', 'Tool 1');
+      formData.append('slug.en', 'tool-1');
+      formData.append('slug.nl', 'tool-1');
+      formData.append('description.en', 'Content 1');
+      formData.append('description.nl', 'Inhoud 1');
+      formData.append('tool', 'undefined');
+      formData.append('image', 'undefined');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('categories', '');
+
+      const tool = convertFormDataIntoToolFormValues(formData);
+
+      expect(tool).toEqual<ToolFormValues>({
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '',
+        image: '',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [],
       });
     });
 
@@ -580,7 +652,8 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: [
           {
@@ -611,9 +684,69 @@ describe('Content utilities', () => {
         name: { en: 'Tool 1', nl: 'Tool 1' },
         slug: { en: 'tool-1', nl: 'tool-1' },
         description: { en: 'Content 1', nl: 'Inhoud 1' },
-        downloadUrl: 'https://example.com',
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+      });
+    });
+  });
+
+  describe('Organisations', () => {
+    test('Convert a list of organisations from the database into table data', () => {
+      const organisations: SerializeFrom<OrganisationsWithUserCount>[] = [
+        {
+          id: '1',
+          name: 'Organisation 1',
+          description: 'Description 1',
+          createdAt: '',
+          updatedAt: '',
+          _count: { users: 2 },
+        },
+      ];
+
+      const [columns, data] = convertOrganisationListToTableData(organisations);
+
+      expect(columns).toEqual(['Naam', 'Beschrijving', 'Aantal gebruikers']);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Organisation 1'],
+            ['Beschrijving', 'Description 1'],
+            ['Aantal gebruikers', '2'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert an organisation form value to form data', () => {
+      const organisation = {
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
+      };
+
+      const formData = convertOrganisationFormValuesToFormData(organisation);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name')).toEqual('Organisation 1');
+      expect(formData.get('description')).toEqual('Description 1');
+    });
+
+    test('Convert form data to organisation form values', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Organisation 1');
+      formData.append('description', 'Description 1');
+
+      const organisation = convertFormDataToOrganisationFormValues(formData);
+
+      expect(organisation).toEqual({
+        id: '1',
+        name: 'Organisation 1',
+        description: 'Description 1',
       });
     });
   });

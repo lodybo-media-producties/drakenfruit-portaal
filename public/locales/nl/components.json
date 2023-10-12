@@ -43,7 +43,11 @@
     "Save Button Label": "Opslaan",
     "Publish Button Label": "Publiceren",
     "Edit Button Label": "Opslaan",
-    "Edit and Publish Button Label": "Wijzigingen opslaan en publiceren"
+    "Edit and Publish Button Label": "Wijzigingen opslaan en publiceren",
+    "Upload": {
+      "Prepare": "Voorbereiden van de upload van {{filename}}",
+      "Uploading": "Bezig met het uploaden van {{filename}}"
+    }
   },
   "Delete Item Dialog": {
     "Title": "Verwijderen",
@@ -73,6 +77,7 @@
     "Description Label": "Beschrijving",
     "Category Label": "Kies een of meerdere categorieën",
     "File Label": "Kies een tool om up te loaden",
+    "Image Label": "Kies een afbeelding als voorbeeld voor de tool",
     "Save Button Label": "Opslaan",
     "Edit Button Label": "Bewerken",
     "Upload": {
@@ -97,5 +102,11 @@
   "ArticleCard": {
     "Author": "Door {{author}}",
     "Read More": "Lees meer"
+  },
+  "OrganisationMutationForm": {
+    "Name Label": "Naam van de organisatie",
+    "Description Label": "Beschrijving van de organisatie",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken"
   }
 }

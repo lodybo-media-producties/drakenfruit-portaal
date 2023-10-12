@@ -30,10 +30,9 @@ export default function DutchArticlePage() {
     <div className="w-full">
       {article.image ? (
         <Image
-          className="h-[30rem]"
+          className="h-[30rem] w-full object-cover object-top"
           src={article.image}
           alt={article.title}
-          fit="cover"
         />
       ) : null}
       <div className="h-10" />

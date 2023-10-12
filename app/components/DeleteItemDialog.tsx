@@ -25,11 +25,13 @@ type ItemToDelete = {
 type Props = {
   itemToDelete: ItemToDelete;
   deletionEndpoint: string;
+  additionalMessage?: string;
 };
 
 export default function DeleteItemDialog({
   itemToDelete,
   deletionEndpoint,
+  additionalMessage,
 }: Props) {
   const { t } = useTranslation('components');
   const fetcher = useFetcher<APIResponse>();
@@ -45,6 +47,12 @@ export default function DeleteItemDialog({
       }
     }
   }, [fetcher.data]);
+
+  useEffect(() => {
+    if (open) {
+      setError('');
+    }
+  }, [open]);
 
   const deleteItem = () => {
     fetcher.submit(
@@ -70,6 +78,12 @@ export default function DeleteItemDialog({
           <DialogTitle>{t('Delete Item Dialog.Title')}</DialogTitle>
           <DialogDescription className="space-y-6">
             <span className="block">{t('Delete Item Dialog.Message')}</span>
+            {additionalMessage ? (
+              <span
+                className="block"
+                dangerouslySetInnerHTML={{ __html: additionalMessage }}
+              />
+            ) : null}
             {itemToDelete.name ? (
               <span className="font-type text-lg block">
                 <Icon name="trash-alt" className="mr-2" sizes="s" />

@@ -5,6 +5,8 @@ import type {
   CategoryErrors,
   LoginData,
   LoginErrors,
+  OrganisationData,
+  OrganisationErrors,
   ToolData,
   ToolErrors,
   ValidationResult,
@@ -190,7 +192,9 @@ export async function validateTool(
     .filter(Boolean);
 
   const tool = formData.get('tool') as File;
-  const downloadUrl = tool.name;
+  const filename = tool.name;
+  const imageData = formData.get('image') as File;
+  const image = imageData.name;
 
   const errors: ToolErrors = {};
 
@@ -198,8 +202,11 @@ export async function validateTool(
   errors.slug = checks.checkLocalisedValue(slug);
   errors.description = checks.checkLocalisedValue(description);
   errors.summary = checks.checkLocalisedValue(summary);
-  if (!isDefined(downloadUrl)) {
-    errors.downloadUrl = 'Bestand is verplicht';
+  if (!isDefined(filename)) {
+    errors.filename = 'Bestand is verplicht';
+  }
+  if (!isDefined(image)) {
+    errors.image = 'Afbeelding is verplicht';
   }
 
   if (Object.keys(errors).some((key) => errors[key as keyof ToolErrors])) {
@@ -213,8 +220,43 @@ export async function validateTool(
       slug,
       description,
       summary,
-      downloadUrl,
+      filename,
+      image,
       categories,
+    },
+  };
+}
+
+export async function validateOrganisation(
+  request: Request
+): Promise<ValidationResult<OrganisationData, OrganisationErrors>> {
+  const formData = await request.formData();
+  const id = formData.get('id') as string | undefined;
+  const name = formData.get('name') as string;
+  const description = formData.get('description') as string;
+
+  const errors: OrganisationErrors = {};
+
+  if (!isDefined(name)) {
+    errors.name = 'Naam is verplicht';
+  }
+
+  if (!isDefined(description)) {
+    errors.description = 'Beschrijving is verplicht';
+  }
+
+  if (
+    Object.keys(errors).some((key) => errors[key as keyof OrganisationErrors])
+  ) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      id,
+      name,
+      description,
     },
   };
 }

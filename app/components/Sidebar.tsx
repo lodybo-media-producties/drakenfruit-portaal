@@ -19,9 +19,13 @@ const mainMenuItems: NavItem[] = [
 ];
 
 const adminMenuItems: NavItem[] = [
-  { title: 'Organisaties', to: '/admin/organisaties', icon: 'building-user' },
-  { title: 'Projecten', to: '/admin/projecten', icon: 'folder-open' },
-  { title: 'Gebruikers', to: '/admin/gebruikers', icon: 'users' },
+  {
+    title: 'Organisaties',
+    to: '/administratie/organisaties',
+    icon: 'building-user',
+  },
+  { title: 'Projecten', to: '/administratie/projecten', icon: 'folder-open' },
+  { title: 'Gebruikers', to: '/administratie/gebruikers', icon: 'users' },
 ];
 
 const contentMenuItems: NavItem[] = [

@@ -46,7 +46,7 @@ CREATE TABLE "Tool" (
     "slug" TEXT NOT NULL,
     "summary" JSONB NOT NULL,
     "content" JSONB NOT NULL,
-    "downloadUrl" TEXT NOT NULL,
+    "filename" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

@@ -14,11 +14,6 @@ interface BaseImageProps extends ComponentPropsWithRef<'img'> {
    * The alt text for the image.
    */
   alt: string;
-
-  /**
-   * The root directory of the image on the server
-   */
-  root?: 'public' | 'images';
 }
 
 interface SingleSrcImageProps extends BaseImageProps {
@@ -61,7 +56,7 @@ interface SrcSetImageProps extends BaseImageProps {
 export type ImageProps = SingleSrcImageProps | SrcSetImageProps;
 
 export const Image = forwardRef<HTMLImageElement, ImageProps>(
-  ({ src, alt, srcSet, root = 'images', ...props }, forwardedRef) => {
+  ({ src, alt, srcSet, ...props }, forwardedRef) => {
     if (srcSet) {
       const { sizes } = props;
       return (
@@ -126,8 +121,6 @@ export const Image = forwardRef<HTMLImageElement, ImageProps>(
     if (fit) {
       query.set('fit', fit.toString());
     }
-
-    query.set('root', root);
 
     return (
       <img
