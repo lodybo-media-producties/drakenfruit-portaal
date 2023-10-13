@@ -34,8 +34,7 @@ import {
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
-import { Project } from '@prisma/client';
-import { ProjectsWithOrganisationAndUsers } from '~/types/Project';
+import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
 
 describe('Content utilities', () => {
   describe('Articles', () => {

@@ -13,16 +13,14 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { type Organisation } from '@prisma/client';
 import { type SerializeFrom } from '@remix-run/node';
 import {
   type OrganisationFormValues,
   type OrganisationsWithUserCount,
 } from '~/types/Organisations';
-import { ProjectData } from '~/types/Validations';
 import {
-  ProjectFormValues,
-  ProjectsWithOrganisationAndUsers,
+  type ProjectFormValues,
+  type ProjectsWithOrganisationAndUsers,
 } from '~/types/Project';
 
 export function convertArticleListToTableData(

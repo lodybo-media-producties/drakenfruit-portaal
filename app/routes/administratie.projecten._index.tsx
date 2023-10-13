@@ -12,10 +12,7 @@ import { prisma } from '~/db.server';
 import i18nextServer from '~/i18next.server';
 import { useTranslation } from 'react-i18next';
 import { useLoaderData, useNavigate } from '@remix-run/react';
-import {
-  convertOrganisationListToTableData,
-  convertProjectListToTableData,
-} from '~/utils/content';
+import { convertProjectListToTableData } from '~/utils/content';
 import Button from '~/components/Button';
 import Table from '~/components/Table';
 import { type APIResponse } from '~/types/Responses';

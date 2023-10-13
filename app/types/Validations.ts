@@ -2,7 +2,7 @@ import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationFormValues } from '~/types/Organisations';
-import { ProjectFormValues } from '~/types/Project';
+import { type ProjectFormValues } from '~/types/Project';
 
 interface BaseValidationResult {
   success: boolean;
