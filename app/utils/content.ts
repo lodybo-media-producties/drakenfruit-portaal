@@ -2,23 +2,28 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
+  type SummarisedArticle,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
-import { type ToolFormValues } from '~/types/Tool';
+import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { type Organisation } from '@prisma/client';
 import { type SerializeFrom } from '@remix-run/node';
 import {
   type OrganisationFormValues,
   type OrganisationsWithUserCount,
 } from '~/types/Organisations';
+import {
+  type ProjectFormValues,
+  type ProjectsWithOrganisationAndUsers,
+} from '~/types/Project';
+import { type Item } from '~/components/ItemCard';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -369,9 +374,6 @@ export function convertOrganisationListToTableData(
   return [columns, data];
 }
 
-// Create a function that converts a FormData object into an object that can be used to create a new organisation.
-// Then, create a function that converts an organisation object into a FormData object.
-// And lastly, create a function that converts an organisation object into an object that can be used to update an existing organisation.
 export function convertOrganisationFormValuesToFormData(
   organisationFormValues: OrganisationFormValues
 ): FormData {
@@ -403,12 +405,101 @@ export function convertFormDataToOrganisationFormValues(
   return organisationFormValues;
 }
 
-export function convertPrismaOrganisationToOrganisationFormValues(
-  organisation: Organisation
-): OrganisationFormValues {
-  return {
-    id: organisation.id,
-    name: organisation.name,
-    description: organisation.description,
+export function convertProjectListToTableData(
+  projects: SerializeFrom<ProjectsWithOrganisationAndUsers>[]
+): [Columns, TableData[]] {
+  const columns: Columns = [
+    'Naam',
+    'Beschrijving',
+    'Organisatie',
+    'Deelnemers',
+  ];
+
+  const data: TableData[] = projects.map((project) => {
+    return {
+      id: project.id,
+      data: new Map([
+        ['Naam', project.name],
+        ['Beschrijving', project.description],
+        ['Organisatie', project.organisation.name],
+        [
+          'Deelnemers',
+          project.users
+            .map((user) => `${user.firstName} ${user.lastName}`)
+            .join(', '),
+        ],
+      ]),
+    };
+  });
+
+  return [columns, data];
+}
+
+export function convertProjectFormValuesToFormData(
+  projectFormValues: ProjectFormValues
+): FormData {
+  const formData = new FormData();
+
+  formData.append('name', projectFormValues.name);
+  formData.append('description', projectFormValues.description);
+  formData.append('organisationId', projectFormValues.organisationId);
+
+  if (projectFormValues.id) {
+    formData.append('id', projectFormValues.id);
+  }
+
+  return formData;
+}
+
+export function convertFormDataToProjectFormValues(
+  formData: FormData
+): ProjectFormValues {
+  const projectFormValues: ProjectFormValues = {
+    name: formData.get('name') as string,
+    description: formData.get('description') as string,
+    organisationId: formData.get('organisationId') as string,
   };
+
+  const id = formData.get('id') as string | null;
+  if (id) {
+    projectFormValues.id = id;
+  }
+
+  return projectFormValues;
+}
+
+export function convertArticleOrToolToItem(
+  data: SummarisedArticle | SummarisedTool,
+  type: 'article' | 'tool'
+): Item {
+  const item: Item = {
+    type,
+    id: data.id,
+    title: { en: '', nl: '' }, // We initialize these to empty strings to satisfy the type checker
+    summary: data.summary,
+    slug: data.slug,
+    image: data.image,
+    categories: data.categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+    })),
+    updatedAt: data.updatedAt.toISOString(),
+  };
+
+  if ('author' in data) {
+    item.author = {
+      id: data.author.id,
+      firstName: data.author.firstName,
+      lastName: data.author.lastName,
+    };
+  }
+
+  if ('title' in data) {
+    item.title = data.title;
+  } else {
+    item.title = data.name;
+  }
+
+  return item;
 }

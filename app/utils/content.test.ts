@@ -4,6 +4,7 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
+  type SummarisedArticle,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -21,6 +22,10 @@ import {
   convertOrganisationListToTableData,
   convertOrganisationFormValuesToFormData,
   convertFormDataToOrganisationFormValues,
+  convertProjectListToTableData,
+  convertFormDataToProjectFormValues,
+  convertProjectFormValuesToFormData,
+  convertArticleOrToolToItem,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -29,8 +34,10 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { type ToolFormValues } from '~/types/Tool';
+import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
+import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
+import { type Item } from '~/components/ItemCard';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -747,6 +754,173 @@ describe('Content utilities', () => {
         id: '1',
         name: 'Organisation 1',
         description: 'Description 1',
+      });
+    });
+  });
+
+  describe('Projects', () => {
+    test('Convert a list of projects from the database into table data', () => {
+      const projects: SerializeFrom<ProjectsWithOrganisationAndUsers>[] = [
+        {
+          id: '1',
+          name: 'Project 1',
+          description: 'Description 1',
+          organisation: {
+            name: 'Organisation 1',
+          },
+          users: [
+            {
+              firstName: 'Kaylee',
+              lastName: 'Rosalina',
+            },
+            {
+              firstName: 'Lisa',
+              lastName: 'Janssen',
+            },
+          ],
+          organisationId: '1',
+          createdAt: '',
+          updatedAt: '',
+        },
+      ];
+
+      const [columns, data] = convertProjectListToTableData(projects);
+
+      expect(columns).toEqual([
+        'Naam',
+        'Beschrijving',
+        'Organisatie',
+        'Deelnemers',
+      ]);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Project 1'],
+            ['Beschrijving', 'Description 1'],
+            ['Organisatie', 'Organisation 1'],
+            ['Deelnemers', 'Kaylee Rosalina, Lisa Janssen'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert a project form value to form data', () => {
+      const project = {
+        id: '1',
+        name: 'Project 1',
+        description: 'Description 1',
+        organisationId: '1',
+      };
+
+      const formData = convertProjectFormValuesToFormData(project);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name')).toEqual('Project 1');
+      expect(formData.get('description')).toEqual('Description 1');
+      expect(formData.get('organisationId')).toEqual('1');
+    });
+
+    test('Convert form data to project form values', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Project 1');
+      formData.append('description', 'Description 1');
+      formData.append('organisationId', '1');
+
+      const project = convertFormDataToProjectFormValues(formData);
+
+      expect(project).toEqual({
+        id: '1',
+        name: 'Project 1',
+        description: 'Description 1',
+        organisationId: '1',
+      });
+    });
+  });
+
+  describe('Miscellaneous', () => {
+    test('Converting an article or a tool to an item for the card overview', () => {
+      const article: SummarisedArticle = {
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+        },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        image: '/path/to/image',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const tool: SummarisedTool = {
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        image: '/portal/tools/tool.jpg',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const articleItem = convertArticleOrToolToItem(article, 'article');
+      const toolItem = convertArticleOrToolToItem(tool, 'tool');
+
+      expect(articleItem).toEqual<Item>({
+        type: 'article',
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        image: '/path/to/image',
+        updatedAt: article.updatedAt.toISOString(),
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+        },
+      });
+
+      expect(toolItem).toEqual<Item>({
+        type: 'tool',
+        id: '1',
+        title: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        image: '/portal/tools/tool.jpg',
+        updatedAt: tool.updatedAt.toISOString(),
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
       });
     });
   });

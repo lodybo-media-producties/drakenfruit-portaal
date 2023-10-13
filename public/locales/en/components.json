@@ -99,14 +99,36 @@
       "Selected Label_other": "Selected images: "
     }
   },
-  "ArticleCard": {
+  "ItemCard": {
     "Author": "By {{author}}",
-    "Read More": "Read more"
+    "Read More": "Read more",
+    "Article Badge": "Article",
+    "Tool Badge": "Tool"
   },
   "OrganisationMutationForm": {
     "Name Label": "Name of the organisation",
     "Description Label": "Description of the organisation",
     "Save Button Label": "Save",
     "Edit Button Label": "Edit"
+  },
+  "ProjectMutationForm": {
+    "Name Label": "Name of the project",
+    "Description Label": "Description of the project",
+    "Save Button Label": "Save",
+    "Edit Button Label": "Edit"
+  },
+  "OrganisationSelector": {
+    "Placeholder": "organisation",
+    "Trigger Label": "Select an organisation",
+    "Not Found Message": "No organisations found",
+    "Create Option": "Create organisation",
+    "Custom Organisation Option Label": "+ Create a new organisation",
+    "Custom Organisation Dialog": {
+      "Title": "Create a new organisation",
+      "Description": "Please enter a name for the new organisation",
+      "Input Label": "Organisation name",
+      "Cancel Button Label": "Cancel",
+      "Create Button Label": "Create"
+    }
   }
 }
