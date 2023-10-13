@@ -46,22 +46,3 @@ export const EditProject: Story = {
     },
   },
 };
-
-export const EditProjectWithErrors: Story = {
-  args: {
-    mode: 'update',
-    organisations,
-    backLink: '/admin/projects',
-    backLinkLabel: 'Back to projects',
-    initialValues: {
-      name: 'Inclusiviteitsprogramma opzetten',
-      description: 'Inclusiviteitsprogramma opzetten voor Drakenfruit.',
-      organisationId: '3',
-    },
-    errors: {
-      name: 'Name is required',
-      description: 'Description is required',
-      organisationId: 'Organisation is required',
-    },
-  },
-};
