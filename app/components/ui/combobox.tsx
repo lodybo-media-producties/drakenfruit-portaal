@@ -30,6 +30,7 @@ interface BaseProps {
   showSelectedInTrigger?: boolean;
   error?: string;
   multiple?: boolean;
+  width?: string;
 }
 
 interface SingleSelectProps extends BaseProps {
@@ -61,6 +62,7 @@ export function Combobox({
   initialValue = '',
   initialValues = [],
   id = 'combobox',
+  width = 'w-[200px]',
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(
@@ -134,8 +136,6 @@ export function Combobox({
           aria-expanded={open}
           className={cn(
             `
-              w-[200px]
-              
               flex
               justify-between
               
@@ -155,6 +155,7 @@ export function Combobox({
                 !error,
               'hover:bg-light-blue data-[state=open]:bg-light-blue': !error,
             },
+            width,
             inputClasses.focusAndFocusVisible
           )}
         >
@@ -162,7 +163,7 @@ export function Combobox({
           <Icon name="sort" />
         </button>
       </PopoverTrigger>
-      <PopoverContent id={id} className="w-[200px] p-0">
+      <PopoverContent id={id} className={`${width} p-0`}>
         <Command>
           <CommandInput placeholder={placeholder} />
           <CommandEmpty>{notFoundMessage}</CommandEmpty>

@@ -108,5 +108,25 @@
     "Description Label": "Beschrijving van de organisatie",
     "Save Button Label": "Opslaan",
     "Edit Button Label": "Bewerken"
+  },
+  "ProjectMutationForm": {
+    "Name Label": "Naam van het project",
+    "Description Label": "Beschrijving van het project",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken"
+  },
+  "OrganisationSelector": {
+    "Placeholder": "Organisatie",
+    "Trigger Label": "Kies een organisatie",
+    "Not Found Message": "Geen organisatie gevonden",
+    "Create Option": "Maak een organisatie aan",
+    "Custom Organisation Option Label": "+ Organisatie aanmaken",
+    "Custom Organisation Dialog": {
+      "Title": "Nieuwe organisatie aanmaken",
+      "Description": "Vul de naam van de organisatie in en klik op 'Aanmaken'.",
+      "Input Label": "Naam van de organisatie",
+      "Cancel Button Label": "Annuleren",
+      "Create Button Label": "Aanmaken"
+    }
   }
 }

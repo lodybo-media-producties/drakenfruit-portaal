@@ -299,4 +299,47 @@ describe('Validating user flows', () => {
       expect(validationResult.data).toBe(undefined);
     });
   });
+
+  describe('Project validation', () => {
+    test('Check whether a project request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Naam 1');
+      formData.append('description', 'Beschrijving 1');
+      formData.append('organisationId', '1');
+
+      const request = new Request('http://localhost:3000/api/project', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateProject(request);
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual({
+        id: '1',
+        name: 'Naam 1',
+        description: 'Beschrijving 1',
+        organisationId: '1',
+      });
+    });
+
+    test('Check whether a project request is invalid because of missing name', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('description', 'Beschrijving 1');
+      formData.append('organisationId', '1');
+
+      const request = new Request('http://localhost:3000/api/project', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateProject(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.name).toBe('Naam is verplicht');
+      expect(validationResult.data).toBe(undefined);
+    });
+  });
 });

@@ -216,5 +216,61 @@
       },
       "Back Link Label": "Terug naar overzicht"
     }
+  },
+  "Projects": {
+    "API": {
+      "Error": {
+        "Invalid Method": "Ongeldige methode"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "Project aangemaakt",
+          "Message": "Het Project is aangemaakt."
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Project bijgewerkt",
+          "Message": "Het Project is bijgewerkt."
+        },
+        "Error": {
+          "No ID": "Geen ID opgegeven",
+          "Project Not Found": "Het Project kon niet gevonden worden"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Project verwijderd",
+          "Message": "Het Project is verwijderd."
+        },
+        "Error": {
+          "No ID": "Geen ID opgegeven"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Projecten | Drakenfruit"
+      },
+      "Title": "Projecten",
+      "No Projects": "Er zijn nog geen Projecten aangemaakt.",
+      "New Project": "Nieuw Project"
+    },
+    "New": {
+      "Meta": {
+        "Title": "Nieuwe Project | Drakenfruit"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Project bewerken | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "Geen ID opgegeven",
+        "Project Not Found": "Het Project kon niet gevonden worden"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    }
   }
 }

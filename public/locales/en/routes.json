@@ -216,5 +216,61 @@
       },
       "Back Link Label": "Back to organisations"
     }
+  },
+  "Projects": {
+    "API": {
+      "Error": {
+        "Invalid Method": "Method not allowed"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "Project created",
+          "Message": "The Project was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "Project updated",
+          "Message": "The Project was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "Project Not Found": "The Project could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "Project deleted",
+          "Message": "The Project was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Projects | Drakenfruit"
+      },
+      "Title": "Projects",
+      "No Projects": "No Projects were found",
+      "New Project": "New Project"
+    },
+    "New": {
+      "Meta": {
+        "Title": "New Project | Drakenfruit"
+      },
+      "Back Link Label": "Back to Projects"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit Project | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "Project Not Found": "The Project could not be found"
+      },
+      "Back Link Label": "Back to Projects"
+    }
   }
 }

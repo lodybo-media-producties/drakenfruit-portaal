@@ -21,6 +21,9 @@ import {
   convertOrganisationListToTableData,
   convertOrganisationFormValuesToFormData,
   convertFormDataToOrganisationFormValues,
+  convertProjectListToTableData,
+  convertFormDataToProjectFormValues,
+  convertProjectFormValuesToFormData,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -31,6 +34,8 @@ import {
 } from '~/models/tools.server';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
+import { Project } from '@prisma/client';
+import { ProjectsWithOrganisationAndUsers } from '~/types/Project';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -747,6 +752,88 @@ describe('Content utilities', () => {
         id: '1',
         name: 'Organisation 1',
         description: 'Description 1',
+      });
+    });
+  });
+
+  describe('Projects', () => {
+    test('Convert a list of projects from the database into table data', () => {
+      const projects: SerializeFrom<ProjectsWithOrganisationAndUsers>[] = [
+        {
+          id: '1',
+          name: 'Project 1',
+          description: 'Description 1',
+          organisation: {
+            name: 'Organisation 1',
+          },
+          users: [
+            {
+              firstName: 'Kaylee',
+              lastName: 'Rosalina',
+            },
+            {
+              firstName: 'Lisa',
+              lastName: 'Janssen',
+            },
+          ],
+          organisationId: '1',
+          createdAt: '',
+          updatedAt: '',
+        },
+      ];
+
+      const [columns, data] = convertProjectListToTableData(projects);
+
+      expect(columns).toEqual([
+        'Naam',
+        'Beschrijving',
+        'Organisatie',
+        'Deelnemers',
+      ]);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Naam', 'Project 1'],
+            ['Beschrijving', 'Description 1'],
+            ['Organisatie', 'Organisation 1'],
+            ['Deelnemers', 'Kaylee Rosalina, Lisa Janssen'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert a project form value to form data', () => {
+      const project = {
+        id: '1',
+        name: 'Project 1',
+        description: 'Description 1',
+        organisationId: '1',
+      };
+
+      const formData = convertProjectFormValuesToFormData(project);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('name')).toEqual('Project 1');
+      expect(formData.get('description')).toEqual('Description 1');
+      expect(formData.get('organisationId')).toEqual('1');
+    });
+
+    test('Convert form data to project form values', () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name', 'Project 1');
+      formData.append('description', 'Description 1');
+      formData.append('organisationId', '1');
+
+      const project = convertFormDataToProjectFormValues(formData);
+
+      expect(project).toEqual({
+        id: '1',
+        name: 'Project 1',
+        description: 'Description 1',
+        organisationId: '1',
       });
     });
   });
