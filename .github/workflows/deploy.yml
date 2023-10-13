@@ -138,9 +138,27 @@ jobs:
         with:
           cmd: 'jq .version package.json -r'
 
-
       - name: Build container image
         run: docker build -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:$(echo ${{ steps.version.outputs.value }}) -t registry.digitalocean.com/lodybo-registry/drakenfruit-portaal:latest .
+
+      - name: Add IP address to trusted source (managed database)
+        uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
+        with:
+          action: "add"
+          database_id: ${{ secrets.PROD_DATABASE_UUID }}
+          digitalocean_token: ${{ secrets.DO_MANAGED_DB_TRUSTED_SOURCES_API_TOKEN }}
+
+      - name: Apply all pending migrations to the database
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+
+      - name: Remove IP address to trusted source (managed database)
+        uses: GarreauArthur/manage-digital-ocean-managed-database-trusted-sources-gh-action@main
+        with:
+          action: "remove"
+          database_id: ${{ secrets.PROD_DATABASE_UUID }}
+          digitalocean_token: ${{ secrets.DO_MANAGED_DB_TRUSTED_SOURCES_API_TOKEN }}
 
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 1200
