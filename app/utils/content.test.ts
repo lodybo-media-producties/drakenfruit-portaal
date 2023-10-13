@@ -4,6 +4,7 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
+  type SummarisedArticle,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -24,6 +25,7 @@ import {
   convertProjectListToTableData,
   convertFormDataToProjectFormValues,
   convertProjectFormValuesToFormData,
+  convertArticleOrToolToItem,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -32,10 +34,10 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { type ToolFormValues } from '~/types/Tool';
+import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
-import { Project } from '@prisma/client';
-import { ProjectsWithOrganisationAndUsers } from '~/types/Project';
+import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
+import { type Item } from '~/components/ItemCard';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -834,6 +836,91 @@ describe('Content utilities', () => {
         name: 'Project 1',
         description: 'Description 1',
         organisationId: '1',
+      });
+    });
+  });
+
+  describe('Miscellaneous', () => {
+    test('Converting an article or a tool to an item for the card overview', () => {
+      const article: SummarisedArticle = {
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+        },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        image: '/path/to/image',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const tool: SummarisedTool = {
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        image: '/portal/tools/tool.jpg',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const articleItem = convertArticleOrToolToItem(article, 'article');
+      const toolItem = convertArticleOrToolToItem(tool, 'tool');
+
+      expect(articleItem).toEqual<Item>({
+        type: 'article',
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        image: '/path/to/image',
+        updatedAt: article.updatedAt.toISOString(),
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
+        author: {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+        },
+      });
+
+      expect(toolItem).toEqual<Item>({
+        type: 'tool',
+        id: '1',
+        title: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        image: '/portal/tools/tool.jpg',
+        updatedAt: tool.updatedAt.toISOString(),
+        categories: [
+          {
+            id: '1',
+            name: { en: 'Category 1', nl: 'Categorie 1' },
+            slug: { en: 'category-1', nl: 'categorie-1' },
+          },
+        ],
       });
     });
   });

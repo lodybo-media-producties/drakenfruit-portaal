@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   type ActionFunctionArgs,
   json,
@@ -19,7 +18,7 @@ import { getErrorMessage } from '~/utils/utils';
 import { type APIResponse } from '~/types/Responses';
 import { prisma } from '~/db.server';
 import ProjectMutationForm from '~/components/ProjectMutationForm';
-import { useActionData, useLoaderData } from '@remix-run/react';
+import { useLoaderData } from '@remix-run/react';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('ADMIN', request);
