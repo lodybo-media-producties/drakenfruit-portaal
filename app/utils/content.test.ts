@@ -4,7 +4,7 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
-  SummarisedArticle,
+  type SummarisedArticle,
 } from '~/models/articles.server';
 import {
   convertArticleListToTableData,
@@ -34,11 +34,10 @@ import {
   type getToolByID,
   type ToolWithCategories,
 } from '~/models/tools.server';
-import { SummarisedTool, type ToolFormValues } from '~/types/Tool';
+import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
 import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
-import { Article, Tool } from '@prisma/client';
-import { Item } from '~/components/ItemCard';
+import { type Item } from '~/components/ItemCard';
 
 describe('Content utilities', () => {
   describe('Articles', () => {

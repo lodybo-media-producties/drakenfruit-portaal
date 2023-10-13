@@ -2,14 +2,14 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
-  SummarisedArticle,
+  type SummarisedArticle,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
-import { SummarisedTool, type ToolFormValues } from '~/types/Tool';
+import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import {
   type getToolByID,
   type ToolWithCategories,
@@ -23,8 +23,7 @@ import {
   type ProjectFormValues,
   type ProjectsWithOrganisationAndUsers,
 } from '~/types/Project';
-import { Prisma } from '@prisma/client';
-import { Item } from '~/components/ItemCard';
+import { type Item } from '~/components/ItemCard';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],

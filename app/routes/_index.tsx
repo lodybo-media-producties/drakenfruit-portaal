@@ -2,7 +2,7 @@ import type { MetaFunction } from '@remix-run/node';
 import { getSummarisedArticles } from '~/models/articles.server';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import ItemCard, { Item } from '~/components/ItemCard';
+import ItemCard, { type Item } from '~/components/ItemCard';
 import { prisma } from '~/db.server';
 import { isBefore, parseISO } from 'date-fns';
 import { convertArticleOrToolToItem } from '~/utils/content';
