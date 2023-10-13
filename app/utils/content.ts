@@ -2,13 +2,14 @@ import {
   type ArticlesWithCategoriesSummaryList,
   type getArticleById,
   type getLocalisedArticleBySlug,
+  SummarisedArticle,
 } from '~/models/articles.server';
 import { type Columns, type TableData } from '~/components/Table';
 import { type SupportedLanguages } from '~/i18n';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
 import { type CategoryFormValues } from '~/types/Category';
-import { type ToolFormValues } from '~/types/Tool';
+import { SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import {
   type getToolByID,
   type ToolWithCategories,
@@ -22,6 +23,8 @@ import {
   type ProjectFormValues,
   type ProjectsWithOrganisationAndUsers,
 } from '~/types/Project';
+import { Prisma } from '@prisma/client';
+import { Item } from '~/components/ItemCard';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -464,4 +467,40 @@ export function convertFormDataToProjectFormValues(
   }
 
   return projectFormValues;
+}
+
+export function convertArticleOrToolToItem(
+  data: SummarisedArticle | SummarisedTool,
+  type: 'article' | 'tool'
+): Item {
+  const item: Item = {
+    type,
+    id: data.id,
+    title: { en: '', nl: '' }, // We initialize these to empty strings to satisfy the type checker
+    summary: data.summary,
+    slug: data.slug,
+    image: data.image,
+    categories: data.categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+    })),
+    updatedAt: data.updatedAt.toISOString(),
+  };
+
+  if ('author' in data) {
+    item.author = {
+      id: data.author.id,
+      firstName: data.author.firstName,
+      lastName: data.author.lastName,
+    };
+  }
+
+  if ('title' in data) {
+    item.title = data.title;
+  } else {
+    item.title = data.name;
+  }
+
+  return item;
 }

@@ -99,9 +99,11 @@
       "Selected Label_other": "Selected images: "
     }
   },
-  "ArticleCard": {
+  "ItemCard": {
     "Author": "By {{author}}",
-    "Read More": "Read more"
+    "Read More": "Read more",
+    "Article Badge": "Article",
+    "Tool Badge": "Tool"
   },
   "OrganisationMutationForm": {
     "Name Label": "Name of the organisation",

@@ -99,9 +99,11 @@
       "Selected Label_other": "Geselecteerde afbeeldingen: "
     }
   },
-  "ArticleCard": {
+  "ItemCard": {
     "Author": "Door {{author}}",
-    "Read More": "Lees meer"
+    "Read More": "Lees meer",
+    "Article Badge": "Artikel",
+    "Tool Badge": "Tool",
   },
   "OrganisationMutationForm": {
     "Name Label": "Naam van de organisatie",
