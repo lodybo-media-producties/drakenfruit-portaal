@@ -11,11 +11,14 @@ import type {
   ProjectErrors,
   ToolData,
   ToolErrors,
+  UserData,
+  UserErrors,
   ValidationResult,
 } from '~/types/Validations';
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
 import { isDefined } from './checks';
+import { Role } from '~/models/user.server';
 
 export async function validateLogin(
   request: Request
@@ -296,6 +299,75 @@ export async function validateProject(
       id,
       name,
       description,
+      organisationId,
+    },
+  };
+}
+
+export async function validateUser(
+  request: Request
+): Promise<ValidationResult<UserData, UserErrors>> {
+  const formData = await request.formData();
+
+  const id = formData.get('id') as string | undefined;
+  const firstName = formData.get('firstName') as string;
+  const lastName = formData.get('lastName') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const role = formData.get('role') as string;
+  const organisationId = formData.get('organisationId') as string;
+  const avatarUrl = formData.get('avatarUrl') as string | null;
+  const locale = formData.get('locale') as string;
+
+  const errors: UserErrors = {};
+
+  if (!isDefined(firstName)) {
+    errors.firstName = 'Voornaam is verplicht';
+  }
+
+  if (!isDefined(lastName)) {
+    errors.lastName = 'Achternaam is verplicht';
+  }
+
+  if (!isDefined(email)) {
+    errors.email = 'E-mailadres is verplicht';
+  }
+
+  if (!isDefined(password)) {
+    errors.password = 'Wachtwoord is verplicht';
+  }
+
+  if (!isDefined(role)) {
+    errors.role = 'Rol is verplicht';
+  }
+
+  if (Role[role as keyof typeof Role] === undefined) {
+    errors.role = 'Rol is ongeldig';
+  }
+
+  if (!isDefined(locale)) {
+    errors.locale = 'Taal is verplicht';
+  }
+
+  if (!isDefined(organisationId)) {
+    errors.organisationId = 'Organisatie is verplicht';
+  }
+
+  if (Object.keys(errors).some((key) => errors[key as keyof UserErrors])) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      id,
+      firstName,
+      lastName,
+      email,
+      password,
+      role: role as Role,
+      locale,
+      avatarUrl,
       organisationId,
     },
   };

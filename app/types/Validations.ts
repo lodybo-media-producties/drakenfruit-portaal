@@ -3,6 +3,7 @@ import { type CategoryFormValues } from '~/types/Category';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationFormValues } from '~/types/Organisations';
 import { type ProjectFormValues } from '~/types/Project';
+import { UserFormValues, UserValidationErrors } from '~/types/User';
 
 interface BaseValidationResult {
   success: boolean;
@@ -72,3 +73,7 @@ export type OrganisationErrors = Partial<
 export type ProjectData = ProjectFormValues;
 
 export type ProjectErrors = Partial<Record<keyof ProjectFormValues, string>>;
+
+export type UserData = UserFormValues;
+
+export type UserErrors = UserValidationErrors;

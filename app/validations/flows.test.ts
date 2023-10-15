@@ -1,6 +1,10 @@
 import { describe, test } from 'vitest';
 import * as validationFlows from '~/validations/flows';
-import { type ToolData } from '~/types/Validations';
+import {
+  type ToolData,
+  type UserData,
+  type UserErrors,
+} from '~/types/Validations';
 
 describe('Validating user flows', () => {
   describe('Login validation', () => {
@@ -340,6 +344,65 @@ describe('Validating user flows', () => {
       expect(validationResult.success).toBe(false);
       expect(validationResult.errors!.name).toBe('Naam is verplicht');
       expect(validationResult.data).toBe(undefined);
+    });
+  });
+
+  describe('User validation', () => {
+    test('Check whether a user request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('firstName', 'Kaylee');
+      formData.append('lastName', 'Rosalina');
+      formData.append('email', 'hallo@kayleerosalina.nl');
+      formData.append('password', '123456789');
+      formData.append('role', 'ADMIN');
+      formData.append('organisationId', '1');
+      formData.append('locale', 'nl');
+      formData.append('avatarUrl', '/path/to/avatar.jpg');
+
+      const request = new Request('http://localhost:3000/api/user', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateUser(request);
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual<UserData>({
+        id: '1',
+        firstName: 'Kaylee',
+        lastName: 'Rosalina',
+        email: 'hallo@kayleerosalina.nl',
+        password: '123456789',
+        role: 'ADMIN',
+        organisationId: '1',
+        locale: 'nl',
+        avatarUrl: '/path/to/avatar.jpg',
+      });
+    });
+
+    test('Check whether a user request is invalid because of a missing emailadress', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('firstName', 'Kaylee');
+      formData.append('lastName', 'Rosalina');
+      formData.append('password', '123456789');
+      formData.append('role', 'ADMIN');
+      formData.append('organisationId', '1');
+      formData.append('locale', 'nl');
+      formData.append('avatarUrl', '/path/to/avatar.jpg');
+
+      const request = new Request('http://localhost:3000/api/user', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateUser(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors).toStrictEqual<UserErrors>({
+        email: 'E-mailadres is verplicht',
+      });
     });
   });
 });

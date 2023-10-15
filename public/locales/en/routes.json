@@ -272,5 +272,68 @@
       },
       "Back Link Label": "Back to Projects"
     }
+  },
+  "Users": {
+    "API": {
+      "Error": {
+        "Invalid Method": "Method not allowed"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "User created",
+          "Message": "The User was created successfully"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "User updated",
+          "Message": "The User was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "User Not Found": "The User could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "User deleted",
+          "Message": "The User was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Users | Drakenfruit"
+      },
+      "Title": "Users",
+      "No Users": "No Users were found",
+      "New User": "New User",
+      "Roles": {
+        "MAINTAINER": "Maintainer",
+        "ADMIN": "Administrator",
+        "OFFICEMANAGER": "Office manager",
+        "CONSULTANT": "Consultant",
+        "PROJECTLEADER": "Project leader"
+      }
+    },
+    "New": {
+      "Meta": {
+        "Title": "New User | Drakenfruit"
+      },
+      "Back Link Label": "Back to Users"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit User | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "User Not Found": "The User could not be found"
+      },
+      "Back Link Label": "Back to Users"
+    }
   }
 }
