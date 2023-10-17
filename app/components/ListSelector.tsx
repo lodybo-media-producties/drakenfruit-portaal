@@ -39,21 +39,21 @@ interface BaseProps {
   multiple?: boolean;
 }
 
-interface SingleSelectProps extends BaseProps {
+export interface SingleSelectProps extends BaseProps {
   multiple?: false;
   selectedId?: string;
   onChange: (id: string) => void;
   selectedIds?: never;
 }
 
-interface MultiSelectProps extends BaseProps {
-  multiple: true;
+export interface MultiSelectProps extends BaseProps {
+  multiple?: true;
   selectedIds?: string[];
   onChange: (ids: string[]) => void;
   selectedId?: never;
 }
 
-type Props = SingleSelectProps | MultiSelectProps;
+export type Props = SingleSelectProps | MultiSelectProps;
 
 export default function ListSelector({
   labels,
@@ -94,7 +94,6 @@ export default function ListSelector({
     }
   };
 
-  // TODO: create hoc components for orgs, projects, and users.
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div className="space-y-4">

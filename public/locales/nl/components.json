@@ -130,5 +130,26 @@
       "Cancel Button Label": "Annuleren",
       "Create Button Label": "Aanmaken"
     }
+  },
+  "UserListSelector": {
+    "Title": "Gebruikers",
+    "AddButtonLabel": "Voeg gebruikers toe",
+    "NoItemsLabel": "Geen gebruikers toegevoegd",
+    "DialogTitle": "Gebruikers toevoegen",
+    "DialogDescription": "Zoek naar gebruikers om toe te voegen aan dit item."
+  },
+  "OrganisationListSelector": {
+    "Title": "Organisaties",
+    "AddButtonLabel": "Voeg organisaties toe",
+    "NoItemsLabel": "Geen organisaties toegevoegd",
+    "DialogTitle": "Organisaties toevoegen",
+    "DialogDescription": "Zoek naar organisaties om toe te voegen aan dit item."
+  },
+  "ProjectListSelector": {
+    "Title": "Projecten",
+    "AddButtonLabel": "Voeg projecten toe",
+    "NoItemsLabel": "Geen projecten toegevoegd",
+    "DialogTitle": "Projecten toevoegen",
+    "DialogDescription": "Zoek naar projecten om toe te voegen aan dit item."
   }
 }
