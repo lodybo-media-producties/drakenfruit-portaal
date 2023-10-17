@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import UserListSelector, { type ListItem } from './UserListSelector';
+import UserListSelector, { type UserSelection } from './UserListSelector';
 import { faker } from '@faker-js/faker';
 
 export default {
@@ -9,27 +9,28 @@ export default {
 
 type Story = StoryObj<typeof UserListSelector>;
 
-const items: ListItem[] = Array.from({ length: 10 }, (_, i) => ({
+const users: UserSelection[] = Array.from({ length: 10 }, (_, i) => ({
   id: `${i + 1}`,
-  label: faker.person.fullName(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
 }));
 
 export const Default: Story = {
   args: {
-    items,
+    users,
   },
 };
 
 export const WithSelected: Story = {
   args: {
-    items,
+    users,
     selectedId: '2',
   },
 };
 
 export const WithMultipleSelected: Story = {
   args: {
-    items,
+    users,
     multiple: true,
     selectedIds: ['2', '3'],
   },
@@ -37,7 +38,7 @@ export const WithMultipleSelected: Story = {
 
 export const WithError: Story = {
   args: {
-    items,
+    users,
     error: 'Something went wrong',
   },
 };

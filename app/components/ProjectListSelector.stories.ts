@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProjectListSelector, { type ListItem } from './ProjectListSelector';
+import ProjectListSelector, {
+  type ProjectSelection,
+} from './ProjectListSelector';
 import { faker } from '@faker-js/faker';
 
 export default {
@@ -9,27 +11,27 @@ export default {
 
 type Story = StoryObj<typeof ProjectListSelector>;
 
-const items: ListItem[] = Array.from({ length: 10 }, (_, i) => ({
+const projects: ProjectSelection[] = Array.from({ length: 10 }, (_, i) => ({
   id: `${i + 1}`,
-  label: faker.commerce.productName(),
+  name: faker.commerce.productName(),
 }));
 
 export const Default: Story = {
   args: {
-    items,
+    projects,
   },
 };
 
 export const WithSelected: Story = {
   args: {
-    items,
+    projects,
     selectedId: '2',
   },
 };
 
 export const WithMultipleSelected: Story = {
   args: {
-    items,
+    projects,
     multiple: true,
     selectedIds: ['2', '3'],
   },
@@ -37,7 +39,7 @@ export const WithMultipleSelected: Story = {
 
 export const WithError: Story = {
   args: {
-    items,
+    projects,
     error: 'Something went wrong',
   },
 };

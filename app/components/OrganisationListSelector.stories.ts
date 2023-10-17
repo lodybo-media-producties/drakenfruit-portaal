@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import OrganisationListSelector, {
-  type ListItem,
+  type OrganisationSelection,
 } from './OrganisationListSelector';
 import { faker } from '@faker-js/faker';
 
@@ -11,27 +11,30 @@ export default {
 
 type Story = StoryObj<typeof OrganisationListSelector>;
 
-const items: ListItem[] = Array.from({ length: 10 }, (_, i) => ({
-  id: `${i + 1}`,
-  label: faker.company.name(),
-}));
+const organisations: OrganisationSelection[] = Array.from(
+  { length: 10 },
+  (_, i) => ({
+    id: `${i + 1}`,
+    name: faker.company.name(),
+  })
+);
 
 export const Default: Story = {
   args: {
-    items,
+    organisations,
   },
 };
 
 export const WithSelected: Story = {
   args: {
-    items,
+    organisations,
     selectedId: '2',
   },
 };
 
 export const WithMultipleSelected: Story = {
   args: {
-    items,
+    organisations,
     multiple: true,
     selectedIds: ['2', '3'],
   },
@@ -39,7 +42,7 @@ export const WithMultipleSelected: Story = {
 
 export const WithError: Story = {
   args: {
-    items,
+    organisations,
     error: 'Something went wrong',
   },
 };

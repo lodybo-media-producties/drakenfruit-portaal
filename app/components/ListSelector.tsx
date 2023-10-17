@@ -42,14 +42,14 @@ interface BaseProps {
 export interface SingleSelectProps extends BaseProps {
   multiple?: false;
   selectedId?: string;
-  onChange: (id: string) => void;
+  onSelect: (id: string) => void;
   selectedIds?: never;
 }
 
 export interface MultiSelectProps extends BaseProps {
   multiple?: true;
   selectedIds?: string[];
-  onChange: (ids: string[]) => void;
+  onSelect: (ids: string[]) => void;
   selectedId?: never;
 }
 
@@ -87,10 +87,10 @@ export default function ListSelector({
         ? (selected as string[]).filter((selectedId) => selectedId !== id)
         : [...(selected as string[]), id];
       setSelected(newSelected);
-      (props as MultiSelectProps).onChange(newSelected);
+      (props as MultiSelectProps).onSelect(newSelected);
     } else {
       setSelected(id);
-      (props as SingleSelectProps).onChange(id);
+      (props as SingleSelectProps).onSelect(id);
     }
   };
 
@@ -123,7 +123,9 @@ export default function ListSelector({
           </ul>
         </div>
 
-        <Button onClick={() => setOpen(true)}>{labels.addButtonLabel}</Button>
+        <Button type="button" onClick={() => setOpen(true)}>
+          {labels.addButtonLabel}
+        </Button>
 
         <Message variant="error" message={error} />
       </div>

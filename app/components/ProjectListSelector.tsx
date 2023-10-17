@@ -3,15 +3,20 @@ import ListSelector, {
   type ListSelectorLabels,
   type MultiSelectProps,
   type SingleSelectProps,
+  type ListItem,
 } from '~/components/ListSelector';
 import { useTranslation } from 'react-i18next';
+import { type SerializeFrom } from '@remix-run/node';
+import { type Project } from '@prisma/client';
 
-type Props = Omit<ListSelectorProps, 'labels'>;
+export type ProjectSelection = Pick<SerializeFrom<Project>, 'id' | 'name'>;
 
-export { type ListItem } from '~/components/ListSelector';
+type Props = Omit<ListSelectorProps, 'labels' | 'items'> & {
+  projects: ProjectSelection[];
+};
 
 export default function ProjectListSelector({
-  items,
+  projects,
   error,
   multiple,
   ...props
@@ -26,8 +31,13 @@ export default function ProjectListSelector({
     dialogDescription: t('ProjectListSelector.DialogDescription'),
   };
 
+  const items: ListItem[] = projects.map((project) => ({
+    id: project.id,
+    label: project.name,
+  }));
+
   if (multiple) {
-    const { selectedIds, onChange } = props as MultiSelectProps;
+    const { selectedIds, onSelect } = props as MultiSelectProps;
     return (
       <ListSelector
         labels={labels}
@@ -35,19 +45,19 @@ export default function ProjectListSelector({
         error={error}
         multiple
         selectedIds={selectedIds}
-        onChange={onChange}
+        onSelect={onSelect}
       />
     );
   }
 
-  const { selectedId, onChange } = props as SingleSelectProps;
+  const { selectedId, onSelect } = props as SingleSelectProps;
   return (
     <ListSelector
       labels={labels}
       items={items}
       error={error}
       selectedId={selectedId}
-      onChange={onChange}
+      onSelect={onSelect}
     />
   );
 }
