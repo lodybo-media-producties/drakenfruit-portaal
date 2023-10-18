@@ -98,6 +98,11 @@ export async function action({ request }: ActionFunctionArgs) {
                 id: data.authorId,
               },
             },
+            categories: {
+              connect: data.categories.map((category) => ({
+                id: category,
+              })),
+            },
           },
         });
 

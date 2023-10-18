@@ -109,7 +109,7 @@ export default function ProjectsIndexRoute() {
   const [columns, data] = convertUserListToTableData(users);
 
   const handleEdit = (id: string) => {
-    navigate(`/administratie/projecten/bewerken/${id}`);
+    navigate(`/administratie/gebruikers/bewerken/${id}`);
   };
 
   return (

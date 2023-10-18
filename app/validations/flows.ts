@@ -313,7 +313,6 @@ export async function validateUser(
   const firstName = formData.get('firstName') as string;
   const lastName = formData.get('lastName') as string;
   const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
   const role = formData.get('role') as string;
   const organisationId = formData.get('organisationId') as string;
   const avatarUrl = formData.get('avatarUrl') as string | null;
@@ -331,10 +330,6 @@ export async function validateUser(
 
   if (!isDefined(email)) {
     errors.email = 'E-mailadres is verplicht';
-  }
-
-  if (!isDefined(password)) {
-    errors.password = 'Wachtwoord is verplicht';
   }
 
   if (!isDefined(role)) {
@@ -364,11 +359,13 @@ export async function validateUser(
       firstName,
       lastName,
       email,
-      password,
       role: role as Role,
       locale,
       avatarUrl,
       organisationId,
+      projectIds: (formData.get('projectIds') as string)
+        .split(',')
+        .filter(Boolean),
     },
   };
 }

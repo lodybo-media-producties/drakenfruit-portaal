@@ -91,6 +91,7 @@ export default function ListSelector({
     } else {
       setSelected(id);
       (props as SingleSelectProps).onSelect(id);
+      setOpen(false);
     }
   };
 

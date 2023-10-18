@@ -151,5 +151,26 @@
     "NoItemsLabel": "No projects added yet",
     "DialogTitle": "Add projects",
     "DialogDescription": "Please select one or more projects to add to the list"
+  },
+  "UserMutationForm": {
+    "First Name Label": "First Name",
+    "Last Name Label": "Last Name",
+    "Email Label": "Email",
+    "Avatar URL Label": "Avatar image",
+    "Role Label": "Choose a role",
+    "Locale Label": "Locale",
+    "Save Button Label": "Save",
+    "Edit Button Label": "Edit",
+    "Locales": {
+      "Dutch": "Dutch",
+      "English": "English"
+    },
+    "Roles": {
+      "MAINTAINER": "Maintainer",
+      "ADMIN": "Administrator",
+      "OFFICEMANAGER": "Office manager",
+      "CONSULTANT": "Consultant",
+      "PROJECTLEADER": "Project leader"
+    }
   }
 }

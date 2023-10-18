@@ -354,9 +354,9 @@ describe('Validating user flows', () => {
       formData.append('firstName', 'Kaylee');
       formData.append('lastName', 'Rosalina');
       formData.append('email', 'hallo@kayleerosalina.nl');
-      formData.append('password', '123456789');
       formData.append('role', 'ADMIN');
       formData.append('organisationId', '1');
+      formData.append('projectIds', '1,2');
       formData.append('locale', 'nl');
       formData.append('avatarUrl', '/path/to/avatar.jpg');
 
@@ -373,9 +373,9 @@ describe('Validating user flows', () => {
         firstName: 'Kaylee',
         lastName: 'Rosalina',
         email: 'hallo@kayleerosalina.nl',
-        password: '123456789',
         role: 'ADMIN',
         organisationId: '1',
+        projectIds: ['1', '2'],
         locale: 'nl',
         avatarUrl: '/path/to/avatar.jpg',
       });

@@ -540,7 +540,6 @@ export function convertUserFormValuesToFormData(
   formData.append('firstName', userFormValues.firstName);
   formData.append('lastName', userFormValues.lastName);
   formData.append('email', userFormValues.email);
-  formData.append('organisationId', userFormValues.organisationId);
   formData.append('role', userFormValues.role);
   formData.append('locale', userFormValues.locale);
 
@@ -550,6 +549,14 @@ export function convertUserFormValuesToFormData(
 
   if (userFormValues.avatarUrl) {
     formData.append('avatarUrl', userFormValues.avatarUrl);
+  }
+
+  if (userFormValues.organisationId) {
+    formData.append('organisationId', userFormValues.organisationId);
+  }
+
+  if (userFormValues.projectIds) {
+    formData.append('projectIds', userFormValues.projectIds.join(','));
   }
 
   return formData;

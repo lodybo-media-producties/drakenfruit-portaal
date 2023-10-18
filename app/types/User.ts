@@ -1,7 +1,7 @@
 import { type User } from '~/models/user.server';
 import { type Prisma } from '@prisma/client';
 
-type CoreUserData = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;
+type CoreUserData = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'role'>;
 
 export type UserWithProjectsAndOrgs = Prisma.UserGetPayload<{
   include: {
@@ -23,10 +23,12 @@ export type UserWithProjectsAndOrgs = Prisma.UserGetPayload<{
 export type UserValidationErrors = Partial<
   Record<keyof CoreUserData, string>
 > & {
-  password?: string;
+  role?: string;
+  projectIds?: string;
 };
 
 export type UserFormValues = CoreUserData & {
+  role: string;
   id?: string;
-  password?: string;
+  projectIds: string[];
 };

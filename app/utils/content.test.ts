@@ -888,6 +888,7 @@ describe('Content utilities', () => {
         locale: 'nl',
         avatarUrl: '/path/to/avatar',
         organisationId: '1',
+        projectIds: ['1'],
       };
 
       const formData = convertUserFormValuesToFormData(user);
@@ -900,6 +901,7 @@ describe('Content utilities', () => {
       expect(formData.get('locale')).toEqual('nl');
       expect(formData.get('avatarUrl')).toEqual('/path/to/avatar');
       expect(formData.get('organisationId')).toEqual('1');
+      expect(formData.get('projectIds')).toEqual('1');
     });
   });
 

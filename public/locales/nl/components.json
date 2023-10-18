@@ -151,5 +151,26 @@
     "NoItemsLabel": "Geen projecten toegevoegd",
     "DialogTitle": "Projecten toevoegen",
     "DialogDescription": "Zoek naar projecten om toe te voegen aan dit item."
+  },
+  "UserMutationForm": {
+    "First Name Label": "Voornaam",
+    "Last Name Label": "Achternaam",
+    "Email Label": "E-mailadres",
+    "Avatar URL Label": "Avatar afbeelding",
+    "Role Label": "Selecteer een rol",
+    "Locale Label": "Taal",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken",
+    "Locales": {
+      "Dutch": "Nederlands",
+      "English": "Engels"
+    },
+    "Roles": {
+      "MAINTAINER": "Beheerder",
+      "ADMIN": "Administrator",
+      "OFFICEMANAGER": "Office manager",
+      "CONSULTANT": "Consultant",
+      "PROJECTLEADER": "Projectleider"
+    }
   }
 }
