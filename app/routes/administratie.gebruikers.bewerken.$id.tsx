@@ -22,6 +22,12 @@ import UserMutationForm from '~/components/UserMutationForm';
 import { type Role } from '@prisma/client';
 import invariant from 'tiny-invariant';
 import { type UserFormValues } from '~/types/User';
+import {
+  composeUploadHandlers,
+  parseMultipartFormData,
+} from '@remix-run/server-runtime/dist/formData';
+import { avatarUploadHandler } from '~/models/storage.server';
+import { createMemoryUploadHandler } from '@remix-run/server-runtime/dist/upload/memoryUploadHandler';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('ADMIN', request);
@@ -111,6 +117,23 @@ export async function action({ request }: ActionFunctionArgs) {
       status: 400,
     });
   } else {
+    const clonedRequest = request.clone();
+    const editedFormData = await clonedRequest.formData();
+    const avatarHasBeenChanged = editedFormData.get('avatarHasBeenChanged');
+
+    const uploadHandler = composeUploadHandlers(
+      (args) =>
+        avatarUploadHandler({
+          ...args,
+          callback: () => {},
+          runHandler: avatarHasBeenChanged === 'true',
+        }),
+      createMemoryUploadHandler()
+    );
+
+    const parsedFormData = await parseMultipartFormData(request, uploadHandler);
+    const avatarUrl = parsedFormData.get('avatar') as string | undefined;
+
     try {
       await prisma.user.update({
         where: {
@@ -120,6 +143,7 @@ export async function action({ request }: ActionFunctionArgs) {
           firstName: validationResults.data.firstName,
           lastName: validationResults.data.lastName,
           email: validationResults.data.email,
+          avatarUrl,
           role: validationResults.data.role as Role,
           locale: validationResults.data.locale,
           organisation: {

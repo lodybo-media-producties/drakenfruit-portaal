@@ -217,7 +217,6 @@ describe('Validating user flows', () => {
 
       const validationResult = await validationFlows.validateTool(request);
 
-      console.log(validationResult);
       expect(validationResult.success).toBe(true);
       expect(validationResult.data).toStrictEqual<ToolData>({
         name: { en: 'Name 1', nl: 'Naam 1' },
@@ -363,6 +362,7 @@ describe('Validating user flows', () => {
       const request = new Request('http://localhost:3000/api/user', {
         method: 'POST',
         body: formData,
+        signal: new AbortController().signal,
       });
 
       const validationResult = await validationFlows.validateUser(request);

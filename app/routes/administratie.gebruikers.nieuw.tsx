@@ -20,6 +20,12 @@ import { prisma } from '~/db.server';
 import { useLoaderData } from '@remix-run/react';
 import UserMutationForm from '~/components/UserMutationForm';
 import { type Role } from '@prisma/client';
+import {
+  composeUploadHandlers,
+  parseMultipartFormData,
+} from '@remix-run/server-runtime/dist/formData';
+import { avatarUploadHandler } from '~/models/storage.server';
+import { createMemoryUploadHandler } from '@remix-run/server-runtime/dist/upload/memoryUploadHandler';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('ADMIN', request);
@@ -74,6 +80,23 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } else {
     try {
+      // TODO: one-time password
+
+      const uploadHandler = composeUploadHandlers(
+        (args) =>
+          avatarUploadHandler({
+            ...args,
+            callback: () => {},
+          }),
+        createMemoryUploadHandler()
+      );
+
+      const parsedFormData = await parseMultipartFormData(
+        request,
+        uploadHandler
+      );
+      const avatarUrl = parsedFormData.get('avatar') as string | undefined;
+
       await prisma.user.create({
         data: {
           firstName: validationResults.data.firstName,
@@ -81,6 +104,7 @@ export async function action({ request }: ActionFunctionArgs) {
           email: validationResults.data.email,
           role: validationResults.data.role as Role,
           locale: validationResults.data.locale,
+          avatarUrl,
           organisation: {
             connect: {
               id: validationResults.data.organisationId,

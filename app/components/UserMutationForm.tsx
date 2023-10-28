@@ -18,6 +18,7 @@ import ProjectListSelector, {
   type ProjectSelection,
 } from '~/components/ProjectListSelector';
 import SelectInput, { type SelectOption } from '~/components/Select';
+import FileInput from '~/components/FileInput';
 
 type Props = {
   mode: 'create' | 'update';
@@ -56,6 +57,7 @@ export default function UserMutationForm({
   const [projectIds, setProjectIds] = useState(
     initialValues?.projectIds ?? ['']
   );
+  const [avatarHasBeenChanged, setAvatarHasBeenChanged] = useState(false);
 
   const roleOptions: SelectOption[] = [
     { value: 'MAINTAINER', label: t('UserMutationForm.Roles.MAINTAINER') },
@@ -76,6 +78,14 @@ export default function UserMutationForm({
     { value: 'en', label: t('UserMutationForm.Locales.English') },
   ];
 
+  const handleAvatarChange = (fileName: string) => {
+    setAvatarUrl(fileName);
+
+    if (mode === 'update') {
+      setAvatarHasBeenChanged(true);
+    }
+  };
+
   const generateFormDataFromUserFormValues = () => {
     return convertUserFormValuesToFormData({
       id: initialValues?.id,
@@ -92,11 +102,17 @@ export default function UserMutationForm({
 
   const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const form = event.currentTarget as HTMLFormElement;
 
     const formData = generateFormDataFromUserFormValues();
+    formData.append('avatar', form.avatar.files[0]);
+    if (mode === 'update' && avatarHasBeenChanged) {
+      formData.append('avatarHasBeenChanged', 'true');
+    }
 
     fetcher.submit(formData, {
       method: mode === 'create' ? 'POST' : 'PUT',
+      encType: 'multipart/form-data',
     });
   };
 
@@ -150,12 +166,12 @@ export default function UserMutationForm({
         error={formErrors?.email}
       />
 
-      <TextInput
+      <FileInput
+        name="avatar"
         label={t('UserMutationForm.Avatar URL Label')}
+        accept="image/*"
         value={avatarUrl}
-        onChange={(event) => {
-          setAvatarUrl(event.target.value);
-        }}
+        onChange={handleAvatarChange}
         error={formErrors?.avatarUrl}
       />
 

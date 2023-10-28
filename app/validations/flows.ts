@@ -307,7 +307,8 @@ export async function validateProject(
 export async function validateUser(
   request: Request
 ): Promise<ValidationResult<UserData, UserErrors>> {
-  const formData = await request.formData();
+  const validationRequest = request.clone();
+  const formData = await validationRequest.formData();
 
   const id = formData.get('id') as string | undefined;
   const firstName = formData.get('firstName') as string;
