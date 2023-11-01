@@ -50,6 +50,15 @@ describe('Validations', () => {
         true
       );
     });
+
+    test('Check whether a new password and a confirmation password match', () => {
+      expect(
+        validationChecks.validatePasswordConfirmation('12345678', '12345678')
+      ).toBe(true);
+      expect(
+        validationChecks.validatePasswordConfirmation('12345678', '123456789')
+      ).toBe(false);
+    });
   });
 
   describe('Testing localised (form data) values', () => {

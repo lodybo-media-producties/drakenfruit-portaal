@@ -44,6 +44,7 @@ async function createOrganisations() {
             password: {
               create: {
                 hash: await bcrypt.hash('kayleeiscool', 10),
+                type: 'ACTIVE',
               },
             },
           },
@@ -56,6 +57,7 @@ async function createOrganisations() {
             password: {
               create: {
                 hash: await bcrypt.hash('lodyiscool', 10),
+                type: 'ACTIVE',
               },
             },
           },
@@ -68,6 +70,7 @@ async function createOrganisations() {
             password: {
               create: {
                 hash: await bcrypt.hash('simoneiscool', 10),
+                type: 'ACTIVE',
               },
             },
           },
@@ -80,6 +83,7 @@ async function createOrganisations() {
             password: {
               create: {
                 hash: await bcrypt.hash('lisaiscool', 10),
+                type: 'ACTIVE',
               },
             },
           },
@@ -109,6 +113,7 @@ async function createOrganisations() {
               password: {
                 create: {
                   hash: await bcrypt.hash('password', 10),
+                  type: 'ACTIVE',
                 },
               },
             },

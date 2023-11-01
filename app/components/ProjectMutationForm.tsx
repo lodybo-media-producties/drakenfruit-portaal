@@ -12,9 +12,9 @@ import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import Loader from '~/components/Loader';
 import Button from '~/components/Button';
-import OrganisationSelector, {
+import OrganisationListSelector, {
   type OrganisationSelection,
-} from '~/components/OrganisationSelector';
+} from '~/components/OrganisationListSelector';
 
 type Props = {
   mode: 'create' | 'update';
@@ -106,9 +106,9 @@ export default function ProjectMutationForm({
         error={formErrors?.description}
       />
 
-      <OrganisationSelector
+      <OrganisationListSelector
         organisations={organisations}
-        initialOrganisation={organisationId}
+        selectedId={organisationId}
         onSelect={setOrganisationId}
         error={formErrors?.organisationId}
       />

@@ -1,22 +1,83 @@
 import { describe, test } from 'vitest';
 import * as validationFlows from '~/validations/flows';
-import { type ToolData } from '~/types/Validations';
+import {
+  type PasswordChangeData,
+  type PasswordChangeErrors,
+  type ToolData,
+  type UserData,
+  type UserErrors,
+} from '~/types/Validations';
 
-describe('Validating user flows', () => {
-  describe('Login validation', () => {
-    test('Check whether a login request is valid or not', async () => {
-      const formData = new FormData();
-      formData.append('email', 'lody@drakenfruit.com');
-      formData.append('password', '123456789');
+describe('Validation flows', () => {
+  describe('Authentication', () => {
+    describe('Login validation', () => {
+      test('Check whether a login request is valid or not', async () => {
+        const formData = new FormData();
+        formData.append('email', 'lody@drakenfruit.com');
+        formData.append('password', '123456789');
 
-      const loginRequest = new Request('http://localhost:3000/login', {
-        method: 'POST',
-        body: formData,
+        const loginRequest = new Request('http://localhost:3000/login', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const validationResult =
+          await validationFlows.validateLogin(loginRequest);
+        expect(validationResult.success).toBe(true);
       });
+    });
 
-      const validationResult =
-        await validationFlows.validateLogin(loginRequest);
-      expect(validationResult.success).toBe(true);
+    describe('Password change validation', () => {
+      test('Check whether a password change request is valid or not', async () => {
+        const formData = new FormData();
+        formData.append('email', 'kaylee@drakenfruit.com');
+        formData.append('redirectTo', '/account');
+        formData.append('new-password', '123456789');
+        formData.append('confirm-password', '123456789');
+
+        const passwordChangeRequest = new Request(
+          'http://localhost:3000/password/change',
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        const validationResult = await validationFlows.validatePasswordChange(
+          passwordChangeRequest
+        );
+
+        expect(validationResult.success).toBe(true);
+        expect(validationResult.data).toStrictEqual<PasswordChangeData>({
+          newPassword: '123456789',
+          confirmation: '123456789',
+          redirectTo: '/account',
+          email: 'kaylee@drakenfruit.com',
+        });
+
+        const formData2 = new FormData();
+        formData2.append('email', 'lody@drakenfruit.com');
+        formData2.append('redirectTo', '/account');
+        formData2.append('new-password', '123456789');
+        formData2.append('confirm-password', '123456700');
+
+        const passwordChangeRequest2 = new Request(
+          'http://localhost:3000/password/change',
+          {
+            method: 'POST',
+            body: formData2,
+          }
+        );
+
+        const validationResult2 = await validationFlows.validatePasswordChange(
+          passwordChangeRequest2
+        );
+
+        expect(validationResult2.success).toBe(false);
+        expect(validationResult2.errors).toStrictEqual<PasswordChangeErrors>({
+          combi: 'Wachtwoorden komen niet overeen',
+        });
+      });
     });
   });
 
@@ -213,7 +274,6 @@ describe('Validating user flows', () => {
 
       const validationResult = await validationFlows.validateTool(request);
 
-      console.log(validationResult);
       expect(validationResult.success).toBe(true);
       expect(validationResult.data).toStrictEqual<ToolData>({
         name: { en: 'Name 1', nl: 'Naam 1' },
@@ -340,6 +400,66 @@ describe('Validating user flows', () => {
       expect(validationResult.success).toBe(false);
       expect(validationResult.errors!.name).toBe('Naam is verplicht');
       expect(validationResult.data).toBe(undefined);
+    });
+  });
+
+  describe('User validation', () => {
+    test('Check whether a user request is valid or not', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('firstName', 'Kaylee');
+      formData.append('lastName', 'Rosalina');
+      formData.append('email', 'hallo@kayleerosalina.nl');
+      formData.append('role', 'ADMIN');
+      formData.append('organisationId', '1');
+      formData.append('projectIds', '1,2');
+      formData.append('locale', 'nl');
+      formData.append('avatarUrl', '/path/to/avatar.jpg');
+
+      const request = new Request('http://localhost:3000/api/user', {
+        method: 'POST',
+        body: formData,
+        signal: new AbortController().signal,
+      });
+
+      const validationResult = await validationFlows.validateUser(request);
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual<UserData>({
+        id: '1',
+        firstName: 'Kaylee',
+        lastName: 'Rosalina',
+        email: 'hallo@kayleerosalina.nl',
+        role: 'ADMIN',
+        organisationId: '1',
+        projectIds: ['1', '2'],
+        locale: 'nl',
+        avatarUrl: '/path/to/avatar.jpg',
+      });
+    });
+
+    test('Check whether a user request is invalid because of a missing emailadress', async () => {
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('firstName', 'Kaylee');
+      formData.append('lastName', 'Rosalina');
+      formData.append('password', '123456789');
+      formData.append('role', 'ADMIN');
+      formData.append('organisationId', '1');
+      formData.append('locale', 'nl');
+      formData.append('avatarUrl', '/path/to/avatar.jpg');
+
+      const request = new Request('http://localhost:3000/api/user', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateUser(request);
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors).toStrictEqual<UserErrors>({
+        email: 'E-mailadres is verplicht',
+      });
     });
   });
 });

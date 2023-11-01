@@ -3,6 +3,7 @@ import { type CategoryFormValues } from '~/types/Category';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationFormValues } from '~/types/Organisations';
 import { type ProjectFormValues } from '~/types/Project';
+import { type UserFormValues, type UserValidationErrors } from '~/types/User';
 
 interface BaseValidationResult {
   success: boolean;
@@ -35,6 +36,19 @@ export type LoginErrors = {
   emailaddress?: string;
   password?: string;
   userNotFound?: string;
+};
+
+export type PasswordChangeData = {
+  newPassword: string;
+  confirmation: string;
+  redirectTo: string;
+  email: string;
+};
+
+export type PasswordChangeErrors = {
+  newPassword?: string;
+  confirmation?: string;
+  combi?: string;
 };
 
 export type ArticleData = ArticleFormValues;
@@ -72,3 +86,7 @@ export type OrganisationErrors = Partial<
 export type ProjectData = ProjectFormValues;
 
 export type ProjectErrors = Partial<Record<keyof ProjectFormValues, string>>;
+
+export type UserData = UserFormValues;
+
+export type UserErrors = UserValidationErrors;

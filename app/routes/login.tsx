@@ -41,6 +41,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       );
     }
 
+    switch (user.passwordType) {
+      case 'MUSTCHANGE':
+        return redirect(
+          `/account/wachtwoord-wijzigen?email=${user.email}&redirectTo=${redirectTo}`
+        );
+      case 'RESET':
+        return redirect(
+          `/account/wachtwoord-resetten?redirectTo=${redirectTo}`
+        );
+      case 'MULTIFACTOR':
+        return redirect(`/account/verificatie?redirectTo=${redirectTo}`);
+    }
+
     return createUserSession({
       redirectTo,
       remember: remember === 'on',

@@ -1,4 +1,34 @@
 {
+  "Authentication": {
+    "Login": {
+      "Meta": {
+        "Title": "Login | Drakenfruit"
+      },
+      "Title": "Login",
+      "Email": "Email",
+      "Password": "Password",
+      "Remember Me": "Remember me",
+      "Login": "Login",
+      "Forgot Password": "Forgot password?",
+      "Error": {
+        "Invalid Credentials": "Invalid credentials"
+      }
+    },
+    "PasswordChange": {
+      "Meta": {
+        "Title": "Change password | Drakenfruit"
+      },
+      "Title": "Change password",
+      "Subtitle": "You have to change your password before you can continue. Enter your new password below.",
+      "Current Password": "Current password",
+      "New Password": "New password",
+      "Confirm New Password": "Confirm new password",
+      "Change Password Action": "Change password",
+      "Error": {
+        "Invalid Credentials": "Invalid credentials"
+      }
+    }
+  },
   "Articles": {
     "API": {
       "CREATE": {
@@ -271,6 +301,73 @@
         "Project Not Found": "The Project could not be found"
       },
       "Back Link Label": "Back to Projects"
+    }
+  },
+  "Users": {
+    "API": {
+      "Error": {
+        "Invalid Method": "Method not allowed"
+      },
+      "CREATE": {
+        "Success": {
+          "Title": "User created",
+          "Message": "The User was created successfully"
+        },
+        "Pass": {
+          "Title": "User created",
+          "Message": "<p>A new temporary password was created for the user. The password is: <strong>{{password}}</strong> </p> <p>The user shall be prompted to change this password upon first login.</p> <p>You cannot view this password again.</p>"
+        }
+      },
+      "UPDATE": {
+        "Success": {
+          "Title": "User updated",
+          "Message": "The User was updated successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided",
+          "User Not Found": "The User could not be found"
+        }
+      },
+      "DELETE": {
+        "Success": {
+          "Title": "User deleted",
+          "Message": "The User was deleted successfully"
+        },
+        "Error": {
+          "No ID": "No ID was provided"
+        }
+      }
+    },
+    "Index": {
+      "Meta": {
+        "Title": "Users | Drakenfruit"
+      },
+      "Title": "Users",
+      "No Users": "No Users were found",
+      "New User": "New User",
+      "Roles": {
+        "MAINTAINER": "Maintainer",
+        "ADMIN": "Administrator",
+        "OFFICEMANAGER": "Office manager",
+        "CONSULTANT": "Consultant",
+        "PROJECTLEADER": "Project leader"
+      }
+    },
+    "New": {
+      "Meta": {
+        "Title": "New User | Drakenfruit"
+      },
+      "Back Link Label": "Back to Users"
+    },
+    "Edit": {
+      "Meta": {
+        "Title": "Edit User | Drakenfruit"
+      },
+      "Error": {
+        "No ID": "No ID was provided",
+        "User Not Found": "The User could not be found"
+      },
+      "Back Link Label": "Back to Users"
     }
   }
 }

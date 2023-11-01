@@ -23,9 +23,10 @@ import {
   convertOrganisationFormValuesToFormData,
   convertFormDataToOrganisationFormValues,
   convertProjectListToTableData,
-  convertFormDataToProjectFormValues,
   convertProjectFormValuesToFormData,
   convertArticleOrToolToItem,
+  convertUserListToTableData,
+  convertUserFormValuesToFormData,
 } from '~/utils/content';
 import { type Category } from '~/models/categories.server';
 import { type ArticleFormValues } from '~/types/Article';
@@ -38,6 +39,10 @@ import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
 import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
 import { type Item } from '~/components/ItemCard';
+import {
+  type UserFormValues,
+  type UserWithProjectsAndOrgs,
+} from '~/types/User';
 
 describe('Content utilities', () => {
   describe('Articles', () => {
@@ -821,22 +826,85 @@ describe('Content utilities', () => {
       expect(formData.get('description')).toEqual('Description 1');
       expect(formData.get('organisationId')).toEqual('1');
     });
+  });
 
-    test('Convert form data to project form values', () => {
-      const formData = new FormData();
-      formData.append('id', '1');
-      formData.append('name', 'Project 1');
-      formData.append('description', 'Description 1');
-      formData.append('organisationId', '1');
+  describe('Users', () => {
+    test('Convert a list of users from the database into table data', () => {
+      const users: SerializeFrom<UserWithProjectsAndOrgs>[] = [
+        {
+          id: '1',
+          firstName: 'Kaylee',
+          lastName: 'Rosalina',
+          email: 'hallo@kayleerosalina.nl',
+          role: 'ADMIN',
+          locale: 'nl',
+          avatarUrl: '',
+          organisation: {
+            id: '1',
+            name: 'Organisation 1',
+          },
+          organisationId: '1',
+          projects: [
+            {
+              id: '1',
+              name: 'Project 1',
+            },
+          ],
+          createdAt: '',
+          updatedAt: '',
+        },
+      ];
 
-      const project = convertFormDataToProjectFormValues(formData);
+      const [columns, data] = convertUserListToTableData(users);
 
-      expect(project).toEqual({
+      expect(columns).toEqual([
+        'Voornaam',
+        'Achternaam',
+        'E-mailadres',
+        'Rol',
+        'Organisatie',
+        'Projecten',
+      ]);
+
+      expect(data).toEqual([
+        {
+          id: '1',
+          data: new Map([
+            ['Voornaam', 'Kaylee'],
+            ['Achternaam', 'Rosalina'],
+            ['E-mailadres', 'hallo@kayleerosalina.nl'],
+            ['Rol', 'Administrator'],
+            ['Organisatie', 'Organisation 1'],
+            ['Projecten', 'Project 1'],
+          ]),
+        },
+      ]);
+    });
+
+    test('Convert a user form value to form data', () => {
+      const user: UserFormValues = {
         id: '1',
-        name: 'Project 1',
-        description: 'Description 1',
+        firstName: 'Kaylee',
+        lastName: 'Rosalina',
+        email: 'hallo@kayleerosalina.nl',
+        role: 'ADMIN',
+        locale: 'nl',
+        avatarUrl: '/path/to/avatar',
         organisationId: '1',
-      });
+        projectIds: ['1'],
+      };
+
+      const formData = convertUserFormValuesToFormData(user);
+
+      expect(formData.get('id')).toEqual('1');
+      expect(formData.get('firstName')).toEqual('Kaylee');
+      expect(formData.get('lastName')).toEqual('Rosalina');
+      expect(formData.get('email')).toEqual('hallo@kayleerosalina.nl');
+      expect(formData.get('role')).toEqual('ADMIN');
+      expect(formData.get('locale')).toEqual('nl');
+      expect(formData.get('avatarUrl')).toEqual('/path/to/avatar');
+      expect(formData.get('organisationId')).toEqual('1');
+      expect(formData.get('projectIds')).toEqual('1');
     });
   });
 

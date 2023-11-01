@@ -7,15 +7,29 @@ import type {
   LoginErrors,
   OrganisationData,
   OrganisationErrors,
+  PasswordChangeData,
+  PasswordChangeErrors,
   ProjectData,
   ProjectErrors,
   ToolData,
   ToolErrors,
+  UserData,
+  UserErrors,
   ValidationResult,
 } from '~/types/Validations';
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
 import { isDefined } from './checks';
+
+// Defined here because if we import it from 'user.server.ts', we got a dependency on the actual Postgres database.
+const Role = {
+  MAINTAINER: 'MAINTAINER',
+  ADMIN: 'ADMIN',
+  OFFICEMANAGER: 'OFFICEMANAGER',
+  CONSULTANT: 'CONSULTANT',
+  PROJECTLEADER: 'PROJECTLEADER',
+};
+type Role = (typeof Role)[keyof typeof Role];
 
 export async function validateLogin(
   request: Request
@@ -64,6 +78,65 @@ export async function validateLogin(
       password: password as string,
       redirectTo,
       remember,
+    },
+  };
+}
+
+export async function validatePasswordChange(
+  request: Request
+): Promise<ValidationResult<PasswordChangeData, PasswordChangeErrors>> {
+  const formData = await request.formData();
+  const newPassword = formData.get('new-password');
+  const confirmation = formData.get('confirm-password');
+
+  const errors: PasswordChangeErrors = {};
+
+  const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
+
+  if (!checks.valueIsString(newPassword)) {
+    errors.newPassword = 'Wachtwoord is ongeldig';
+  } else {
+    if (!checks.isDefined(newPassword)) {
+      errors.newPassword = 'Vul een wachtwoord in';
+    }
+
+    if (!checks.validatePassword(newPassword)) {
+      errors.newPassword = 'Wachtwoord moet minimaal 8 tekens lang zijn';
+    }
+  }
+
+  if (!checks.valueIsString(confirmation)) {
+    errors.confirmation = 'Wachtwoord is ongeldig';
+  } else {
+    if (!checks.isDefined(confirmation)) {
+      errors.confirmation = 'Vul een wachtwoord in';
+    }
+
+    if (!checks.validatePassword(confirmation)) {
+      errors.confirmation = 'Wachtwoord moet minimaal 8 tekens lang zijn';
+    }
+  }
+
+  if (
+    !checks.validatePasswordConfirmation(
+      newPassword as string,
+      confirmation as string
+    )
+  ) {
+    errors.combi = 'Wachtwoorden komen niet overeen';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      newPassword: newPassword as string,
+      confirmation: confirmation as string,
+      redirectTo,
+      email: formData.get('email') as string,
     },
   };
 }
@@ -297,6 +370,73 @@ export async function validateProject(
       name,
       description,
       organisationId,
+    },
+  };
+}
+
+export async function validateUser(
+  request: Request
+): Promise<ValidationResult<UserData, UserErrors>> {
+  const validationRequest = request.clone();
+  const formData = await validationRequest.formData();
+
+  const id = formData.get('id') as string | undefined;
+  const firstName = formData.get('firstName') as string;
+  const lastName = formData.get('lastName') as string;
+  const email = formData.get('email') as string;
+  const role = formData.get('role') as string;
+  const organisationId = formData.get('organisationId') as string;
+  const avatarUrl = formData.get('avatarUrl') as string | null;
+  const locale = formData.get('locale') as string;
+
+  const errors: UserErrors = {};
+
+  if (!isDefined(firstName)) {
+    errors.firstName = 'Voornaam is verplicht';
+  }
+
+  if (!isDefined(lastName)) {
+    errors.lastName = 'Achternaam is verplicht';
+  }
+
+  if (!isDefined(email)) {
+    errors.email = 'E-mailadres is verplicht';
+  }
+
+  if (!isDefined(role)) {
+    errors.role = 'Rol is verplicht';
+  }
+
+  if (Role[role as keyof typeof Role] === undefined) {
+    errors.role = 'Rol is ongeldig';
+  }
+
+  if (!isDefined(locale)) {
+    errors.locale = 'Taal is verplicht';
+  }
+
+  if (!isDefined(organisationId)) {
+    errors.organisationId = 'Organisatie is verplicht';
+  }
+
+  if (Object.keys(errors).some((key) => errors[key as keyof UserErrors])) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      id,
+      firstName,
+      lastName,
+      email,
+      role: role as Role,
+      locale,
+      avatarUrl,
+      organisationId,
+      projectIds: (formData.get('projectIds') as string)
+        .split(',')
+        .filter(Boolean),
     },
   };
 }

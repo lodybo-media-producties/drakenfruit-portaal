@@ -24,6 +24,11 @@ import {
   type ProjectsWithOrganisationAndUsers,
 } from '~/types/Project';
 import { type Item } from '~/components/ItemCard';
+import {
+  type UserFormValues,
+  type UserWithProjectsAndOrgs,
+} from '~/types/User';
+import { type Role } from '@prisma/client';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -450,24 +455,6 @@ export function convertProjectFormValuesToFormData(
 
   return formData;
 }
-
-export function convertFormDataToProjectFormValues(
-  formData: FormData
-): ProjectFormValues {
-  const projectFormValues: ProjectFormValues = {
-    name: formData.get('name') as string,
-    description: formData.get('description') as string,
-    organisationId: formData.get('organisationId') as string,
-  };
-
-  const id = formData.get('id') as string | null;
-  if (id) {
-    projectFormValues.id = id;
-  }
-
-  return projectFormValues;
-}
-
 export function convertArticleOrToolToItem(
   data: SummarisedArticle | SummarisedTool,
   type: 'article' | 'tool'
@@ -502,4 +489,75 @@ export function convertArticleOrToolToItem(
   }
 
   return item;
+}
+
+// Create two functions for user management.
+// One for the user list and one for the user form.
+// The user list should return a table (using the TableData interface) with the users, and as columns the first and lastname, email and organisation.
+// The user form should return a form (using the UserFormValues interface) with all the fields.
+export function convertUserListToTableData(
+  users: SerializeFrom<UserWithProjectsAndOrgs>[]
+): [Columns, TableData[]] {
+  const columns: Columns = [
+    'Voornaam',
+    'Achternaam',
+    'E-mailadres',
+    'Rol',
+    'Organisatie',
+    'Projecten',
+  ];
+
+  const translatedRoles: Record<Role, string> = {
+    MAINTAINER: 'Beheerder',
+    ADMIN: 'Administrator',
+    OFFICEMANAGER: 'Office manager',
+    CONSULTANT: 'Consultant',
+    PROJECTLEADER: 'Projectleider',
+  };
+
+  const data: TableData[] = users.map((user) => {
+    return {
+      id: user.id,
+      data: new Map([
+        ['Voornaam', user.firstName],
+        ['Achternaam', user.lastName],
+        ['E-mailadres', user.email],
+        ['Rol', translatedRoles[user.role]],
+        ['Organisatie', user.organisation.name],
+        ['Projecten', user.projects.map((project) => project.name).join(', ')],
+      ]),
+    };
+  });
+
+  return [columns, data];
+}
+
+export function convertUserFormValuesToFormData(
+  userFormValues: UserFormValues
+): FormData {
+  const formData = new FormData();
+
+  formData.append('firstName', userFormValues.firstName);
+  formData.append('lastName', userFormValues.lastName);
+  formData.append('email', userFormValues.email);
+  formData.append('role', userFormValues.role);
+  formData.append('locale', userFormValues.locale);
+
+  if (userFormValues.id) {
+    formData.append('id', userFormValues.id);
+  }
+
+  if (userFormValues.avatarUrl) {
+    formData.append('avatarUrl', userFormValues.avatarUrl);
+  }
+
+  if (userFormValues.organisationId) {
+    formData.append('organisationId', userFormValues.organisationId);
+  }
+
+  if (userFormValues.projectIds) {
+    formData.append('projectIds', userFormValues.projectIds.join(','));
+  }
+
+  return formData;
 }

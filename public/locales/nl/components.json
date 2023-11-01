@@ -103,7 +103,7 @@
     "Author": "Door {{author}}",
     "Read More": "Lees meer",
     "Article Badge": "Artikel",
-    "Tool Badge": "Tool",
+    "Tool Badge": "Tool"
   },
   "OrganisationMutationForm": {
     "Name Label": "Naam van de organisatie",
@@ -129,6 +129,48 @@
       "Input Label": "Naam van de organisatie",
       "Cancel Button Label": "Annuleren",
       "Create Button Label": "Aanmaken"
+    }
+  },
+  "UserListSelector": {
+    "Title": "Gebruikers",
+    "AddButtonLabel": "Voeg gebruikers toe",
+    "NoItemsLabel": "Geen gebruikers toegevoegd",
+    "DialogTitle": "Gebruikers toevoegen",
+    "DialogDescription": "Zoek naar gebruikers om toe te voegen aan dit item."
+  },
+  "OrganisationListSelector": {
+    "Title": "Organisaties",
+    "AddButtonLabel": "Voeg organisaties toe",
+    "NoItemsLabel": "Geen organisaties toegevoegd",
+    "DialogTitle": "Organisaties toevoegen",
+    "DialogDescription": "Zoek naar organisaties om toe te voegen aan dit item."
+  },
+  "ProjectListSelector": {
+    "Title": "Projecten",
+    "AddButtonLabel": "Voeg projecten toe",
+    "NoItemsLabel": "Geen projecten toegevoegd",
+    "DialogTitle": "Projecten toevoegen",
+    "DialogDescription": "Zoek naar projecten om toe te voegen aan dit item."
+  },
+  "UserMutationForm": {
+    "First Name Label": "Voornaam",
+    "Last Name Label": "Achternaam",
+    "Email Label": "E-mailadres",
+    "Avatar URL Label": "Avatar afbeelding",
+    "Role Label": "Selecteer een rol",
+    "Locale Label": "Taal",
+    "Save Button Label": "Opslaan",
+    "Edit Button Label": "Bewerken",
+    "Locales": {
+      "Dutch": "Nederlands",
+      "English": "Engels"
+    },
+    "Roles": {
+      "MAINTAINER": "Beheerder",
+      "ADMIN": "Administrator",
+      "OFFICEMANAGER": "Office manager",
+      "CONSULTANT": "Consultant",
+      "PROJECTLEADER": "Projectleider"
     }
   }
 }
