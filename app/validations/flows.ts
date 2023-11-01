@@ -20,7 +20,16 @@ import type {
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
 import { isDefined } from './checks';
-import { Role } from '~/models/user.server';
+
+// Defined here because if we import it from 'user.server.ts', we got a dependency on the actual Postgres database.
+const Role = {
+  MAINTAINER: 'MAINTAINER',
+  ADMIN: 'ADMIN',
+  OFFICEMANAGER: 'OFFICEMANAGER',
+  CONSULTANT: 'CONSULTANT',
+  PROJECTLEADER: 'PROJECTLEADER',
+};
+type Role = (typeof Role)[keyof typeof Role];
 
 export async function validateLogin(
   request: Request
