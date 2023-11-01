@@ -315,7 +315,7 @@
         },
         "Pass": {
           "Title": "User created",
-          "Message": "<p>A new temporary password was created for the user. The password is: <strong>{{password}}</strong>.</p> <p>The user shall be prompted to change this password upon first login.</p> <p>You cannot view this password again.</p>"
+          "Message": "<p>A new temporary password was created for the user. The password is: <strong>{{password}}</strong> </p> <p>The user shall be prompted to change this password upon first login.</p> <p>You cannot view this password again.</p>"
         }
       },
       "UPDATE": {
