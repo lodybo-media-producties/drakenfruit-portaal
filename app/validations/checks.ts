@@ -19,6 +19,13 @@ export function validatePassword(password: string): boolean {
   return password.length >= 8;
 }
 
+export function validatePasswordConfirmation(
+  password: string,
+  confirmation: string
+): boolean {
+  return password === confirmation;
+}
+
 export function checkLocalisedValue(localisedValue: any) {
   let errors: { [key in SupportedLanguages]?: string } = {};
 

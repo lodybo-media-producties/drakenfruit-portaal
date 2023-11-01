@@ -21,6 +21,15 @@ import Table from '~/components/Table';
 import { type APIResponse } from '~/types/Responses';
 import { getErrorMessage } from '~/utils/utils';
 import { type UserWithProjectsAndOrgs } from '~/types/User';
+import { useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '~/components/ui/dialog';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUserWithMinimumRole('ADMIN', request);
@@ -47,7 +56,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     title: t('Users.Index.Meta.Title'),
   };
 
-  return json({ user, users, metaTranslations });
+  const session = await getSession(request);
+  const modalData = session.get('modal') || null;
+
+  return json(
+    { user, users, metaTranslations, modalData },
+    {
+      headers: {
+        'Set-Cookie': await commitSession(session),
+      },
+    }
+  );
 }
 
 export async function action({ request }: LoaderFunctionArgs) {
@@ -105,12 +124,21 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 export default function ProjectsIndexRoute() {
   const { t } = useTranslation('routes');
   const navigate = useNavigate();
-  const { users } = useLoaderData<typeof loader>();
+  const { users, modalData } = useLoaderData<typeof loader>();
   const [columns, data] = convertUserListToTableData(users);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleEdit = (id: string) => {
     navigate(`/administratie/gebruikers/bewerken/${id}`);
   };
+
+  useEffect(() => {
+    // TODO: Move this to root, hopefully it will work there..
+    // Also add prompt-on-enter for first inlog.
+    if (modalData) {
+      setModalOpen(true);
+    }
+  }, [modalData]);
 
   return (
     <div className="space-y-6">
@@ -132,6 +160,25 @@ export default function ProjectsIndexRoute() {
       ) : (
         <p>{t('Users.Index.No Users')}</p>
       )}
+
+      {modalData ? (
+        <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{modalData.title}</DialogTitle>
+              <DialogDescription>
+                <div
+                  className="space-y-4"
+                  dangerouslySetInnerHTML={{ __html: modalData.description }}
+                />
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button onClick={() => setModalOpen(false)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </div>
   );
 }

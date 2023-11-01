@@ -5,6 +5,8 @@ import {
   type MetaFunction,
   redirect,
 } from '@remix-run/node';
+import bcrypt from 'bcryptjs';
+import { faker } from '@faker-js/faker/locale/nl';
 import {
   commitSession,
   getSession,
@@ -80,8 +82,6 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } else {
     try {
-      // TODO: one-time password
-
       const uploadHandler = composeUploadHandlers(
         (args) =>
           avatarUploadHandler({
@@ -97,6 +97,10 @@ export async function action({ request }: ActionFunctionArgs) {
       );
       const avatarUrl = parsedFormData.get('avatar') as string | undefined;
 
+      const tempPassword = faker.word.words(3);
+      const tempPasswordHash = await bcrypt.hash(tempPassword, 10);
+
+      // TODO: Use the createUser function?
       await prisma.user.create({
         data: {
           firstName: validationResults.data.firstName,
@@ -115,6 +119,12 @@ export async function action({ request }: ActionFunctionArgs) {
               id: projectId,
             })),
           },
+          password: {
+            create: {
+              hash: tempPasswordHash,
+              type: 'MUSTCHANGE',
+            },
+          },
         },
       });
 
@@ -122,6 +132,18 @@ export async function action({ request }: ActionFunctionArgs) {
       session.flash('toast', {
         title: t('Users.API.CREATE.Success.Title'),
         description: t('Users.API.CREATE.Success.Message'),
+      });
+      session.flash('modal', {
+        title: t('Users.API.CREATE.Success.Pass.Title'),
+        description: t('Users.API.CREATE.Success.Pass.Message', {
+          password: tempPassword,
+        }),
+        buttons: [
+          {
+            label: t('Users.API.CREATE.Success.Pass.Button Label'),
+            action: 'close',
+          },
+        ],
       });
 
       return redirect('/administratie/gebruikers', {

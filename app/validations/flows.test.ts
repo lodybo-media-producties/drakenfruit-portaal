@@ -1,26 +1,83 @@
 import { describe, test } from 'vitest';
 import * as validationFlows from '~/validations/flows';
 import {
+  PasswordChangeData,
+  PasswordChangeErrors,
   type ToolData,
   type UserData,
   type UserErrors,
 } from '~/types/Validations';
 
-describe('Validating user flows', () => {
-  describe('Login validation', () => {
-    test('Check whether a login request is valid or not', async () => {
-      const formData = new FormData();
-      formData.append('email', 'lody@drakenfruit.com');
-      formData.append('password', '123456789');
+describe('Validation flows', () => {
+  describe('Authentication', () => {
+    describe('Login validation', () => {
+      test('Check whether a login request is valid or not', async () => {
+        const formData = new FormData();
+        formData.append('email', 'lody@drakenfruit.com');
+        formData.append('password', '123456789');
 
-      const loginRequest = new Request('http://localhost:3000/login', {
-        method: 'POST',
-        body: formData,
+        const loginRequest = new Request('http://localhost:3000/login', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const validationResult =
+          await validationFlows.validateLogin(loginRequest);
+        expect(validationResult.success).toBe(true);
       });
+    });
 
-      const validationResult =
-        await validationFlows.validateLogin(loginRequest);
-      expect(validationResult.success).toBe(true);
+    describe('Password change validation', () => {
+      test('Check whether a password change request is valid or not', async () => {
+        const formData = new FormData();
+        formData.append('email', 'kaylee@drakenfruit.com');
+        formData.append('redirectTo', '/account');
+        formData.append('new-password', '123456789');
+        formData.append('confirm-password', '123456789');
+
+        const passwordChangeRequest = new Request(
+          'http://localhost:3000/password/change',
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+
+        const validationResult = await validationFlows.validatePasswordChange(
+          passwordChangeRequest
+        );
+
+        expect(validationResult.success).toBe(true);
+        expect(validationResult.data).toStrictEqual<PasswordChangeData>({
+          newPassword: '123456789',
+          confirmation: '123456789',
+          redirectTo: '/account',
+          email: 'kaylee@drakenfruit.com',
+        });
+
+        const formData2 = new FormData();
+        formData2.append('email', 'lody@drakenfruit.com');
+        formData2.append('redirectTo', '/account');
+        formData2.append('new-password', '123456789');
+        formData2.append('confirm-password', '123456700');
+
+        const passwordChangeRequest2 = new Request(
+          'http://localhost:3000/password/change',
+          {
+            method: 'POST',
+            body: formData2,
+          }
+        );
+
+        const validationResult2 = await validationFlows.validatePasswordChange(
+          passwordChangeRequest2
+        );
+
+        expect(validationResult2.success).toBe(false);
+        expect(validationResult2.errors).toStrictEqual<PasswordChangeErrors>({
+          combi: 'Wachtwoorden komen niet overeen',
+        });
+      });
     });
   });
 

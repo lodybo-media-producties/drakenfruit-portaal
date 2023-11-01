@@ -19,6 +19,13 @@ enum Role {
   PROJECTLEADER
 }
 
+enum PasswordType {
+  ACTIVE
+  MULTIFACTOR
+  MUSTCHANGE
+  RESET
+}
+
 model Organisation {
   id String @id @default(cuid())
 
@@ -73,6 +80,8 @@ model User {
 
 model Password {
   hash String
+
+  type PasswordType
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique

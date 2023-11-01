@@ -34,6 +34,7 @@ export async function createUser(email: User['email'], password: string) {
       password: {
         create: {
           hash: hashedPassword,
+          type: 'MUSTCHANGE',
         },
       },
     },
@@ -70,5 +71,23 @@ export async function verifyLogin(
 
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
-  return userWithoutPassword;
+  return {
+    ...userWithoutPassword,
+    passwordType: _password.type,
+  };
+}
+
+export async function updatePassword(email: User['email'], password: string) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  return prisma.user.update({
+    where: { email },
+    data: {
+      password: {
+        update: {
+          hash: hashedPassword,
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
 }

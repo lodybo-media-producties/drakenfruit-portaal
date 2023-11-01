@@ -7,6 +7,8 @@ import type {
   LoginErrors,
   OrganisationData,
   OrganisationErrors,
+  PasswordChangeData,
+  PasswordChangeErrors,
   ProjectData,
   ProjectErrors,
   ToolData,
@@ -67,6 +69,65 @@ export async function validateLogin(
       password: password as string,
       redirectTo,
       remember,
+    },
+  };
+}
+
+export async function validatePasswordChange(
+  request: Request
+): Promise<ValidationResult<PasswordChangeData, PasswordChangeErrors>> {
+  const formData = await request.formData();
+  const newPassword = formData.get('new-password');
+  const confirmation = formData.get('confirm-password');
+
+  const errors: PasswordChangeErrors = {};
+
+  const redirectTo = safeRedirect(formData.get('redirectTo'), '/');
+
+  if (!checks.valueIsString(newPassword)) {
+    errors.newPassword = 'Wachtwoord is ongeldig';
+  } else {
+    if (!checks.isDefined(newPassword)) {
+      errors.newPassword = 'Vul een wachtwoord in';
+    }
+
+    if (!checks.validatePassword(newPassword)) {
+      errors.newPassword = 'Wachtwoord moet minimaal 8 tekens lang zijn';
+    }
+  }
+
+  if (!checks.valueIsString(confirmation)) {
+    errors.confirmation = 'Wachtwoord is ongeldig';
+  } else {
+    if (!checks.isDefined(confirmation)) {
+      errors.confirmation = 'Vul een wachtwoord in';
+    }
+
+    if (!checks.validatePassword(confirmation)) {
+      errors.confirmation = 'Wachtwoord moet minimaal 8 tekens lang zijn';
+    }
+  }
+
+  if (
+    !checks.validatePasswordConfirmation(
+      newPassword as string,
+      confirmation as string
+    )
+  ) {
+    errors.combi = 'Wachtwoorden komen niet overeen';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return { success: false, errors };
+  }
+
+  return {
+    success: true,
+    data: {
+      newPassword: newPassword as string,
+      confirmation: confirmation as string,
+      redirectTo,
+      email: formData.get('email') as string,
     },
   };
 }

@@ -38,6 +38,19 @@ export type LoginErrors = {
   userNotFound?: string;
 };
 
+export type PasswordChangeData = {
+  newPassword: string;
+  confirmation: string;
+  redirectTo: string;
+  email: string;
+};
+
+export type PasswordChangeErrors = {
+  newPassword?: string;
+  confirmation?: string;
+  combi?: string;
+};
+
 export type ArticleData = ArticleFormValues;
 
 export type ArticleErrors = Partial<

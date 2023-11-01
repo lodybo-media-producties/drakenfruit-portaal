@@ -1,4 +1,34 @@
 {
+  "Authentication": {
+    "Login": {
+      "Meta": {
+        "Title": "Inloggen | Drakenfruit"
+      },
+      "Title": "Inloggen",
+      "Email": "E-mailadres",
+      "Password": "Wachtwoord",
+      "Remember Me": "Onthoud mij",
+      "Login": "Inloggen",
+      "Forgot Password": "Wachtwoord vergeten?",
+      "Error": {
+        "Invalid Credentials": "De ingevoerde gegevens zijn onjuist"
+      }
+    },
+    "PasswordChange": {
+      "Meta": {
+        "Title": "Wachtwoord wijzigen | Drakenfruit"
+      },
+      "Title": "Wachtwoord wijzigen",
+      "Subtitle": "U moet uw wachtwoord wijzigen voordat u verder kunt gaan. Vul hieronder uw nieuwe wachtwoord in.",
+      "Current Password": "Huidig wachtwoord",
+      "New Password": "Nieuw wachtwoord",
+      "Confirm New Password": "Bevestig nieuw wachtwoord",
+      "Change Password Action": "Wachtwoord wijzigen",
+      "Error": {
+        "Invalid Credentials": "De ingevoerde gegevens zijn onjuist"
+      }
+    }
+  },
   "Articles": {
     "API": {
       "CREATE": {
@@ -281,7 +311,11 @@
       "CREATE": {
         "Success": {
           "Title": "Gebruiker aangemaakt",
-          "Message": "De Gebruiker is aangemaakt."
+          "Message": "De Gebruiker is aangemaakt.",
+          "Pass": {
+            "Title": "Wachtwoord aangemaakt",
+            "Message": "<p>Er is een nieuw tijdelijk wachtwoord aangemaakt voor de gebruiker. Het wachtwoord is: <strong>{{password}}</strong>.</p> <p>De gebruiker zal bij het inloggen gevraagd worden om een nieuw wachtwoord in te stellen.</p> <p>Hierna kan je dit wachtwoord niet meer opvragen.</p>"
+          }
         }
       },
       "UPDATE": {
