@@ -39,7 +39,10 @@ import { type SummarisedTool, type ToolFormValues } from '~/types/Tool';
 import { type OrganisationsWithUserCount } from '~/types/Organisations';
 import { type ProjectsWithOrganisationAndUsers } from '~/types/Project';
 import { type Item } from '~/components/ItemCard';
-import { UserFormValues, UserWithProjectsAndOrgs } from '~/types/User';
+import {
+  type UserFormValues,
+  type UserWithProjectsAndOrgs,
+} from '~/types/User';
 
 describe('Content utilities', () => {
   describe('Articles', () => {

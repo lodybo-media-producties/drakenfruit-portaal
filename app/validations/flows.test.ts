@@ -1,8 +1,8 @@
 import { describe, test } from 'vitest';
 import * as validationFlows from '~/validations/flows';
 import {
-  PasswordChangeData,
-  PasswordChangeErrors,
+  type PasswordChangeData,
+  type PasswordChangeErrors,
   type ToolData,
   type UserData,
   type UserErrors,

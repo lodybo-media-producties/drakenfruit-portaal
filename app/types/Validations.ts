@@ -3,7 +3,7 @@ import { type CategoryFormValues } from '~/types/Category';
 import { type ToolFormValues } from '~/types/Tool';
 import { type OrganisationFormValues } from '~/types/Organisations';
 import { type ProjectFormValues } from '~/types/Project';
-import { UserFormValues, UserValidationErrors } from '~/types/User';
+import { type UserFormValues, type UserValidationErrors } from '~/types/User';
 
 interface BaseValidationResult {
   success: boolean;

@@ -3,7 +3,6 @@ import {
   json,
   type LoaderFunctionArgs,
   type MetaFunction,
-  redirect,
 } from '@remix-run/node';
 import invariant from 'tiny-invariant';
 import { prisma } from '~/db.server';
@@ -20,7 +19,6 @@ import i18next from '~/i18next.server';
 import { validatePasswordChange } from '~/validations/flows';
 import { type PasswordChangeErrors } from '~/types/Validations';
 import { updatePassword } from '~/models/user.server';
-import { useState } from 'react';
 import Message from '~/components/Message';
 import Loader from '~/components/Loader';
 import { createUserSession } from '~/session.server';
