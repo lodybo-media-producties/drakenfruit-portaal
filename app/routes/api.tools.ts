@@ -21,6 +21,7 @@ import { type ToolErrors } from '~/types/Validations';
 import { toolUploadHandler, type UploadState } from '~/models/storage.server';
 // @ts-ignore
 import { eventStream } from 'remix-utils/event-stream';
+import { Prisma } from '@prisma/client';
 
 // TODO: Instead of rewriting this in other api's, make this reusable.
 let currentUpload: UploadState | null = null;
@@ -124,8 +125,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (request.method === 'PUT') {
     const editCheckRequest = request.clone();
-    // TODO: Fix validation when editing a tool. Filename or image are not required.
-    const validationResults = await validateTool(request);
+    const validationResults = await validateTool(request, false);
 
     if (!validationResults.success) {
       return json<ToolErrors>(validationResults.errors, { status: 400 });
@@ -160,27 +160,33 @@ export async function action({ request }: ActionFunctionArgs) {
           uploadHandler
         );
 
-        const data = convertFormDataIntoToolFormValues(formData);
-        await prisma.tool.create({
-          data: {
-            name: data.name,
-            slug: data.slug,
-            description: data.description,
-            summary: data.summary,
-            filename: data.filename,
-            image: data.image,
-            categories: {
-              connect: data.categories.map((category) => ({
-                id: category,
-              })),
-            },
+        const toolFormValues = convertFormDataIntoToolFormValues(formData);
+        const data: Prisma.ToolUpdateInput = {
+          name: toolFormValues.name,
+          slug: toolFormValues.slug,
+          description: toolFormValues.description,
+          summary: toolFormValues.summary,
+        };
+
+        if (toolFormValues.categories.length > 0) {
+          data.categories = {
+            set: toolFormValues.categories.map((category) => ({
+              id: category,
+            })),
+          };
+        }
+
+        await prisma.tool.update({
+          where: {
+            id: toolFormValues.id,
           },
+          data,
         });
 
         const session = await getSession(request);
         session.flash('toast', {
-          title: t('Tools.API.CREATE.Success.Title'),
-          description: t('Tools.API.CREATE.Success.Message'),
+          title: t('Tools.API.UPDATE.Success.Title'),
+          description: t('Tools.API.UPDATE.Success.Message'),
         });
 
         return redirect('/administratie/tools', {
