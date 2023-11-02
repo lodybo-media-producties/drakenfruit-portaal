@@ -191,8 +191,8 @@ export default function ToolMutationForm({
         nl: nlDescription,
       },
       summary: {
-        en: enDescription,
-        nl: nlDescription,
+        en: enSummary,
+        nl: nlSummary,
       },
       categories: selectedCategoryIDs,
     };
