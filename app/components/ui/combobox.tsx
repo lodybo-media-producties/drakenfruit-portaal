@@ -160,7 +160,7 @@ export function Combobox({
           )}
         >
           {getValueLabel()}
-          <Icon name="sort" />
+          <Icon name="chevron-down" />
         </button>
       </PopoverTrigger>
       <PopoverContent id={id} className={`${width} p-0`}>

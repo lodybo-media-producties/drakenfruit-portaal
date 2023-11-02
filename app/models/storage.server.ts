@@ -24,7 +24,7 @@ interface UploadingUploadState extends BaseUploadState {
 
 export type UploadState = PrepareUploadState | UploadingUploadState;
 
-export type StorageType = 'article' | 'tool' | 'webinar';
+export type StorageType = 'article' | 'tool' | 'webinar' | 'image';
 
 let currentByteLength = 0;
 
@@ -151,6 +151,32 @@ export const articleUploadHandler: StorageUploadHandler = async ({
 
     if ('Key' in file) {
       return file.Key;
+    }
+  }
+
+  return undefined;
+};
+
+export const avatarUploadHandler: StorageUploadHandler = async ({
+  name,
+  filename,
+  data,
+  callback,
+  runHandler = true,
+}) => {
+  if (runHandler) {
+    if (name === 'avatar') {
+      currentByteLength = 0;
+
+      const stream = uploadToDO(filename!, 'image', callback);
+
+      await writeAsyncIterableToWritable(data, stream.writeStream);
+
+      const file = await stream.promise;
+
+      if ('Key' in file) {
+        return file.Key;
+      }
     }
   }
 

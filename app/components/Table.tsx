@@ -27,7 +27,7 @@ export default function Table({
 }: Props) {
   return (
     <div>
-      <table className="table-fixed w-full border-collapse border border-light-pink">
+      <table className="w-full border-collapse border border-light-pink">
         <thead>
           <tr>
             {columns.map((column) => (

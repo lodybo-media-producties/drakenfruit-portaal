@@ -11,4 +11,9 @@ module.exports = {
     /remix-utils/,
     /escape-string-regexp/,
   ],
+  browserNodeBuiltinsPolyfill: {
+    modules: {
+      crypto: true,
+    },
+  },
 };

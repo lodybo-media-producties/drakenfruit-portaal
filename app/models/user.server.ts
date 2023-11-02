@@ -1,4 +1,4 @@
-import type { Password, User as DbUser, Role } from '@prisma/client';
+import { type Password, type User as DbUser, Role } from '@prisma/client';
 import type { SerializeFrom } from '@remix-run/server-runtime';
 import bcrypt from 'bcryptjs';
 
@@ -6,7 +6,7 @@ import { prisma } from '~/db.server';
 
 type User = SerializeFrom<DbUser> | DbUser;
 
-export type { User, Role };
+export { type User, Role };
 
 export async function getUsers() {
   return prisma.user.findMany();
@@ -34,6 +34,7 @@ export async function createUser(email: User['email'], password: string) {
       password: {
         create: {
           hash: hashedPassword,
+          type: 'MUSTCHANGE',
         },
       },
     },
@@ -70,5 +71,23 @@ export async function verifyLogin(
 
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
-  return userWithoutPassword;
+  return {
+    ...userWithoutPassword,
+    passwordType: _password.type,
+  };
+}
+
+export async function updatePassword(email: User['email'], password: string) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  return prisma.user.update({
+    where: { email },
+    data: {
+      password: {
+        update: {
+          hash: hashedPassword,
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
 }
