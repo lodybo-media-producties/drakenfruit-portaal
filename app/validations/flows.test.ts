@@ -286,6 +286,43 @@ describe('Validation flows', () => {
       });
     });
 
+    test('Check a valid or invalid tool request but skip the uploads', async () => {
+      const tool = new File([''], 'tool.zip', { type: 'application/zip' });
+
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Name 1');
+      formData.append('name.nl', 'Naam 1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
+      formData.append('categories', '1,2');
+      formData.append('tool', tool);
+      formData.append('image', '');
+
+      const request = new Request('http://localhost:3000/api/tool', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateTool(
+        request.clone()
+      );
+
+      expect(validationResult.success).toBe(false);
+      expect(validationResult.errors!.image).toEqual('Afbeelding is verplicht');
+
+      const validationResult2 = await validationFlows.validateTool(
+        request,
+        false
+      );
+
+      expect(validationResult2.success).toBe(true);
+    });
+
     test('Check whether a tool request is invalid because of missing names', async () => {
       const tool = new File([''], 'tool.zip', { type: 'application/zip' });
       const image = new File([''], 'image.jpg', { type: 'image/jpeg' });

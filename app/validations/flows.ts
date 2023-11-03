@@ -242,7 +242,8 @@ export async function validateCategory(
 }
 
 export async function validateTool(
-  request: Request
+  request: Request,
+  validateUploads = true
 ): Promise<ValidationResult<ToolData, ToolErrors>> {
   const formData = await request.formData();
 
@@ -277,11 +278,14 @@ export async function validateTool(
   errors.slug = checks.checkLocalisedValue(slug);
   errors.description = checks.checkLocalisedValue(description);
   errors.summary = checks.checkLocalisedValue(summary);
-  if (!isDefined(filename)) {
-    errors.filename = 'Bestand is verplicht';
-  }
-  if (!isDefined(image)) {
-    errors.image = 'Afbeelding is verplicht';
+
+  if (validateUploads) {
+    if (!isDefined(filename)) {
+      errors.filename = 'Bestand is verplicht';
+    }
+    if (!isDefined(image)) {
+      errors.image = 'Afbeelding is verplicht';
+    }
   }
 
   if (Object.keys(errors).some((key) => errors[key as keyof ToolErrors])) {

@@ -15,6 +15,7 @@ type Props = {
   onChange?: (value: string) => void;
   accept?: string;
   error?: string;
+  disabled?: boolean;
 };
 
 export default function FileInput({
@@ -26,6 +27,7 @@ export default function FileInput({
   onChange,
   accept,
   error,
+  disabled,
 }: Props) {
   const [fileName, setFileName] = useState<string | null | undefined>(
     initialValue ?? value
@@ -85,6 +87,7 @@ export default function FileInput({
         ref={ref}
         className="hidden"
         accept={accept}
+        disabled={disabled}
       />
       <Label label={label}>
         <Button
@@ -97,6 +100,7 @@ export default function FileInput({
           })}
           type="button"
           onClick={toggleFilePicker}
+          disabled={disabled}
         >
           {t(`FileInput.${fileTypeTranslationGroup}.Button Label`)}
         </Button>

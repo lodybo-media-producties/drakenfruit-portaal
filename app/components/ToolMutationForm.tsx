@@ -191,8 +191,8 @@ export default function ToolMutationForm({
         nl: nlDescription,
       },
       summary: {
-        en: enDescription,
-        nl: nlDescription,
+        en: enSummary,
+        nl: nlSummary,
       },
       categories: selectedCategoryIDs,
     };
@@ -346,6 +346,7 @@ export default function ToolMutationForm({
         value={filename}
         onChange={handleFilenameChange}
         error={getLocalisedError('filename')}
+        disabled={mode === 'update'}
       />
 
       <FileInput
@@ -354,6 +355,7 @@ export default function ToolMutationForm({
         value={image}
         onChange={handleImageChange}
         accept="image/*"
+        disabled={mode === 'update'}
       />
 
       {uploadProgress && uploadProgress.state === 'prepare' ? (

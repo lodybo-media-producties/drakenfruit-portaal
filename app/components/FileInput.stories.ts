@@ -23,3 +23,9 @@ export const WithError: Story = {
     error: 'This is an error',
   },
 };
+
+export const WithDisabled: Story = {
+  args: {
+    disabled: true,
+  },
+};
