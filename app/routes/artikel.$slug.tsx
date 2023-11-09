@@ -1,4 +1,8 @@
-import { json, type LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import {
+  json,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node';
 import { getLocalisedArticleBySlug } from '~/models/articles.server';
 import { requireUserWithMinimumRole } from '~/session.server';
 import invariant from 'tiny-invariant';

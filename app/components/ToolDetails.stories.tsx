@@ -41,8 +41,6 @@ const tool: ToolWithCategories = {
   ],
 };
 
-const BackLink = () => <a href="#">Terug naar overzicht</a>;
-
 export const Default: Story = {
   args: {
     tool,
@@ -50,6 +48,8 @@ export const Default: Story = {
 };
 
 // Turned off because of an error in Storybook
+
+// const BackLink = () => <a href="#">Terug naar overzicht</a>;
 // export const WithCustomBackLink: Story = {
 //   args: {
 //     tool,
