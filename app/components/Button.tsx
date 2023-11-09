@@ -1,8 +1,9 @@
-import type { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
+import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
 import { Link, type LinkProps } from '@remix-run/react';
 import Icon from '~/components/Icon';
 import { forwardRef } from 'react';
 import { cn } from '~/lib/utils';
+import Loader from '~/components/Loader';
 
 type BaseProps = {
   /**
@@ -14,6 +15,11 @@ type BaseProps = {
    * Whether the button has animations
    */
   animated?: boolean;
+
+  /**
+   * Whether the action of the button is currently loading
+   */
+  loading?: boolean;
 };
 
 interface ButtonProps
@@ -53,17 +59,17 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     );
 
     if ('to' in props) {
-      const { to = '', ...restProps } = props as LinkProps;
+      const { to = '', ...restProps } = props as ButtonLinkProps;
 
       return (
-        <Link to={to} className={classes} {...restProps}>
-          {children}
-          {canAnimate ? (
-            <Icon
-              name="chevron-right"
-              className="absolute right-2 opacity-0 transition group-hover:opacity-100 motion-reduce:transition-none"
-            />
-          ) : null}
+        <Link to={to} className={`inline-block ${classes}`} {...restProps}>
+          <ButtonContents
+            isLoading={restProps.loading}
+            canAnimate={canAnimate}
+            primary={primary}
+          >
+            {children}
+          </ButtonContents>
         </Link>
       );
     }
@@ -73,13 +79,13 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     const buttonProps = props as ButtonProps;
     return (
       <button ref={ref} className={classes} {...buttonProps}>
-        {children}
-        {canAnimate ? (
-          <Icon
-            name="chevron-right"
-            className="absolute right-2 opacity-0 transition group-hover:opacity-100 motion-reduce:transition-none"
-          />
-        ) : null}
+        <ButtonContents
+          isLoading={buttonProps.loading}
+          canAnimate={canAnimate}
+          primary={primary}
+        >
+          {children}
+        </ButtonContents>
       </button>
     );
   }
@@ -87,3 +93,28 @@ const Button = forwardRef<HTMLButtonElement, Props>(
 Button.displayName = 'Button';
 
 export default Button;
+
+type ButtonContentProps = {
+  children: ReactNode;
+  isLoading?: boolean;
+  canAnimate?: boolean;
+  primary?: boolean;
+};
+
+export const ButtonContents = ({
+  children,
+  isLoading,
+  canAnimate,
+  primary,
+}: ButtonContentProps) => (
+  <span className="flex flex-row gap-2">
+    {isLoading ? <Loader sizes="s" light={primary} /> : null}
+    {children}
+    {canAnimate ? (
+      <Icon
+        name="chevron-right"
+        className="absolute right-2 opacity-0 transition group-hover:opacity-100 motion-reduce:transition-none"
+      />
+    ) : null}
+  </span>
+);

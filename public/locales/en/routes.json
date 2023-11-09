@@ -188,6 +188,12 @@
         "Tool Not Found": "The tool could not be found"
       },
       "Back Link Label": "Back to tools"
+    },
+    "Detail": {
+      "Meta": {
+          "Title": "{{ toolName }} | Drakenfruit"
+      },
+      "Back Link Label": "Back to overview"
     }
   },
   "Organisations": {

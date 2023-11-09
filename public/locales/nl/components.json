@@ -172,5 +172,10 @@
       "CONSULTANT": "Consultant",
       "PROJECTLEADER": "Projectleider"
     }
+  },
+  "ToolDetails": {
+    "Title": "Tool",
+    "Summary title": "Over de tool",
+    "Download button caption": "Downloaden"
   }
 }
