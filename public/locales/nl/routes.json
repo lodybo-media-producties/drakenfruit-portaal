@@ -80,6 +80,12 @@
         "Article Not Found": "Het artikel kon niet gevonden worden"
       },
       "Back Link Label": "Terug naar overzicht"
+    },
+    "Detail": {
+      "Meta": {
+        "Title": "{{ articleTitle }} | Drakenfruit"
+      },
+      "Back Link Label": "Terug naar overzicht"
     }
   },
   "Categories": {
@@ -186,6 +192,12 @@
       "Error": {
         "No ID": "Geen ID opgegeven",
         "Tool Not Found": "De tool kon niet gevonden worden"
+      },
+      "Back Link Label": "Terug naar overzicht"
+    },
+    "Detail": {
+      "Meta": {
+        "Title": "{{toolName}} | Drakenfruit"
       },
       "Back Link Label": "Terug naar overzicht"
     }

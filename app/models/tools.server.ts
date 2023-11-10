@@ -42,6 +42,18 @@ export function getToolByID(id: string) {
   });
 }
 
+export function getToolBySlug(slug: string, locale: string) {
+  return prisma.tool.findFirstOrThrow({
+    where: {
+      slug: {
+        path: [locale],
+        equals: slug,
+      },
+    },
+    include: { categories: true },
+  });
+}
+
 export function createTool(tool: Tool) {
   return prisma.tool.create({ data: tool });
 }

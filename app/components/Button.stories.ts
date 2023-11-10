@@ -38,3 +38,20 @@ export const Disabled: Story = {
     primary: false,
   },
 };
+
+export const Loading: Story = {
+  args: {
+    children: 'Button',
+    loading: true,
+    primary: false,
+    disabled: false,
+  },
+};
+
+export const Link: Story = {
+  args: {
+    children: 'Button',
+    to: '/test',
+    primary: true,
+  },
+};

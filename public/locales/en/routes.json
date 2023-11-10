@@ -80,6 +80,12 @@
         "Article Not Found": "The article could not be found"
       },
       "Back Link Label": "Back to articles"
+    },
+    "Detail": {
+      "Meta": {
+        "Title": "{{ articleTitle }} | Drakenfruit"
+      },
+      "Back Link Label": "Back to overview"
     }
   },
   "Categories": {
@@ -188,6 +194,12 @@
         "Tool Not Found": "The tool could not be found"
       },
       "Back Link Label": "Back to tools"
+    },
+    "Detail": {
+      "Meta": {
+          "Title": "{{ toolName }} | Drakenfruit"
+      },
+      "Back Link Label": "Back to overview"
     }
   },
   "Organisations": {
