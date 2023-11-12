@@ -5,6 +5,7 @@ import type { User } from '~/models/user.server';
 import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Button from '~/components/Button';
+import LanguageSwitcher from '~/components/LanguageSwitcher';
 
 type Props = {
   user?: User;
@@ -38,18 +39,16 @@ export default function Header({ user }: Props) {
       </div>
 
       <div className="w-1/6 flex place-content-center place-items-center gap-2.5">
-        {i18n.language === 'nl' ? (
-          <Button onClick={() => i18n.changeLanguage('en')}>English</Button>
-        ) : (
-          <Button onClick={() => i18n.changeLanguage('nl')}>Nederlands</Button>
-        )}
         {user ? (
           <form method="post" action="/logout">
             <button>Uitloggen</button>
           </form>
         ) : (
-          <Link to="/login">Inloggen</Link>
+          <Button primary to="/login">
+            Inloggen
+          </Button>
         )}
+        <LanguageSwitcher />
         <Icon name="bars" sizes="l" />
       </div>
     </div>
