@@ -8,6 +8,14 @@ export default {
 
 type Story = StoryObj<typeof LanguageSwitcher>;
 
-export const Default: Story = {
-  args: {},
+export const Small: Story = {
+  args: {
+    mode: 'small',
+  },
+};
+
+export const Large: Story = {
+  args: {
+    mode: 'large',
+  },
 };

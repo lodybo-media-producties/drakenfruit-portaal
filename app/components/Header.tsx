@@ -6,16 +6,15 @@ import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 import Button from '~/components/Button';
 import LanguageSwitcher from '~/components/LanguageSwitcher';
+import MainMenu from '~/components/MainMenu';
 
 type Props = {
   user?: User;
 };
 
 export default function Header({ user }: Props) {
-  const { i18n } = useTranslation();
-
   return (
-    <div className="bg-light-blue flex flex-row justify-between gap-2.5 px-5 py-2.5">
+    <div className="bg-light-blue flex flex-row justify-between gap-2.5 pl-5 pr-12 py-2.5">
       <div className="w-5/6 sm:w-2/6">
         <Link to="/">
           <Image
@@ -38,18 +37,8 @@ export default function Header({ user }: Props) {
         </Link>
       </div>
 
-      <div className="w-1/6 flex place-content-center place-items-center gap-2.5">
-        {user ? (
-          <form method="post" action="/logout">
-            <button>Uitloggen</button>
-          </form>
-        ) : (
-          <Button primary to="/login">
-            Inloggen
-          </Button>
-        )}
-        <LanguageSwitcher />
-        <Icon name="bars" sizes="l" />
+      <div className="w-1/6 flex justify-end items-center gap-2.5">
+        <MainMenu user={user} />
       </div>
     </div>
   );
