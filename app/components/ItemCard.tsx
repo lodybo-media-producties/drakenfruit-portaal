@@ -86,7 +86,9 @@ export default function ItemCard({ item }: Props) {
       )}
       <CardHeader>
         <CardTitle className="text-black group-hover:text-dark-pink transition duration">
-          <Link to={getLink(item)}>{item.title[lang]}</Link>
+          <Link className="inline-block w-full" to={getLink(item)}>
+            {item.title[lang]}
+          </Link>
         </CardTitle>
         <CardDescription>
           {item.author ? (
