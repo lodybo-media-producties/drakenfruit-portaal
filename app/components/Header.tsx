@@ -1,11 +1,7 @@
 // import logo from '~/assets/images/logo/horizontal-icon-name-smaller.png';
 import { Image } from '~/components/Image';
-import Icon from '~/components/Icon';
 import type { User } from '~/models/user.server';
 import { Link } from '@remix-run/react';
-import { useTranslation } from 'react-i18next';
-import Button from '~/components/Button';
-import LanguageSwitcher from '~/components/LanguageSwitcher';
 import MainMenu from '~/components/MainMenu';
 
 type Props = {
