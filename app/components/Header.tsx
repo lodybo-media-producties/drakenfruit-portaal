@@ -37,7 +37,7 @@ export default function Header({ user }: Props) {
         </Link>
       </div>
 
-      <div className="w-1/6 flex justify-end items-center gap-2.5">
+      <div className="w-1/6 flex justify-center items-center gap-2.5">
         <MainMenu user={user} />
       </div>
     </div>
