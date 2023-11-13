@@ -41,8 +41,8 @@ export default function MainMenu({ user }: Props) {
               <MenuItem to="/account" icon="circle-user">
                 Account
               </MenuItem>
-              <MenuItem to="/account/opgeslagen-artikelen" icon="bookmark">
-                Opgeslagen artikelen
+              <MenuItem to="/account/opgeslagen-items" icon="bookmark">
+                Opgeslagen items
               </MenuItem>
               <MenuItem to="/account/instellingen" icon="user-gear">
                 Instellingen
