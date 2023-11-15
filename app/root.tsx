@@ -23,6 +23,7 @@ import { langSessionCookie } from '~/cookies.server';
 import { Toaster } from '~/components/ui/toaster';
 import { useEffect } from 'react';
 import { useToast } from '~/components/ui/use-toast';
+import Footer from '~/components/Footer';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -81,6 +82,7 @@ export default function App() {
         <Header user={user} />
         <Outlet />
         <Toaster />
+        <Footer />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

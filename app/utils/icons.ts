@@ -25,3 +25,5 @@ export {
   faArrowRightFromBracket,
   faArrowRightToBracket,
 } from '@fortawesome/free-solid-svg-icons';
+
+export { faCopyright } from '@fortawesome/free-regular-svg-icons';
