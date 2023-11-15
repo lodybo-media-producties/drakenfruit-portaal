@@ -22,4 +22,6 @@ export {
   faArrowRight,
   faSpinner,
   faTags,
+  faArrowRightFromBracket,
+  faArrowRightToBracket,
 } from '@fortawesome/free-solid-svg-icons';

@@ -44,7 +44,6 @@ export default function ItemCard({ item }: Props) {
   const { t, i18n } = useTranslation('components');
   const lang = i18n.language as SupportedLanguages;
 
-  console.log(item.updatedAt);
   const recentDate = formatDate(
     convertDateToUTC(parseISO(item.updatedAt)),
     lang
@@ -86,7 +85,9 @@ export default function ItemCard({ item }: Props) {
       )}
       <CardHeader>
         <CardTitle className="text-black group-hover:text-dark-pink transition duration">
-          <Link to={getLink(item)}>{item.title[lang]}</Link>
+          <Link className="inline-block w-full" to={getLink(item)}>
+            {item.title[lang]}
+          </Link>
         </CardTitle>
         <CardDescription>
           {item.author ? (

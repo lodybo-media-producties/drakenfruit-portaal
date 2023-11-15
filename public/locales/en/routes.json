@@ -88,6 +88,14 @@
       "Back Link Label": "Back to overview"
     }
   },
+  "Account": {
+    "Index": {
+      "Meta": {
+        "Title": "My Account | Drakenfruit"
+      },
+      "Title": "Hello {{name}}!"
+    }
+  },
   "Categories": {
     "API": {
       "CREATE": {

@@ -11,8 +11,8 @@ const mainMenuItems: NavItem[] = [
     icon: 'circle-user',
   },
   {
-    title: 'Mijn opgeslagen artikelen',
-    to: '/account/opgeslagen-artikelen',
+    title: 'Mijn opgeslagen items',
+    to: '/account/opgeslagen-items',
     icon: 'bookmark',
   },
   { title: 'Instellingen', to: '/account/instellingen', icon: 'user-gear' },

@@ -29,6 +29,14 @@
       }
     }
   },
+  "Account": {
+    "Index": {
+      "Meta": {
+          "Title": "Mijn account | Drakenfruit"
+      },
+      "Title": "Hallo {{name}}!"
+    }
+  },
   "Articles": {
     "API": {
       "CREATE": {
