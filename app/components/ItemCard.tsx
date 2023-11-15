@@ -44,7 +44,6 @@ export default function ItemCard({ item }: Props) {
   const { t, i18n } = useTranslation('components');
   const lang = i18n.language as SupportedLanguages;
 
-  console.log(item.updatedAt);
   const recentDate = formatDate(
     convertDateToUTC(parseISO(item.updatedAt)),
     lang

@@ -9,7 +9,7 @@
     "build:remix": "remix build",
     "build:server": "esbuild --platform=node --format=cjs ./server.ts --outdir=build --bundle --external:fsevents",
     "dev": "run-p dev:*",
-    "dev:remix": "remix dev --manual -c \"node --require ./mocks ./build/server.js\"",
+    "dev:remix": "remix dev --manual -c \"node --inspect --require ./mocks ./build/server.js\"",
     "dev:storybook": "npm run storybook",
     "dev:db-studio": "npm run db:studio",
     "docker:start": "docker-compose up -d",
