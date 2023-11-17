@@ -182,3 +182,11 @@ export const avatarUploadHandler: StorageUploadHandler = async ({
 
   return undefined;
 };
+
+export async function downloadFile(fileName: string) {
+  try {
+    return await retrieveFromDO(fileName);
+  } catch (err) {
+    throw err;
+  }
+}

@@ -44,14 +44,19 @@ export default function ItemCard({ item }: Props) {
   const { t, i18n } = useTranslation('components');
   const lang = i18n.language as SupportedLanguages;
 
-  console.log(item.updatedAt);
   const recentDate = formatDate(
     convertDateToUTC(parseISO(item.updatedAt)),
     lang
   );
 
-  const linkArticlePrefix = lang === 'en' ? 'article' : 'artikel';
-  const link = `/${linkArticlePrefix}/${item.slug[lang]}`;
+  const getLink = (item: Item) => {
+    if (item.type === 'article') {
+      const linkArticlePrefix = lang === 'en' ? 'article' : 'artikel';
+      return `/${linkArticlePrefix}/${item.slug[lang]}`;
+    } else {
+      return `/tool/${item.slug[lang]}`;
+    }
+  };
 
   return (
     <Card className="relative group cursor-pointer grid grid-cols-1 grid-rows-[repeat(3, minmax(0, auto))] gap-3">
@@ -80,7 +85,9 @@ export default function ItemCard({ item }: Props) {
       )}
       <CardHeader>
         <CardTitle className="text-black group-hover:text-dark-pink transition duration">
-          <Link to={link}>{item.title[lang]}</Link>
+          <Link className="inline-block w-full" to={getLink(item)}>
+            {item.title[lang]}
+          </Link>
         </CardTitle>
         <CardDescription>
           {item.author ? (
@@ -102,7 +109,7 @@ export default function ItemCard({ item }: Props) {
       </CardContent>
 
       <CardFooter className="mt-auto flex flex-col gap-2 h-12">
-        <AnchorLink className="self-end" to={link}>
+        <AnchorLink className="self-end" to={getLink(item)}>
           {t('ItemCard.Read More')}{' '}
           <Icon className="ml-0.5" name="arrow-right" />
         </AnchorLink>

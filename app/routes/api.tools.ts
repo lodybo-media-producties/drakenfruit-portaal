@@ -21,7 +21,7 @@ import { type ToolErrors } from '~/types/Validations';
 import { toolUploadHandler, type UploadState } from '~/models/storage.server';
 // @ts-ignore
 import { eventStream } from 'remix-utils/event-stream';
-import { Prisma } from '@prisma/client';
+import { type Prisma } from '@prisma/client';
 
 // TODO: Instead of rewriting this in other api's, make this reusable.
 let currentUpload: UploadState | null = null;
