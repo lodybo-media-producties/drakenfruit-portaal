@@ -928,8 +928,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 0, 1, 12, 0),
+        updatedAt: new Date(2023, 0, 2, 14, 45),
       };
 
       const tool: SummarisedTool = {
@@ -945,12 +945,12 @@ describe('Content utilities', () => {
             slug: { en: 'category-1', nl: 'categorie-1' },
           },
         ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 0, 1, 12, 0),
+        updatedAt: new Date(2023, 0, 2, 14, 45),
       };
 
-      const articleItem = convertArticleOrToolToItem(article, 'article');
-      const toolItem = convertArticleOrToolToItem(tool, 'tool');
+      const articleItem = convertArticleOrToolToItem(article, 'article', 'nl');
+      const toolItem = convertArticleOrToolToItem(tool, 'tool', 'nl');
 
       expect(articleItem).toEqual<Item>({
         type: 'article',
@@ -959,7 +959,6 @@ describe('Content utilities', () => {
         slug: { en: 'title-1', nl: 'titel-1' },
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         image: '/path/to/image',
-        updatedAt: article.updatedAt.toISOString(),
         categories: [
           {
             id: '1',
@@ -972,6 +971,8 @@ describe('Content utilities', () => {
           firstName: 'Kaylee',
           lastName: 'Rosalina',
         },
+        createdAt: '1 jan 2023 12:00',
+        updatedAt: '2 jan 2023 14:45',
       });
 
       expect(toolItem).toEqual<Item>({
@@ -981,7 +982,6 @@ describe('Content utilities', () => {
         slug: { en: 'tool-1', nl: 'tool-1' },
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         image: '/portal/tools/tool.jpg',
-        updatedAt: tool.updatedAt.toISOString(),
         categories: [
           {
             id: '1',
@@ -989,6 +989,8 @@ describe('Content utilities', () => {
             slug: { en: 'category-1', nl: 'categorie-1' },
           },
         ],
+        createdAt: '1 jan 2023 12:00',
+        updatedAt: '2 jan 2023 14:45',
       });
     });
   });

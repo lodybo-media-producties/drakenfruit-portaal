@@ -100,7 +100,6 @@
     }
   },
   "ItemCard": {
-    "Author": "Door {{author}}",
     "Read More": "Lees meer",
     "Article Badge": "Artikel",
     "Tool Badge": "Tool"
@@ -177,5 +176,12 @@
     "Title": "Tool",
     "Summary title": "Over de tool",
     "Download button caption": "Downloaden"
+  },
+  "ArticleDetails": {
+    "Back Link Label": "Terug naar overzicht"
+  },
+  "ContentMeta": {
+    "Author": "Door {{author}}",
+    "Updated Label": "laatst bijgewerkt op {{date}}"
   }
 }

@@ -2,19 +2,17 @@ import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '~/components/ui/card';
 import { type SupportedLanguages } from '~/i18n';
-import { parseISO } from 'date-fns';
-import { convertDateToUTC, formatDate } from '~/utils/utils';
 import { Image } from '~/components/Image';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import { Link } from '@remix-run/react';
 import { cn } from '~/lib/utils';
+import ContentMeta from '~/components/ContentMeta';
 
 export type Item = {
   type: 'article' | 'tool';
@@ -33,6 +31,7 @@ export type Item = {
     firstName: string;
     lastName: string;
   };
+  createdAt: string;
   updatedAt: string;
 };
 
@@ -43,11 +42,6 @@ type Props = {
 export default function ItemCard({ item }: Props) {
   const { t, i18n } = useTranslation('components');
   const lang = i18n.language as SupportedLanguages;
-
-  const recentDate = formatDate(
-    convertDateToUTC(parseISO(item.updatedAt)),
-    lang
-  );
 
   const getLink = (item: Item) => {
     if (item.type === 'article') {
@@ -89,19 +83,12 @@ export default function ItemCard({ item }: Props) {
             {item.title[lang]}
           </Link>
         </CardTitle>
-        <CardDescription>
-          {item.author ? (
-            <>
-              {t('ItemCard.Author', {
-                author: `${item.author.firstName} ${item.author.lastName}`,
-              })}
-              {' | '}
-            </>
-          ) : null}
-          {recentDate}
-          {item.categories.length ? ' | ' : ''}
-          {item.categories.map((category) => category.name[lang]).join(', ')}
-        </CardDescription>
+        <ContentMeta
+          author={item.author}
+          categories={item.categories}
+          createdAt={item.createdAt}
+          updatedAt={item.updatedAt}
+        />
       </CardHeader>
 
       <CardContent>

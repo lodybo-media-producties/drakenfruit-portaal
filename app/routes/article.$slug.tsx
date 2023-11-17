@@ -13,6 +13,7 @@ import { Image } from '~/components/Image';
 import i18next from '~/i18next.server';
 import { useTranslation } from 'react-i18next';
 import AnchorLink from '~/components/AnchorLink';
+import ArticleDetails from '~/components/ArticleDetails';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('PROJECTLEADER', request);
@@ -44,26 +45,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 
 export default function DutchArticlePage() {
   const { article } = useLoaderData<typeof loader>();
-  const { t } = useTranslation('routes');
 
-  return (
-    <div className="w-full">
-      {article.image ? (
-        <Image
-          className="h-[30rem] w-full object-cover object-top"
-          src={article.image}
-          alt={article.title}
-        />
-      ) : null}
-
-      <div className="w-3/4 mx-auto py-8">
-        <AnchorLink to="/">{t('Articles.Detail.Back Link Label')}</AnchorLink>
-      </div>
-
-      <Prose>
-        <h1>{article.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
-      </Prose>
-    </div>
-  );
+  return <ArticleDetails article={article} />;
 }
