@@ -4,13 +4,15 @@ import { Image } from '~/components/Image';
 import Button from '~/components/Button';
 import Prose from './Prose';
 import { type ReactNode } from 'react';
+import BookmarkIndicator from '~/components/BookmarkIndicator';
 
 type Props = {
   tool: ToolWithCategories;
   backLink?: ReactNode;
+  isBookmarked: boolean;
 };
 
-export default function ToolDetails({ tool, backLink }: Props) {
+export default function ToolDetails({ tool, backLink, isBookmarked }: Props) {
   const { t, i18n } = useTranslation('components');
 
   const getTranslatedValue = (key: PrismaJson.Translated): string => {
@@ -44,6 +46,7 @@ export default function ToolDetails({ tool, backLink }: Props) {
         />
       </div>
       <div className="[grid-area:_summary] flex flex-col gap-4">
+        <BookmarkIndicator bookmarked={isBookmarked} bookmarkID={tool.id} />
         <h3 className="font-bold text-2xl">{t('ToolDetails.Summary title')}</h3>
         <p className="font-type text-2xl">{getTranslatedValue(tool.summary)}</p>
         <Button
