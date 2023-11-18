@@ -37,3 +37,11 @@ export type ArticleWithAuthorAndCategories = Prisma.ArticleGetPayload<{
     };
   };
 }>;
+
+export type LocalisedArticle<A> = {
+  [Property in keyof A]: A[Property] extends PrismaJson.Translated
+    ? string
+    : A[Property] extends any[]
+    ? LocalisedArticle<A[Property][0]>[]
+    : A[Property];
+};

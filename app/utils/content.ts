@@ -176,8 +176,8 @@ export function convertPrismaArticleToLocalisedArticle(
       slug: category.slug[lang],
     })),
     published: article.published,
-    createdAt: article.createdAt,
-    updatedAt: article.updatedAt,
+    createdAt: formatDate(article.createdAt, lang),
+    updatedAt: formatDate(article.updatedAt, lang),
   };
 }
 

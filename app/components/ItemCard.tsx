@@ -16,6 +16,7 @@ import ContentMeta from '~/components/ContentMeta';
 
 export type Item = {
   type: 'article' | 'tool';
+  isBookmarked?: boolean;
   id: string;
   title: PrismaJson.Translated;
   slug: PrismaJson.Translated;
@@ -66,6 +67,16 @@ export default function ItemCard({ item }: Props) {
             : 'ItemCard.Tool Badge'
         )}
       </span>
+      {item.isBookmarked !== undefined ? (
+        <div
+          className={cn('absolute top-0 left-0 px-2 py-0 z-10 text-egg-white', {
+            'bg-dark-pink': item.type === 'article',
+            'bg-dark-blue': item.type === 'tool',
+          })}
+        >
+          <Icon name="bookmark" prefix={item.isBookmarked ? 'fas' : 'far'} />
+        </div>
+      ) : null}
       {item.image ? (
         <div className="overflow-hidden w-full h-48">
           <Image

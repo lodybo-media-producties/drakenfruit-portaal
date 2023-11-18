@@ -14,6 +14,7 @@ export const Article: Story = {
   args: {
     item: {
       type: 'article',
+      isBookmarked: false,
       id: faker.string.uuid(),
       title: {
         nl: faker.lorem.sentence(),
@@ -56,6 +57,7 @@ export const Tool: Story = {
   args: {
     item: {
       type: 'tool',
+      isBookmarked: false,
       id: faker.string.uuid(),
       title: {
         nl: faker.lorem.sentence(),

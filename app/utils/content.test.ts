@@ -366,8 +366,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 10, 18, 21, 14),
+        updatedAt: new Date(2023, 10, 18, 22, 14),
       };
 
       const dutchArticle = convertPrismaArticleToLocalisedArticle(
@@ -400,8 +400,8 @@ describe('Content utilities', () => {
             slug: 'categorie-1',
           },
         ],
-        createdAt: articleFromPrisma.createdAt,
-        updatedAt: articleFromPrisma.updatedAt,
+        createdAt: '18 nov 2023 21:14',
+        updatedAt: '18 nov 2023 22:14',
       });
 
       expect(englishArticle).toEqual({
@@ -425,8 +425,8 @@ describe('Content utilities', () => {
             slug: 'category-1',
           },
         ],
-        createdAt: articleFromPrisma.createdAt,
-        updatedAt: articleFromPrisma.updatedAt,
+        createdAt: 'Nov 18, 2023, 21:14',
+        updatedAt: 'Nov 18, 2023, 22:14',
       });
     });
   });

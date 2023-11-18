@@ -1,15 +1,21 @@
-import { type ArticleWithAuthorAndCategories } from '~/types/Article';
+import {
+  type ArticleWithAuthorAndCategories,
+  type LocalisedArticle,
+} from '~/types/Article';
 import { useTranslation } from 'react-i18next';
 import { type SupportedLanguages } from '~/i18n';
 import { isAfter, parseISO } from 'date-fns';
 import { type SerializeFrom } from '@remix-run/node';
 
 type Props = SerializeFrom<
-  Pick<
-    ArticleWithAuthorAndCategories,
-    'categories' | 'createdAt' | 'updatedAt'
-  > & {
+  Pick<ArticleWithAuthorAndCategories, 'createdAt' | 'updatedAt'> & {
     author?: ArticleWithAuthorAndCategories['author'];
+    categories:
+      | ArticleWithAuthorAndCategories['categories']
+      | Pick<
+          LocalisedArticle<ArticleWithAuthorAndCategories>,
+          'categories'
+        >['categories'];
   }
 >;
 
@@ -42,7 +48,13 @@ export default function ContentMeta({
           })})`
         : null}
       {categories.length ? ' | ' : ''}
-      {categories.map((category) => category.name[lang]).join(', ')}
+      {categories
+        .map((category) =>
+          typeof category.name === 'string'
+            ? category.name
+            : category.name[lang]
+        )
+        .join(', ')}
     </div>
   );
 }

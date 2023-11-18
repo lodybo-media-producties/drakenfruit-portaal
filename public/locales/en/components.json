@@ -183,5 +183,9 @@
   "ContentMeta": {
     "Author": "By {{author}}",
     "Updated Label": "last updated on {{date}}"
+  },
+  "BookmarkIndicator": {
+    "Bookmarked": "Bookmarked",
+    "Save": "Save bookmark"
   }
 }

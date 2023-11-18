@@ -183,5 +183,9 @@
   "ContentMeta": {
     "Author": "Door {{author}}",
     "Updated Label": "laatst bijgewerkt op {{date}}"
+  },
+  "BookmarkIndicator": {
+    "Bookmarked": "Bladwijzer verwijderen",
+    "Save": "Bladwijzer opslaan"
   }
 }

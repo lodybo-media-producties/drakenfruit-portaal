@@ -1,22 +1,10 @@
 import { type Prisma, type Article } from '@prisma/client';
 import { prisma } from '~/db.server';
 import { type SerializeFrom } from '@remix-run/node';
-import { type User } from '~/models/user.server';
 
 export type SerializedArticle = SerializeFrom<Article>;
 
 export { Article };
-
-export type LocalisedArticle = Record<keyof Article, string> & {
-  author: User;
-  categories: Prisma.CategoryGetPayload<{
-    select: {
-      id: true;
-      name: true;
-      slug: true;
-    };
-  }>;
-};
 
 export type SummarisedArticle = Prisma.ArticleGetPayload<{
   select: {

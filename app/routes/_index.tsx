@@ -9,10 +9,13 @@ import { convertArticleOrToolToItem } from '~/utils/content';
 import { type SummarisedTool } from '~/types/Tool';
 import i18next from '~/i18next.server';
 import { type SupportedLanguages } from '~/i18n';
+import { getUser } from '~/session.server';
 
 export const meta: MetaFunction = () => [{ title: 'Drakenfruit' }];
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request);
+
   // TODO: implement streaming maybe?
   const articles = await getSummarisedArticles();
   const tools: SummarisedTool[] = await prisma.tool.findMany({
@@ -46,6 +49,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   items.push(
     ...tools.map((item) => convertArticleOrToolToItem(item, 'tool', locale))
   );
+
+  if (user) {
+    items.forEach((item) => {
+      item.isBookmarked = user.bookmarks.includes(item.id);
+    });
+  }
 
   items.sort((a, b) => {
     const aDate = parseISO(a.updatedAt);
