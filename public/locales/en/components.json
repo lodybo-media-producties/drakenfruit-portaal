@@ -178,7 +178,8 @@
     "Download button caption": "Download"
   },
   "ArticleDetails": {
-    "Back Link Label": "Back to overview"
+    "Back Link Label": "Back to overview",
+    "Related Articles": "Also interesting for you"
   },
   "ContentMeta": {
     "Author": "By {{author}}",

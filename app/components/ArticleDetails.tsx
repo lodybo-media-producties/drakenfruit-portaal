@@ -6,15 +6,25 @@ import Prose from '~/components/Prose';
 import { type SerializeFrom } from '@remix-run/node';
 import ContentMeta from '~/components/ContentMeta';
 import BookmarkIndicator from '~/components/BookmarkIndicator';
+import { type SerializedArticle } from '~/models/articles.server';
+import { type LocalisedArticle } from '~/types/Article';
 
 type Props = {
   article: SerializeFrom<
     ReturnType<typeof convertPrismaArticleToLocalisedArticle>
   >;
   isBookmarked: boolean;
+  relatedArticles: Pick<
+    LocalisedArticle<SerializedArticle>,
+    'id' | 'title' | 'slug'
+  >[];
 };
 
-export default function ArticleDetails({ article, isBookmarked }: Props) {
+export default function ArticleDetails({
+  article,
+  isBookmarked,
+  relatedArticles,
+}: Props) {
   const { t } = useTranslation('components');
 
   return (
@@ -28,30 +38,51 @@ export default function ArticleDetails({ article, isBookmarked }: Props) {
         />
       ) : null}
 
-      <div className="w-3/4 mx-auto py-8">
-        <AnchorLink to="/">{t('ArticleDetails.Back Link Label')}</AnchorLink>
-      </div>
+      <div className="flex flex-row gap-2 px-4 mt-16">
+        <div className="w-3/4">
+          <Prose>
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-row gap-4">
+                <ContentMeta
+                  author={article.author}
+                  categories={article.categories}
+                  createdAt={article.createdAt}
+                  updatedAt={article.updatedAt}
+                />
 
-      <Prose>
-        <div className="mb-10 flex flex-col gap-2">
-          <h1 className="not-prose text-7xl">{article.title}</h1>
-          <div className="flex flex-row gap-4">
-            <ContentMeta
-              author={article.author}
-              categories={article.categories}
-              createdAt={article.createdAt}
-              updatedAt={article.updatedAt}
-            />
+                <BookmarkIndicator
+                  bookmarked={isBookmarked}
+                  bookmarkID={article.id}
+                />
+              </div>
+              <h1>{article.title}</h1>
+            </div>
 
-            <BookmarkIndicator
-              bookmarked={isBookmarked}
-              bookmarkID={article.id}
-            />
-          </div>
+            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+          </Prose>
         </div>
 
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
-      </Prose>
+        <div className="w-1/4 relative">
+          {relatedArticles.length === 0 ? null : (
+            <div className="sticky top-8 mt-8">
+              <div className="flex flex-col gap-2">
+                <h2 className="text-2xl">
+                  {t('ArticleDetails.Related Articles')}
+                </h2>
+                <ul className="flex flex-col gap-2">
+                  {relatedArticles.map((article) => (
+                    <li key={article.id}>
+                      <AnchorLink to={`/articles/${article.slug}`}>
+                        {article.title}
+                      </AnchorLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

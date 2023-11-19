@@ -178,7 +178,8 @@
     "Download button caption": "Downloaden"
   },
   "ArticleDetails": {
-    "Back Link Label": "Terug naar overzicht"
+    "Back Link Label": "Terug naar overzicht",
+    "Related Articles": "Ook interessant voor jou"
   },
   "ContentMeta": {
     "Author": "Door {{author}}",
