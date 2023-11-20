@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { getSummarisedArticles } from '~/models/articles.server';
 import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
@@ -7,10 +7,15 @@ import { prisma } from '~/db.server';
 import { isBefore, parseISO } from 'date-fns';
 import { convertArticleOrToolToItem } from '~/utils/content';
 import { type SummarisedTool } from '~/types/Tool';
+import i18next from '~/i18next.server';
+import { type SupportedLanguages } from '~/i18n';
+import { getUser } from '~/session.server';
 
 export const meta: MetaFunction = () => [{ title: 'Drakenfruit' }];
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request);
+
   // TODO: implement streaming maybe?
   const articles = await getSummarisedArticles();
   const tools: SummarisedTool[] = await prisma.tool.findMany({
@@ -33,11 +38,23 @@ export async function loader() {
     },
   });
 
+  const locale = (await i18next.getLocale(request)) as SupportedLanguages;
+
   const items: Item[] = [];
   items.push(
-    ...articles.map((item) => convertArticleOrToolToItem(item, 'article'))
+    ...articles.map((item) =>
+      convertArticleOrToolToItem(item, 'article', locale)
+    )
   );
-  items.push(...tools.map((item) => convertArticleOrToolToItem(item, 'tool')));
+  items.push(
+    ...tools.map((item) => convertArticleOrToolToItem(item, 'tool', locale))
+  );
+
+  if (user) {
+    items.forEach((item) => {
+      item.isBookmarked = user.bookmarks.includes(item.id);
+    });
+  }
 
   items.sort((a, b) => {
     const aDate = parseISO(a.updatedAt);

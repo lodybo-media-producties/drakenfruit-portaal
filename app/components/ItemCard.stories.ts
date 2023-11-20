@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ItemCard from 'app/components/ItemCard';
 import { faker } from '@faker-js/faker';
+import { formatDate } from '~/utils/utils';
 
 export default {
   title: 'Components/Item Card',
@@ -13,6 +14,7 @@ export const Article: Story = {
   args: {
     item: {
       type: 'article',
+      isBookmarked: false,
       id: faker.string.uuid(),
       title: {
         nl: faker.lorem.sentence(),
@@ -45,7 +47,8 @@ export const Article: Story = {
           },
         },
       ],
-      updatedAt: faker.date.past().toString(),
+      createdAt: formatDate(faker.date.past(), 'nl'),
+      updatedAt: formatDate(faker.date.past(), 'nl'),
     },
   },
 };
@@ -54,6 +57,7 @@ export const Tool: Story = {
   args: {
     item: {
       type: 'tool',
+      isBookmarked: false,
       id: faker.string.uuid(),
       title: {
         nl: faker.lorem.sentence(),
@@ -81,7 +85,8 @@ export const Tool: Story = {
           },
         },
       ],
-      updatedAt: faker.date.past().toISOString(),
+      createdAt: formatDate(faker.date.past(), 'nl'),
+      updatedAt: formatDate(faker.date.past(), 'nl'),
     },
   },
 };

@@ -83,7 +83,14 @@ export function getErrorMessage(err: unknown) {
 
 export function convertDateToUTC(date: Date): Date {
   return new Date(
-    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds()
+    )
   );
 }
 
@@ -92,5 +99,8 @@ export function formatDate(date: Date, lang: SupportedLanguages): string {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
   });
 }

@@ -1,7 +1,10 @@
 import { type User } from '~/models/user.server';
 import { type Prisma } from '@prisma/client';
 
-type CoreUserData = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'role'>;
+type CoreUserData = Omit<
+  User,
+  'id' | 'createdAt' | 'updatedAt' | 'role' | 'bookmarks'
+>;
 
 export type UserWithProjectsAndOrgs = Prisma.UserGetPayload<{
   include: {

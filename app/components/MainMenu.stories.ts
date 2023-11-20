@@ -23,8 +23,6 @@ export const LoggedInUser: Story = {
       locale: 'NL',
       organisationId: '1',
       avatarUrl: null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     },
   },
 };

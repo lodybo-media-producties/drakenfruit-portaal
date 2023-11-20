@@ -256,6 +256,7 @@ describe('Content utilities', () => {
           avatarUrl: null,
           createdAt: new Date(),
           updatedAt: new Date(),
+          bookmarks: [],
         },
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: [
@@ -308,6 +309,7 @@ describe('Content utilities', () => {
           avatarUrl: null,
           createdAt: new Date(),
           updatedAt: new Date(),
+          bookmarks: [],
         },
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: [
@@ -366,8 +368,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 10, 18, 21, 14),
+        updatedAt: new Date(2023, 10, 18, 22, 14),
       };
 
       const dutchArticle = convertPrismaArticleToLocalisedArticle(
@@ -400,8 +402,8 @@ describe('Content utilities', () => {
             slug: 'categorie-1',
           },
         ],
-        createdAt: articleFromPrisma.createdAt,
-        updatedAt: articleFromPrisma.updatedAt,
+        createdAt: '18 nov 2023 21:14',
+        updatedAt: '18 nov 2023 22:14',
       });
 
       expect(englishArticle).toEqual({
@@ -425,8 +427,8 @@ describe('Content utilities', () => {
             slug: 'category-1',
           },
         ],
-        createdAt: articleFromPrisma.createdAt,
-        updatedAt: articleFromPrisma.updatedAt,
+        createdAt: 'Nov 18, 2023, 21:14',
+        updatedAt: 'Nov 18, 2023, 22:14',
       });
     });
   });
@@ -852,6 +854,7 @@ describe('Content utilities', () => {
           ],
           createdAt: '',
           updatedAt: '',
+          bookmarks: [],
         },
       ];
 
@@ -928,8 +931,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 0, 1, 12, 0),
+        updatedAt: new Date(2023, 0, 2, 14, 45),
       };
 
       const tool: SummarisedTool = {
@@ -945,12 +948,12 @@ describe('Content utilities', () => {
             slug: { en: 'category-1', nl: 'categorie-1' },
           },
         ],
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: new Date(2023, 0, 1, 12, 0),
+        updatedAt: new Date(2023, 0, 2, 14, 45),
       };
 
-      const articleItem = convertArticleOrToolToItem(article, 'article');
-      const toolItem = convertArticleOrToolToItem(tool, 'tool');
+      const articleItem = convertArticleOrToolToItem(article, 'article', 'nl');
+      const toolItem = convertArticleOrToolToItem(tool, 'tool', 'nl');
 
       expect(articleItem).toEqual<Item>({
         type: 'article',
@@ -959,7 +962,6 @@ describe('Content utilities', () => {
         slug: { en: 'title-1', nl: 'titel-1' },
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         image: '/path/to/image',
-        updatedAt: article.updatedAt.toISOString(),
         categories: [
           {
             id: '1',
@@ -972,6 +974,8 @@ describe('Content utilities', () => {
           firstName: 'Kaylee',
           lastName: 'Rosalina',
         },
+        createdAt: '1 jan 2023 12:00',
+        updatedAt: '2 jan 2023 14:45',
       });
 
       expect(toolItem).toEqual<Item>({
@@ -981,7 +985,6 @@ describe('Content utilities', () => {
         slug: { en: 'tool-1', nl: 'tool-1' },
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         image: '/portal/tools/tool.jpg',
-        updatedAt: tool.updatedAt.toISOString(),
         categories: [
           {
             id: '1',
@@ -989,6 +992,8 @@ describe('Content utilities', () => {
             slug: { en: 'category-1', nl: 'categorie-1' },
           },
         ],
+        createdAt: '1 jan 2023 12:00',
+        updatedAt: '2 jan 2023 14:45',
       });
     });
   });
