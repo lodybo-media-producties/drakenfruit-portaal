@@ -84,8 +84,7 @@
     "Detail": {
       "Meta": {
         "Title": "{{ articleTitle }} | Drakenfruit"
-      },
-      "Back Link Label": "Back to overview"
+      }
     }
   },
   "Account": {

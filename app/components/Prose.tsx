@@ -19,7 +19,6 @@ export default function Prose({ children }: Props) {
         prose-a:pb-0.5
         prose-a:hover:pb-1
         transition-all
-        mx-auto
       `}
     >
       {children}

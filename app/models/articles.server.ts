@@ -1,22 +1,14 @@
 import { type Prisma, type Article } from '@prisma/client';
 import { prisma } from '~/db.server';
 import { type SerializeFrom } from '@remix-run/node';
-import { type User } from '~/models/user.server';
+import {
+  type ArticleWithAuthorAndCategories,
+  type LocalisedArticle,
+} from '~/types/Article';
 
 export type SerializedArticle = SerializeFrom<Article>;
 
 export { Article };
-
-export type LocalisedArticle = Record<keyof Article, string> & {
-  author: User;
-  categories: Prisma.CategoryGetPayload<{
-    select: {
-      id: true;
-      name: true;
-      slug: true;
-    };
-  }>;
-};
 
 export type SummarisedArticle = Prisma.ArticleGetPayload<{
   select: {
@@ -142,5 +134,28 @@ export function getLocalisedArticleBySlug(slug: string, locale: string) {
         },
       },
     },
+  });
+}
+
+export function getRelatedArticlesForArticle(
+  article:
+    | ArticleWithAuthorAndCategories
+    | LocalisedArticle<ArticleWithAuthorAndCategories>,
+  amount = 3
+) {
+  return prisma.article.findMany({
+    where: {
+      id: {
+        not: article.id,
+      },
+      categories: {
+        some: {
+          id: {
+            in: article.categories.map((category) => category.id),
+          },
+        },
+      },
+    },
+    take: amount,
   });
 }

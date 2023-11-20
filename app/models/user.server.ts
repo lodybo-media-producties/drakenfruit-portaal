@@ -91,3 +91,32 @@ export async function updatePassword(email: User['email'], password: string) {
     },
   });
 }
+
+export async function hasBookmarked(id: User['id'], bookmark: string) {
+  const { bookmarks } = await prisma.user.findUniqueOrThrow({
+    where: { id },
+    select: { bookmarks: true },
+  });
+
+  return bookmarks.includes(bookmark);
+}
+
+export async function updateBookmarks(id: User['id'], bookmark: string) {
+  const { bookmarks } = await prisma.user.findUniqueOrThrow({
+    where: { id },
+    select: { bookmarks: true },
+  });
+
+  const newBookmarks = bookmarks.includes(bookmark)
+    ? bookmarks.filter((b) => b !== bookmark)
+    : [...bookmarks, bookmark];
+
+  return prisma.user.update({
+    where: { id },
+    data: {
+      bookmarks: {
+        set: newBookmarks,
+      },
+    },
+  });
+}

@@ -16,6 +16,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '2',
@@ -28,6 +29,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '3',
@@ -40,6 +42,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '4',
@@ -52,6 +55,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '5',
@@ -64,6 +68,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '6',
@@ -76,6 +81,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
       {
         id: '7',
@@ -88,6 +94,7 @@ describe('User utils', () => {
         avatarUrl: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        bookmarks: [],
       },
     ];
 

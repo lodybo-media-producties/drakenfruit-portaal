@@ -29,6 +29,7 @@ import {
   type UserWithProjectsAndOrgs,
 } from '~/types/User';
 import { type Role } from '@prisma/client';
+import { formatDate } from '~/utils/utils';
 
 export function convertArticleListToTableData(
   articles: ArticlesWithCategoriesSummaryList[],
@@ -174,8 +175,8 @@ export function convertPrismaArticleToLocalisedArticle(
       slug: category.slug[lang],
     })),
     published: article.published,
-    createdAt: article.createdAt,
-    updatedAt: article.updatedAt,
+    createdAt: formatDate(article.createdAt, lang),
+    updatedAt: formatDate(article.updatedAt, lang),
   };
 }
 
@@ -457,8 +458,12 @@ export function convertProjectFormValuesToFormData(
 }
 export function convertArticleOrToolToItem(
   data: SummarisedArticle | SummarisedTool,
-  type: 'article' | 'tool'
+  type: 'article' | 'tool',
+  lang: SupportedLanguages
 ): Item {
+  const localisedCreatedAtDate = formatDate(data.createdAt, lang);
+  const localisedUpdatedAtDate = formatDate(data.updatedAt, lang);
+
   const item: Item = {
     type,
     id: data.id,
@@ -471,7 +476,8 @@ export function convertArticleOrToolToItem(
       name: category.name,
       slug: category.slug,
     })),
-    updatedAt: data.updatedAt.toISOString(),
+    createdAt: localisedCreatedAtDate,
+    updatedAt: localisedUpdatedAtDate,
   };
 
   if ('author' in data) {

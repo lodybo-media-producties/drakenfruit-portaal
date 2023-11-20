@@ -92,8 +92,7 @@
     "Detail": {
       "Meta": {
         "Title": "{{ articleTitle }} | Drakenfruit"
-      },
-      "Back Link Label": "Terug naar overzicht"
+      }
     }
   },
   "Categories": {

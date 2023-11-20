@@ -17,7 +17,7 @@ import { isAllowedForRole } from '~/utils/roles';
 import { cn } from '~/lib/utils';
 
 type Props = {
-  user?: User;
+  user?: Omit<User, 'bookmarks' | 'createdAt' | 'updatedAt'>;
 };
 
 export default function MainMenu({ user }: Props) {
@@ -52,7 +52,7 @@ export default function MainMenu({ user }: Props) {
           </>
         ) : null}
 
-        {user && isAllowedForRole('OFFICEMANAGER', user) ? (
+        {user && isAllowedForRole('OFFICEMANAGER', user as User) ? (
           <>
             <DropdownMenuGroup>
               <MenuItem to="/administratie/organisaties" icon="building-user">

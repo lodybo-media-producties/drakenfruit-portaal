@@ -2,22 +2,21 @@ import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '~/components/ui/card';
 import { type SupportedLanguages } from '~/i18n';
-import { parseISO } from 'date-fns';
-import { convertDateToUTC, formatDate } from '~/utils/utils';
 import { Image } from '~/components/Image';
 import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import { Link } from '@remix-run/react';
 import { cn } from '~/lib/utils';
+import ContentMeta from '~/components/ContentMeta';
 
 export type Item = {
   type: 'article' | 'tool';
+  isBookmarked?: boolean;
   id: string;
   title: PrismaJson.Translated;
   slug: PrismaJson.Translated;
@@ -33,6 +32,7 @@ export type Item = {
     firstName: string;
     lastName: string;
   };
+  createdAt: string;
   updatedAt: string;
 };
 
@@ -44,11 +44,6 @@ export default function ItemCard({ item }: Props) {
   const { t, i18n } = useTranslation('components');
   const lang = i18n.language as SupportedLanguages;
 
-  const recentDate = formatDate(
-    convertDateToUTC(parseISO(item.updatedAt)),
-    lang
-  );
-
   const getLink = (item: Item) => {
     if (item.type === 'article') {
       const linkArticlePrefix = lang === 'en' ? 'article' : 'artikel';
@@ -59,61 +54,67 @@ export default function ItemCard({ item }: Props) {
   };
 
   return (
-    <Card className="relative group cursor-pointer grid grid-cols-1 grid-rows-[repeat(3, minmax(0, auto))] gap-3">
-      <span
-        className={cn('absolute top-0 right-0 px-2 text-egg-white z-10', {
-          'bg-dark-pink': item.type === 'article',
-          'bg-dark-blue': item.type === 'tool',
-        })}
-      >
-        {t(
-          item.type === 'article'
-            ? 'ItemCard.Article Badge'
-            : 'ItemCard.Tool Badge'
+    <Link className="block h-full" to={getLink(item)}>
+      <Card className="relative group cursor-pointer grid grid-cols-1 grid-rows-[repeat(3, minmax(0, auto))] gap-3 h-full">
+        <span
+          className={cn('absolute top-0 right-0 px-2 text-egg-white z-10', {
+            'bg-dark-pink': item.type === 'article',
+            'bg-dark-blue': item.type === 'tool',
+          })}
+        >
+          {t(
+            item.type === 'article'
+              ? 'ItemCard.Article Badge'
+              : 'ItemCard.Tool Badge'
+          )}
+        </span>
+        {item.isBookmarked !== undefined ? (
+          <div
+            className={cn(
+              'absolute top-0 left-0 px-2 py-0 z-10 text-egg-white',
+              {
+                'bg-dark-pink': item.type === 'article',
+                'bg-dark-blue': item.type === 'tool',
+              }
+            )}
+          >
+            <Icon name="bookmark" prefix={item.isBookmarked ? 'fas' : 'far'} />
+          </div>
+        ) : null}
+        {item.image ? (
+          <div className="overflow-hidden w-full h-48">
+            <Image
+              className="h-full w-full object-cover scale-100 group-hover:scale-105 transition-all duration-300"
+              src={item.image}
+              alt={item.title[lang]}
+            />
+          </div>
+        ) : (
+          <div className="h-48" />
         )}
-      </span>
-      {item.image ? (
-        <div className="overflow-hidden w-full h-48">
-          <Image
-            className="h-full w-full object-cover scale-100 group-hover:scale-105 transition-all duration-300"
-            src={item.image}
-            alt={item.title[lang]}
-          />
-        </div>
-      ) : (
-        <div className="h-48" />
-      )}
-      <CardHeader>
-        <CardTitle className="text-black group-hover:text-dark-pink transition duration">
-          <Link className="inline-block w-full" to={getLink(item)}>
+        <CardHeader>
+          <CardTitle className="text-black group-hover:text-dark-pink transition duration">
             {item.title[lang]}
-          </Link>
-        </CardTitle>
-        <CardDescription>
-          {item.author ? (
-            <>
-              {t('ItemCard.Author', {
-                author: `${item.author.firstName} ${item.author.lastName}`,
-              })}
-              {' | '}
-            </>
-          ) : null}
-          {recentDate}
-          {item.categories.length ? ' | ' : ''}
-          {item.categories.map((category) => category.name[lang]).join(', ')}
-        </CardDescription>
-      </CardHeader>
+          </CardTitle>
+          <ContentMeta
+            author={item.author}
+            categories={item.categories}
+            createdAt={item.createdAt}
+            updatedAt={item.updatedAt}
+          />
+        </CardHeader>
 
-      <CardContent>
-        <p>{item.summary[lang]}</p>
-      </CardContent>
+        <CardContent>
+          <p>{item.summary[lang]}</p>
+        </CardContent>
 
-      <CardFooter className="mt-auto flex flex-col gap-2 h-12">
-        <AnchorLink className="self-end" to={getLink(item)}>
-          {t('ItemCard.Read More')}{' '}
-          <Icon className="ml-0.5" name="arrow-right" />
-        </AnchorLink>
-      </CardFooter>
-    </Card>
+        <CardFooter className="mt-auto flex flex-col gap-2 h-12">
+          <AnchorLink className="self-end" to={getLink(item)}>
+            {t('ItemCard.Read More')}{' '}
+            <Icon className="ml-0.5" name="arrow-right" />
+          </AnchorLink>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
