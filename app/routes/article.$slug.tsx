@@ -3,7 +3,10 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { getLocalisedArticleBySlug } from '~/models/articles.server';
+import {
+  getLocalisedArticleBySlug,
+  getRelatedArticlesForArticle,
+} from '~/models/articles.server';
 import { requireUserWithMinimumRole } from '~/session.server';
 import invariant from 'tiny-invariant';
 import { useLoaderData } from '@remix-run/react';
@@ -11,7 +14,10 @@ import { convertPrismaArticleToLocalisedArticle } from '~/utils/content';
 import i18next from '~/i18next.server';
 import ArticleDetails from '~/components/ArticleDetails';
 import { hasBookmarked } from '~/models/user.server';
-import { prisma } from '~/db.server';
+import {
+  type ArticleWithAuthorAndCategories,
+  type LocalisedArticle,
+} from '~/types/Article';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUserWithMinimumRole('PROJECTLEADER', request);
@@ -26,24 +32,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const article = convertPrismaArticleToLocalisedArticle(fullArticle, 'en');
     const articleIsBookmarked = await hasBookmarked(user.id, article.id);
 
-    const relatedArticles = await prisma.article.findMany({
-      where: {
-        id: {
-          not: article.id,
-        },
-        categories: {
-          some: {
-            id: {
-              in: article.categories.map((category) => category.id),
-            },
-          },
-        },
-      },
-      take: 3,
-    });
-
-    console.log('categories', fullArticle.categories);
-    console.log('relatedArticles', relatedArticles);
+    const relatedArticles = await getRelatedArticlesForArticle(
+      article as unknown as LocalisedArticle<ArticleWithAuthorAndCategories>
+    );
 
     const localisedRelatedArticles = relatedArticles.map((relatedArticle) => ({
       id: relatedArticle.id,

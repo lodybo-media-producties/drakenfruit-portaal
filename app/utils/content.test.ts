@@ -256,6 +256,7 @@ describe('Content utilities', () => {
           avatarUrl: null,
           createdAt: new Date(),
           updatedAt: new Date(),
+          bookmarks: [],
         },
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: [
@@ -308,6 +309,7 @@ describe('Content utilities', () => {
           avatarUrl: null,
           createdAt: new Date(),
           updatedAt: new Date(),
+          bookmarks: [],
         },
         content: { en: 'Content 1', nl: 'Inhoud 1' },
         categories: [
@@ -852,6 +854,7 @@ describe('Content utilities', () => {
           ],
           createdAt: '',
           updatedAt: '',
+          bookmarks: [],
         },
       ];
 

@@ -1,8 +1,7 @@
 import Icon from '~/components/Icon';
 import { useTranslation } from 'react-i18next';
 import { useFetcher } from '@remix-run/react';
-import { useState } from 'react';
-import { APIResponse } from '~/types/Responses';
+import { type APIResponse } from '~/types/Responses';
 
 type Props = {
   bookmarked: boolean;

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import ArticleDetails from './ArticleDetails';
 import { type convertPrismaArticleToLocalisedArticle } from '~/utils/content';
 import { faker } from '@faker-js/faker/locale/nl';
-import { SerializeFrom } from '@remix-run/node';
+import { type SerializeFrom } from '@remix-run/node';
 
 export default {
   title: 'Overviews/Article Details',

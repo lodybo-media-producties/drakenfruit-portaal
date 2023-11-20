@@ -14,6 +14,7 @@ describe('Roles', () => {
     avatarUrl: '',
     createdAt: '',
     updatedAt: '',
+    bookmarks: [],
   };
 
   test('The correct permissions are returned for a role and upwards', () => {
