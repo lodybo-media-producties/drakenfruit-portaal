@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import ItemCard, { type Item } from '~/components/ItemCard';
 import { prisma } from '~/db.server';
-import { isBefore, parseISO } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { convertArticleOrToolToItem } from '~/utils/content';
 import { type SummarisedTool } from '~/types/Tool';
 import i18next from '~/i18next.server';
@@ -40,14 +40,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const locale = (await i18next.getLocale(request)) as SupportedLanguages;
 
+  const content = [
+    ...articles.map((article) => ({
+      ...article,
+      type: 'article',
+    })),
+    ...tools.map((tool) => ({
+      ...tool,
+      type: 'tool',
+    })),
+  ];
+
+  content.sort((a, b) => {
+    return isBefore(a.updatedAt, b.updatedAt) ? 1 : -1;
+  });
+
   const items: Item[] = [];
+
   items.push(
-    ...articles.map((item) =>
-      convertArticleOrToolToItem(item, 'article', locale)
+    ...content.map((item) =>
+      convertArticleOrToolToItem(item, item.type as 'tool' | 'article', locale)
     )
-  );
-  items.push(
-    ...tools.map((item) => convertArticleOrToolToItem(item, 'tool', locale))
   );
 
   if (user) {
@@ -55,13 +68,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       item.isBookmarked = user.bookmarks.includes(item.id);
     });
   }
-
-  items.sort((a, b) => {
-    const aDate = parseISO(a.updatedAt);
-    const bDate = parseISO(b.updatedAt);
-
-    return isBefore(aDate, bDate) ? 1 : -1;
-  });
 
   return json({ items });
 }
