@@ -4,7 +4,7 @@ import { json } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import ItemCard, { type Item } from '~/components/ItemCard';
 import { prisma } from '~/db.server';
-import { isAfter, isBefore, parseISO } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { convertArticleOrToolToItem } from '~/utils/content';
 import { type SummarisedTool } from '~/types/Tool';
 import i18next from '~/i18next.server';
