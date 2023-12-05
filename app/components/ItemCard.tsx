@@ -107,13 +107,6 @@ export default function ItemCard({ item }: Props) {
         <CardContent>
           <p>{item.summary[lang]}</p>
         </CardContent>
-
-        <CardFooter className="mt-auto flex flex-col gap-2 h-12">
-          <AnchorLink className="self-end" to={getLink(item)}>
-            {t('ItemCard.Read More')}{' '}
-            <Icon className="ml-0.5" name="arrow-right" />
-          </AnchorLink>
-        </CardFooter>
       </Card>
     </Link>
   );
