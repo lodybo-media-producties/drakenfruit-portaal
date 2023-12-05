@@ -1,14 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '~/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card';
 import { type SupportedLanguages } from '~/i18n';
 import { Image } from '~/components/Image';
-import AnchorLink from '~/components/AnchorLink';
 import Icon from '~/components/Icon';
 import { Link } from '@remix-run/react';
 import { cn } from '~/lib/utils';
@@ -107,13 +100,6 @@ export default function ItemCard({ item }: Props) {
         <CardContent>
           <p>{item.summary[lang]}</p>
         </CardContent>
-
-        <CardFooter className="mt-auto flex flex-col gap-2 h-12">
-          <AnchorLink className="self-end" to={getLink(item)}>
-            {t('ItemCard.Read More')}{' '}
-            <Icon className="ml-0.5" name="arrow-right" />
-          </AnchorLink>
-        </CardFooter>
       </Card>
     </Link>
   );

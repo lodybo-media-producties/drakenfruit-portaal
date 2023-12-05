@@ -123,7 +123,7 @@ function MenuItem({ to, icon, emphasis, children }: MenuItemProps) {
       })}
     >
       {to ? (
-        <Link className="flex flex-row gap-5" to={to}>
+        <Link className="w-full flex flex-row gap-5" to={to}>
           <Icon name={icon} sizes="m" />
           {children}
         </Link>
