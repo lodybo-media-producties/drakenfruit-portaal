@@ -1,14 +1,17 @@
 import Backend from 'i18next-fs-backend';
 import { resolve } from 'node:path';
 import { RemixI18Next } from 'remix-i18next';
-import i18n from '~/i18n'; // your i18n configuration file
+import i18n, { type SupportedLanguages } from '~/i18n'; // your i18n configuration file
 import { langSessionCookie } from '~/cookies.server';
+import { getUser } from '~/session.server';
+import { type User } from '~/models/user.server';
 
 let i18next = new RemixI18Next({
   detection: {
+    // order: ['cookie'],
     cookie: langSessionCookie,
     supportedLanguages: i18n.supportedLngs as unknown as string[],
-    fallbackLanguage: i18n.fallbackLng,
+    fallbackLanguage: process.env.DEFAULT_APP_LOCALE ?? 'nl',
   },
   // This is the configuration for i18next used
   // when translating messages server-side only
@@ -25,3 +28,20 @@ let i18next = new RemixI18Next({
 });
 
 export default i18next;
+
+export async function detectLocale(
+  request: Request,
+  usr?: User | null
+): Promise<SupportedLanguages> {
+  let locale: string;
+
+  const user = usr || (await getUser(request));
+
+  if (user) {
+    locale = user.locale;
+  } else {
+    locale = await i18next.getLocale(request);
+  }
+
+  return locale as SupportedLanguages;
+}
