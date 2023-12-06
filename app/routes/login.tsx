@@ -88,6 +88,7 @@ export default function LoginPage() {
             label="Wachtwoord"
             id="password"
             name="password"
+            required
             autoComplete="current-password"
             aria-invalid={loginErrors?.password ? true : undefined}
             aria-describedby="password-error"
