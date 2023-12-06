@@ -7,8 +7,7 @@ import { prisma } from '~/db.server';
 import { isBefore } from 'date-fns';
 import { convertArticleOrToolToItem } from '~/utils/content';
 import { type SummarisedTool } from '~/types/Tool';
-import i18next from '~/i18next.server';
-import { type SupportedLanguages } from '~/i18n';
+import { detectLocale } from '~/i18next.server';
 import { getUser } from '~/session.server';
 
 export const meta: MetaFunction = () => [{ title: 'Drakenfruit' }];
@@ -38,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   });
 
-  const locale = (await i18next.getLocale(request)) as SupportedLanguages;
+  const locale = await detectLocale(request, user);
 
   const content = [
     ...articles.map((article) => ({
