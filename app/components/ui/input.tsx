@@ -99,6 +99,7 @@ const Input = React.forwardRef<HTMLInputElement, TextInputProps>(
           aria-describedby={`${props.id ?? props.name ?? ''}-${type}-error`}
           ref={ref as React.Ref<HTMLInputElement>}
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+          required={false}
         />
         <Message
           variant="error"
@@ -124,6 +125,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           aria-describedby={`${props.id}-textarea-error`}
           ref={ref as React.Ref<HTMLTextAreaElement>}
           {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          required={false}
         />
         <Message
           variant="error"
