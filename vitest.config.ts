@@ -17,6 +17,8 @@ export default defineConfig({
       '.*\\/build\\/.*',
       '.*\\/postgres-data\\/.*',
     ],
-    exclude: ['node_modules', 'build', '.idea', '.git', '.cache', 'public'],
+    coverage: {
+      include: ['app/**'],
+    },
   },
 });
