@@ -11,7 +11,7 @@ let i18next = new RemixI18Next({
     // order: ['cookie'],
     cookie: langSessionCookie,
     supportedLanguages: i18n.supportedLngs as unknown as string[],
-    fallbackLanguage: process.env.DEFAULT_APP_LOCALE ?? 'nl',
+    fallbackLanguage: i18n.fallbackLng,
   },
   // This is the configuration for i18next used
   // when translating messages server-side only
@@ -40,7 +40,21 @@ export async function detectLocale(
   if (user) {
     locale = user.locale;
   } else {
-    locale = await i18next.getLocale(request);
+    const cookieLocale = await langSessionCookie.parse(
+      request.headers.get('Cookie')
+    );
+
+    if (cookieLocale) {
+      locale = cookieLocale;
+    } else {
+      const subdomain = request.headers.get('Host')?.split('.')[0];
+
+      if (subdomain === 'my') {
+        locale = 'en';
+      } else {
+        locale = 'nl';
+      }
+    }
   }
 
   return locale as SupportedLanguages;

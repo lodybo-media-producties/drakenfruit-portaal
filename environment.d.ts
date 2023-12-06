@@ -5,6 +5,5 @@ declare namespace NodeJS {
     SESSION_SECRET: string;
     SPACES_KEY: string;
     SPACES_SECRET: string;
-    DEFAULT_APP_LOCALE: string;
   }
 }
