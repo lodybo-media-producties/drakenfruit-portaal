@@ -28,6 +28,7 @@ import {
 } from '@remix-run/server-runtime/dist/formData';
 import { avatarUploadHandler } from '~/models/storage.server';
 import { createMemoryUploadHandler } from '@remix-run/server-runtime/dist/upload/memoryUploadHandler';
+import { sendWelcomeMailForNewUser } from '~/mail.server';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireUserWithMinimumRole('ADMIN', request);
@@ -101,7 +102,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const tempPasswordHash = await bcrypt.hash(tempPassword, 10);
 
       // TODO: Use the createUser function?
-      await prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           firstName: validationResults.data.firstName,
           lastName: validationResults.data.lastName,
@@ -133,17 +134,10 @@ export async function action({ request }: ActionFunctionArgs) {
         title: t('Users.API.CREATE.Success.Title'),
         description: t('Users.API.CREATE.Success.Message'),
       });
-      session.flash('modal', {
-        title: t('Users.API.CREATE.Success.Pass.Title'),
-        description: t('Users.API.CREATE.Success.Pass.Message', {
-          password: tempPassword,
-        }),
-        buttons: [
-          {
-            label: t('Users.API.CREATE.Success.Pass.Button Label'),
-            action: 'close',
-          },
-        ],
+
+      await sendWelcomeMailForNewUser({
+        user: newUser,
+        tempPassword,
       });
 
       return redirect('/administratie/gebruikers', {

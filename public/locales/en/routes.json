@@ -330,11 +330,7 @@
       "CREATE": {
         "Success": {
           "Title": "User created",
-          "Message": "The User was created successfully"
-        },
-        "Pass": {
-          "Title": "User created",
-          "Message": "<p>A new temporary password was created for the user. The password is: <strong>{{password}}</strong> </p> <p>The user shall be prompted to change this password upon first login.</p> <p>You cannot view this password again.</p>"
+          "Message": "The User was created successfully. They have been sent an email with their login details."
         }
       },
       "UPDATE": {
