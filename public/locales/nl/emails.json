@@ -1,0 +1,11 @@
+{
+  "WelcomeUser": {
+    "Subject": "Welkom bij het portaal van Drakenfruit",
+    "Salutation": "Hallo {{firstname}},",
+    "Introduction": "Welkom op het portaal van Drakenfruit. Je kunt hier je gegevens inzien en aanpassen.",
+    "Password Instruction": "Je kunt inloggen met je e-mailadres en het volgende wachtwoord:",
+    "Password Change Instruction": "Je wordt gevraagd om dit wachtwoord te wijzigen na je eerste inlog.",
+    "Greeting": "Met vriendelijke groet,",
+    "Company Name": "Drakenfruit"
+  }
+}
