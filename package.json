@@ -77,6 +77,7 @@
     "@remix-run/react": "^2.3.1",
     "@remix-run/serve": "^2.3.1",
     "@remix-run/server-runtime": "^2.3.1",
+    "@sendgrid/mail": "^8.1.0",
     "@sindresorhus/slugify": "^2.2.1",
     "@tailwindcss/typography": "^0.5.10",
     "@tinymce/tinymce-react": "^4.3.2",
