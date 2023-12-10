@@ -1,11 +1,14 @@
 import Backend from 'i18next-fs-backend';
 import { resolve } from 'node:path';
 import { RemixI18Next } from 'remix-i18next';
-import i18n from '~/i18n'; // your i18n configuration file
+import i18n, { type SupportedLanguages } from '~/i18n'; // your i18n configuration file
 import { langSessionCookie } from '~/cookies.server';
+import { getUser } from '~/session.server';
+import { type User } from '~/models/user.server';
 
 let i18next = new RemixI18Next({
   detection: {
+    // order: ['cookie'],
     cookie: langSessionCookie,
     supportedLanguages: i18n.supportedLngs as unknown as string[],
     fallbackLanguage: i18n.fallbackLng,
@@ -25,3 +28,34 @@ let i18next = new RemixI18Next({
 });
 
 export default i18next;
+
+export async function detectLocale(
+  request: Request,
+  usr?: User | null
+): Promise<SupportedLanguages> {
+  let locale: string;
+
+  const user = usr || (await getUser(request));
+
+  if (user) {
+    locale = user.locale;
+  } else {
+    const cookieLocale = await langSessionCookie.parse(
+      request.headers.get('Cookie')
+    );
+
+    if (cookieLocale) {
+      locale = cookieLocale;
+    } else {
+      const subdomain = request.headers.get('Host')?.split('.')[0];
+
+      if (subdomain === 'my') {
+        locale = 'en';
+      } else {
+        locale = 'nl';
+      }
+    }
+  }
+
+  return locale as SupportedLanguages;
+}

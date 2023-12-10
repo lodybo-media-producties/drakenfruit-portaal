@@ -5,13 +5,12 @@ import {
 } from '@remix-run/node';
 import { requireUserWithMinimumRole } from '~/session.server';
 import invariant from 'tiny-invariant';
-import i18next from '~/i18next.server';
+import i18next, { detectLocale } from '~/i18next.server';
 import { getToolBySlug } from '~/models/tools.server';
 import { getErrorMessage } from '~/utils/utils';
 import { useLoaderData } from '@remix-run/react';
 import ToolDetails from '~/components/ToolDetails';
 import AnchorLink from '~/components/AnchorLink';
-import { type SupportedLanguages } from '~/i18n';
 import { hasBookmarked } from '~/models/user.server';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -20,7 +19,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { slug } = params;
   invariant(slug, 'slug is required');
 
-  const locale = (await i18next.getLocale(request)) as SupportedLanguages;
+  const locale = await detectLocale(request, user);
   const t = await i18next.getFixedT(request, 'routes');
 
   try {

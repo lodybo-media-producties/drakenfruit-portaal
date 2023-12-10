@@ -15,11 +15,10 @@ import {
 import { commitSession, getSession, getUser } from '~/session.server';
 import stylesheet from '~/tailwind.css';
 import Header from '~/components/Header';
-import i18next from '~/i18next.server';
+import { detectLocale } from '~/i18next.server';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getErrorMessage, useOptionalUser } from '~/utils/utils';
-import { langSessionCookie } from '~/cookies.server';
 import { Toaster } from '~/components/ui/toaster';
 import { useEffect } from 'react';
 import { useToast } from '~/components/ui/use-toast';
@@ -28,21 +27,31 @@ import Footer from '~/components/Footer';
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
+  {
+    rel: 'icon',
+    href: '/favicon.png',
+    type: 'image/png',
+  },
+  {
+    rel: 'apple-touch-icon',
+    href: '/favicon.png',
+    type: 'image/png',
+  },
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await getUser(request);
   const session = await getSession(request);
   const toasterData = session.get('toast') || null;
 
-  const headers = new Headers();
-  headers.set('Set-Cookie', await langSessionCookie.serialize('nl'));
-  headers.set('Set-Cookie', await commitSession(session));
+  const locale = await detectLocale(request, user);
 
-  const locale = await i18next.getLocale(request);
   return json(
-    { user: await getUser(request), locale, toasterData },
+    { user, locale, toasterData },
     {
-      headers,
+      headers: {
+        'Set-Cookie': await commitSession(session),
+      },
     }
   );
 };

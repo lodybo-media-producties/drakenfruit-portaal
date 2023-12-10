@@ -4,10 +4,7 @@ import i18n from './i18n-storybook';
 import '../app/tailwind.css';
 
 import { withThemeByClassName } from '@storybook/addon-styling';
-import {
-  unstable_createRemixStub as createRemixStub,
-  RemixStubProps,
-} from '@remix-run/testing';
+import { createRemixStub } from '@remix-run/testing';
 
 const preview: Preview = {
   globals: {
