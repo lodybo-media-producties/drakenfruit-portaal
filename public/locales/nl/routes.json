@@ -331,27 +331,26 @@
         "Success": {
           "Title": "Gebruiker aangemaakt",
           "Message": "De Gebruiker is aangemaakt. Zij ontvangen een e-mail met instructies om hun account te activeren."
-          }
         }
+      }
+    },
+    "UPDATE": {
+      "Success": {
+        "Title": "Gebruiker bijgewerkt",
+        "Message": "De Gebruiker is bijgewerkt."
       },
-      "UPDATE": {
-        "Success": {
-          "Title": "Gebruiker bijgewerkt",
-          "Message": "De Gebruiker is bijgewerkt."
-        },
-        "Error": {
-          "No ID": "Geen ID opgegeven",
-          "User Not Found": "De Gebruiker kon niet gevonden worden"
-        }
+      "Error": {
+        "No ID": "Geen ID opgegeven",
+        "User Not Found": "De Gebruiker kon niet gevonden worden"
+      }
+    },
+    "DELETE": {
+      "Success": {
+        "Title": "Gebruiker verwijderd",
+        "Message": "De Gebruiker is verwijderd."
       },
-      "DELETE": {
-        "Success": {
-          "Title": "Gebruiker verwijderd",
-          "Message": "De Gebruiker is verwijderd."
-        },
-        "Error": {
-          "No ID": "Geen ID opgegeven"
-        }
+      "Error": {
+        "No ID": "Geen ID opgegeven"
       }
     },
     "Index": {
