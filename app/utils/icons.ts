@@ -24,9 +24,10 @@ export {
   faTags,
   faArrowRightFromBracket,
   faArrowRightToBracket,
+  faTag,
 } from '@fortawesome/free-solid-svg-icons';
 
 export {
   faCopyright,
-  faBookmark as farBookmark,
+  faBookmark as farBookmark, // Aliased to avoid conflict with faBookmark from solid.
 } from '@fortawesome/free-regular-svg-icons';

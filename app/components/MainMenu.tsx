@@ -15,6 +15,7 @@ import { type IconName } from '@fortawesome/fontawesome-svg-core';
 import { Link } from '@remix-run/react';
 import { isAllowedForRole } from '~/utils/roles';
 import { cn } from '~/lib/utils';
+import { version } from '../../package.json';
 
 type Props = {
   user?: Omit<User, 'bookmarks' | 'createdAt' | 'updatedAt'>;
@@ -85,6 +86,20 @@ export default function MainMenu({ user }: Props) {
           </>
         ) : null}
 
+        {user && isAllowedForRole('ADMIN', user as User) ? (
+          <>
+            <DropdownMenuGroup>
+              <MenuItem
+                to={`https://github.com/lodybo-media-producties/drakenfruit-portaal/releases/v${version}`}
+                icon="tag"
+              >
+                Versie {version}
+              </MenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
+
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <LanguageSwitcher mode="large" />
@@ -128,7 +143,7 @@ function MenuItem({ to, icon, emphasis, children }: MenuItemProps) {
           {children}
         </Link>
       ) : (
-        <span className="flex flex-row gap-2">
+        <span className="relative flex flex-row gap-2">
           <Icon name={icon} sizes="m" />
           {children}
         </span>
