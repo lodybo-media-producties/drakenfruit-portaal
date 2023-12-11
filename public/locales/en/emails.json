@@ -1,0 +1,11 @@
+{
+  "WelcomeUser": {
+    "Subject": "Welcome to Drakenfruit",
+    "Salutation": "Hello {{firstname}},",
+    "Introduction": "Welcome to Drakenfruit! We are happy to have you on board.",
+    "Password Instruction": "You can login with your email address and the following password:",
+    "Password Change Instruction": "You will be asked to change your password on your first login.",
+    "Greeting": "Best regards,",
+    "Company Name": "Drakenfruit"
+  }
+}
