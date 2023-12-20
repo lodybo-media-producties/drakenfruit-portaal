@@ -6,5 +6,6 @@ declare namespace NodeJS {
     SPACES_KEY: string;
     SPACES_SECRET: string;
     SENDGRID_API_KEY: string;
+    MOLLIE_API_KEY: string;
   }
 }
