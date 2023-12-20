@@ -14,6 +14,8 @@ import EmailInput from '~/components/EmailInput';
 import PasswordInput from '~/components/PasswordInput';
 import Button from '~/components/Button';
 import Checkbox from '~/components/Checkbox';
+import Message from '~/components/Message';
+import i18next, { detectLocale } from '~/i18next.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -27,6 +29,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (!validationResult.success) {
     return json<LoginErrors>(validationResult.errors, { status: 400 });
   } else {
+    const locale = await detectLocale(request);
+    const t = await i18next.getFixedT(locale, 'routes');
+
     const { emailaddress, password, remember, redirectTo } =
       validationResult.data;
     const user = await verifyLogin(emailaddress, password);
@@ -34,8 +39,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (!user) {
       return json<LoginErrors>(
         {
-          userNotFound:
-            'Deze combinatie van e-mailadres en wachtwoord is niet bekend.',
+          userNotFound: t('Authentication.Login.Error.Invalid Credentials'),
         },
         { status: 400 }
       );
@@ -94,6 +98,10 @@ export default function LoginPage() {
             aria-describedby="password-error"
             error={loginErrors?.password}
           />
+
+          {loginErrors?.userNotFound ? (
+            <Message variant="error" message={loginErrors.userNotFound} />
+          ) : null}
 
           <input type="hidden" name="redirectTo" value={redirectTo} />
 

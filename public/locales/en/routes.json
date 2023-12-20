@@ -11,7 +11,7 @@
       "Login": "Login",
       "Forgot Password": "Forgot password?",
       "Error": {
-        "Invalid Credentials": "Invalid credentials"
+        "Invalid Credentials": "The combination of email and password is incorrect"
       }
     },
     "PasswordChange": {
@@ -25,7 +25,7 @@
       "Confirm New Password": "Confirm new password",
       "Change Password Action": "Change password",
       "Error": {
-        "Invalid Credentials": "Invalid credentials"
+        "Invalid Credentials": "The combination of email and password is incorrect"
       }
     }
   },

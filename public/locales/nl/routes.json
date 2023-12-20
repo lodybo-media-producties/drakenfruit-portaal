@@ -11,7 +11,7 @@
       "Login": "Inloggen",
       "Forgot Password": "Wachtwoord vergeten?",
       "Error": {
-        "Invalid Credentials": "De ingevoerde gegevens zijn onjuist"
+        "Invalid Credentials": "Deze combinatie van e-mailadres en wachtwoord is niet bekend."
       }
     },
     "PasswordChange": {
@@ -25,7 +25,7 @@
       "Confirm New Password": "Bevestig nieuw wachtwoord",
       "Change Password Action": "Wachtwoord wijzigen",
       "Error": {
-        "Invalid Credentials": "De ingevoerde gegevens zijn onjuist"
+        "Invalid Credentials": "Deze combinatie van e-mailadres en wachtwoord is niet bekend."
       }
     }
   },
