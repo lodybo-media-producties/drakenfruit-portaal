@@ -6,6 +6,7 @@ const PermissionLevels: Record<Role, number> = {
   OFFICEMANAGER: 300,
   CONSULTANT: 200,
   PROJECTLEADER: 100,
+  READER: 0,
 };
 
 export function isAllowedForRole(role: Role, user: User) {

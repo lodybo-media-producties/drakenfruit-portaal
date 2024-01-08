@@ -5,16 +5,22 @@ import CategoryWhereUniqueInput = Prisma.CategoryWhereUniqueInput;
 
 const prisma = new PrismaClient();
 
-async function seed() {
-  console.log(`Seeding database...`);
+let kaylee: any;
+let lody: any;
+let simone: any;
+let lisa: any;
 
+async function seed() {
+  console.log(`=== Seeding database... ===`);
+
+  await createUsers();
   await createOrganisations();
   await createCategories();
   await createArticles();
   await createTools();
   await createProjects();
 
-  console.log(`Database has been seeded. 🌱`);
+  console.log(`=== Database has been seeded. 🌱 ===`);
 }
 
 seed()
@@ -26,6 +32,99 @@ seed()
     await prisma.$disconnect();
   });
 
+async function createUsers() {
+  console.log('Creating users...');
+
+  console.log('> Creating Kaylee...');
+  kaylee = await prisma.user.create({
+    data: {
+      email: 'kaylee@drakenfruit.com',
+      locale: 'nl',
+      firstName: 'Kaylee',
+      lastName: 'Rosalina',
+      role: 'ADMIN',
+      password: {
+        create: {
+          hash: await bcrypt.hash('kayleeiscool', 10),
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
+
+  console.log('> Creating Lody...');
+  lody = await prisma.user.create({
+    data: {
+      email: 'hi@lodybo.nl',
+      locale: 'nl',
+      firstName: 'Lody',
+      lastName: 'Borgers',
+      role: 'MAINTAINER',
+      password: {
+        create: {
+          hash: await bcrypt.hash('lodyiscool', 10),
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
+
+  console.log('> Creating Simone...');
+  simone = await prisma.user.create({
+    data: {
+      email: 'simone@drakenfruit.com',
+      locale: 'nl',
+      firstName: 'Simone',
+      lastName: 'Leenders',
+      role: 'OFFICEMANAGER',
+      password: {
+        create: {
+          hash: await bcrypt.hash('simoneiscool', 10),
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
+
+  console.log('> Creating Lisa...');
+  lisa = await prisma.user.create({
+    data: {
+      email: 'lisa@drakenfruit.com',
+      locale: 'nl',
+      firstName: 'Lisa',
+      lastName: 'Jansen',
+      role: 'CONSULTANT',
+      password: {
+        create: {
+          hash: await bcrypt.hash('lisaiscool', 10),
+          type: 'ACTIVE',
+        },
+      },
+    },
+  });
+
+  console.log('> Creating random users...');
+  const totalUsers = getRandomNumberOfAtLeastOne();
+  console.log(`> Creating ${totalUsers} random users...`);
+  for (let i = 0; i < totalUsers; i++) {
+    await prisma.user.create({
+      data: {
+        email: faker.internet.email(),
+        locale: randomItem(['nl', 'en']),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        role: randomItem(['PROJECTLEADER', 'READER']),
+        password: {
+          create: {
+            hash: await bcrypt.hash('password', 10),
+            type: 'ACTIVE',
+          },
+        },
+      },
+    });
+  }
+}
+
 async function createOrganisations() {
   console.log('Creating organisations, starting with known organisations');
   console.log('> Creating Drakenfruit...');
@@ -34,58 +133,18 @@ async function createOrganisations() {
       name: 'Drakenfruit',
       description: 'Drakenfruit, for diversity and inclusion.',
       users: {
-        create: [
+        connect: [
           {
-            email: 'kaylee@drakenfruit.com',
-            locale: 'nl',
-            firstName: 'Kaylee',
-            lastName: 'Rosalina',
-            role: 'ADMIN',
-            password: {
-              create: {
-                hash: await bcrypt.hash('kayleeiscool', 10),
-                type: 'ACTIVE',
-              },
-            },
+            id: kaylee.id,
           },
           {
-            email: 'hi@lodybo.nl',
-            locale: 'nl',
-            firstName: 'Lody',
-            lastName: 'Borgers',
-            role: 'MAINTAINER',
-            password: {
-              create: {
-                hash: await bcrypt.hash('lodyiscool', 10),
-                type: 'ACTIVE',
-              },
-            },
+            id: lody.id,
           },
           {
-            email: 'simone@drakenfruit.com',
-            locale: 'nl',
-            firstName: 'Simone',
-            lastName: 'Leenders',
-            role: 'OFFICEMANAGER',
-            password: {
-              create: {
-                hash: await bcrypt.hash('simoneiscool', 10),
-                type: 'ACTIVE',
-              },
-            },
+            id: simone.id,
           },
           {
-            email: 'lisa@drakenfruit.com',
-            locale: 'nl',
-            firstName: 'Lisa',
-            lastName: 'Jansen',
-            role: 'CONSULTANT',
-            password: {
-              create: {
-                hash: await bcrypt.hash('lisaiscool', 10),
-                type: 'ACTIVE',
-              },
-            },
+            id: lisa.id,
           },
         ],
       },
@@ -163,24 +222,6 @@ function createCategories() {
 async function createArticles() {
   console.log('Creating articles...');
 
-  console.log('Fetching Kaylee from the database...');
-  const kaylee = await prisma.user.findUnique({
-    where: {
-      email: 'kaylee@drakenfruit.com',
-    },
-  });
-
-  console.log('Fetching Simone from the database...');
-  const simone = await prisma.user.findUnique({
-    where: {
-      email: 'simone@drakenfruit.com',
-    },
-  });
-
-  if (!kaylee || !simone) {
-    throw new Error('Kaylee or Simone not found');
-  }
-
   console.log('Fetching categories from the database...');
   const categories = await prisma.category.findMany();
 
@@ -210,7 +251,7 @@ async function createArticles() {
         },
         author: {
           connect: {
-            id: randomItem([kaylee.id, simone.id]),
+            id: randomItem([kaylee.id, simone.id, lisa.id]),
           },
         },
         categories: {
@@ -222,15 +263,65 @@ async function createArticles() {
       },
     });
   }
+
+  console.log('Assigning purchases randomly to readers...');
+  const readers = await prisma.user.findMany({
+    where: {
+      role: 'READER',
+    },
+  });
+
+  const articles = await prisma.article.findMany();
+
+  // Randomly map articles to readers, do it later with tools as well
+  for (const reader of readers) {
+    const randomArticles = Array.from({
+      length: Math.floor(Math.random() * articles.length),
+    }).map(() => ({
+      // id: articles[Math.floor(Math.random() * articles.length)].id,
+      ...articles[Math.floor(Math.random() * articles.length)],
+    }));
+
+    const articlesToConnect = randomArticles.filter(
+      (article, index, self) =>
+        index === self.findIndex((a) => a.id === article.id)
+    );
+
+    console.log(
+      `> Reader ${reader.firstName} ${reader.lastName} is going to buy ${articlesToConnect.length} article(s)`
+    );
+
+    for (const article of articlesToConnect) {
+      console.log(
+        `> Reader ${reader.firstName} ${reader.lastName} has just bought article ${article.title.en}`
+      );
+      await prisma.user.update({
+        where: {
+          id: reader.id,
+        },
+        data: {
+          purchases: {
+            create: {
+              article: {
+                connect: {
+                  id: article.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
 }
 
 async function createTools() {
   console.log('Creating tools...');
 
-  console.log('Fetching categories from the database...');
+  console.log('> Fetching categories from the database...');
   const categories = await prisma.category.findMany();
 
-  console.log('Creating first tool');
+  console.log('> Creating first tool');
   await prisma.tool.create({
     data: {
       name: {
@@ -264,7 +355,7 @@ async function createTools() {
     },
   });
 
-  console.log('Creating second tool');
+  console.log('> Creating second tool');
   await prisma.tool.create({
     data: {
       name: {
@@ -344,4 +435,8 @@ function getRandomAmountOfCategories(
 
 function getRandomNumber() {
   return Math.floor(Math.random() * 10);
+}
+
+function getRandomNumberOfAtLeastOne() {
+  return getRandomNumber() || 1;
 }
