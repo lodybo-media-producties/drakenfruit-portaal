@@ -25,6 +25,7 @@ export {
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faTag,
+  faCartShopping,
 } from '@fortawesome/free-solid-svg-icons';
 
 export {

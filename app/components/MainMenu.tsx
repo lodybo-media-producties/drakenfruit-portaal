@@ -42,6 +42,11 @@ export default function MainMenu({ user }: Props) {
               <MenuItem to="/account" icon="circle-user">
                 Account
               </MenuItem>
+              {user.role === 'READER' ? (
+                <MenuItem to="/account/gekochte-items" icon="cart-shopping">
+                  Gekochte items
+                </MenuItem>
+              ) : null}
               <MenuItem to="/account/opgeslagen-items" icon="bookmark">
                 Opgeslagen items
               </MenuItem>
