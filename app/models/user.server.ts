@@ -178,3 +178,24 @@ export async function requirePurchased(
     throw redirect('/account');
   }
 }
+
+export async function requireUserHasPurchasedItem(
+  id: User['id'],
+  itemId: string
+) {
+  const hasPurchasedItem = await prisma.purchase.findFirst({
+    where: {
+      userId: id,
+      OR: [
+        {
+          articleId: itemId,
+        },
+        {
+          toolId: itemId,
+        },
+      ],
+    },
+  });
+
+  return !!hasPurchasedItem;
+}
