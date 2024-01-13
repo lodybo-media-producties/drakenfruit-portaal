@@ -11,15 +11,20 @@ import { getErrorMessage } from '~/utils/utils';
 import { useLoaderData } from '@remix-run/react';
 import ToolDetails from '~/components/ToolDetails';
 import AnchorLink from '~/components/AnchorLink';
-import { hasBookmarked } from '~/models/user.server';
+import { hasBookmarked, requirePurchased } from '~/models/user.server';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await requireUserWithMinimumRole('PROJECTLEADER', request);
+  const user = await requireUserWithMinimumRole('READER', request);
 
   const { slug } = params;
   invariant(slug, 'slug is required');
 
   const locale = await detectLocale(request, user);
+
+  if (user.role === 'READER') {
+    await requirePurchased(user.id, slug, locale);
+  }
+
   const t = await i18next.getFixedT(request, 'routes');
 
   try {

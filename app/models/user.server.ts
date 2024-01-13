@@ -3,6 +3,7 @@ import type { SerializeFrom } from '@remix-run/server-runtime';
 import bcrypt from 'bcryptjs';
 
 import { prisma } from '~/db.server';
+import { redirect } from '@remix-run/node';
 
 type User = SerializeFrom<DbUser> | DbUser;
 
@@ -119,4 +120,61 @@ export async function updateBookmarks(id: User['id'], bookmark: string) {
       },
     },
   });
+}
+
+export async function retrievePurchases(id: User['id']) {
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      purchases: {
+        include: {
+          article: {
+            include: {
+              categories: true,
+              author: true,
+            },
+          },
+          tool: {
+            include: {
+              categories: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function requirePurchased(
+  id: User['id'],
+  itemSlug: string,
+  locale: string
+) {
+  const hasPurchasedItem = await prisma.purchase.findFirst({
+    where: {
+      userId: id,
+      OR: [
+        {
+          article: {
+            slug: {
+              path: [locale],
+              equals: itemSlug,
+            },
+          },
+        },
+        {
+          tool: {
+            slug: {
+              path: [locale],
+              equals: itemSlug,
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  if (!hasPurchasedItem) {
+    throw redirect('/account');
+  }
 }

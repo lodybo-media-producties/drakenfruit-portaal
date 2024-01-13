@@ -13,17 +13,21 @@ import { useLoaderData } from '@remix-run/react';
 import { convertPrismaArticleToLocalisedArticle } from '~/utils/content';
 import i18next from '~/i18next.server';
 import ArticleDetails from '~/components/ArticleDetails';
-import { hasBookmarked } from '~/models/user.server';
+import { hasBookmarked, requirePurchased } from '~/models/user.server';
 import {
   type ArticleWithAuthorAndCategories,
   type LocalisedArticle,
 } from '~/types/Article';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await requireUserWithMinimumRole('PROJECTLEADER', request);
+  const user = await requireUserWithMinimumRole('READER', request);
 
   const { slug } = params;
   invariant(slug, 'slug is required');
+
+  if (user.role === 'READER') {
+    await requirePurchased(user.id, slug, 'nl');
+  }
 
   const t = await i18next.getFixedT(request, 'routes');
 

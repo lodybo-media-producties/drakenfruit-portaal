@@ -35,6 +35,13 @@
           "Title": "Mijn account | Drakenfruit"
       },
       "Title": "Hallo {{name}}!"
+    },
+    "Purchases": {
+      "Meta": {
+        "Title": "Mijn aankopen | Drakenfruit"
+      },
+      "Title": "Mijn aankopen",
+      "No Purchases": "U heeft nog geen aankopen gedaan."
     }
   },
   "Articles": {

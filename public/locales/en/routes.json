@@ -93,6 +93,13 @@
         "Title": "My Account | Drakenfruit"
       },
       "Title": "Hello {{name}}!"
+    },
+    "Purchases": {
+      "Meta": {
+        "Title": "My purchases | Drakenfruit"
+      },
+      "Title": "My purchases",
+      "No Purchases": "You haven't made any purchases yet"
     }
   },
   "Categories": {
