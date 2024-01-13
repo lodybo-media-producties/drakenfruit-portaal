@@ -222,13 +222,13 @@ function createCategories() {
 async function createArticles() {
   console.log('Creating articles...');
 
-  console.log('Fetching categories from the database...');
+  console.log('> Fetching categories from the database...');
   const categories = await prisma.category.findMany();
 
-  console.log('Creating articles...');
+  console.log('> Creating articles...');
   const max = 20;
   for (let i = 0; i < max; i++) {
-    console.log(`Creating article ${i + 1} of ${max}`);
+    console.log(`>>Creating article ${i + 1} of ${max}`);
     const creationDate = faker.date.past();
     await prisma.article.create({
       data: {
@@ -270,10 +270,11 @@ async function createArticles() {
       role: 'READER',
     },
   });
+  console.log(`> Found ${readers.length} readers`);
 
   const articles = await prisma.article.findMany();
 
-  // Randomly map articles to readers, do it later with tools as well
+  // Randomly map articles and tools to readers
   for (const reader of readers) {
     const randomArticles = Array.from({
       length: Math.floor(Math.random() * articles.length),
@@ -341,7 +342,7 @@ async function createTools() {
         en: faker.lorem.paragraph(),
       },
       filename: 'portal/tools/inclusiviteitsscan.pdf',
-      image: 'portal/tools/inclusiviteitsscan.png',
+      image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
       categories: {
         connect: [
           {
@@ -375,7 +376,7 @@ async function createTools() {
         en: faker.lorem.paragraph(),
       },
       filename: 'portal/tools/inclusievere-projecten-canvas.pdf',
-      image: 'portal/tools/inclusievere-projecten-canvas.png',
+      image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
       categories: {
         connect: [
           {
@@ -385,6 +386,87 @@ async function createTools() {
       },
     },
   });
+
+  console.log('> Creating a few random tools...');
+  const totalTools = getRandomNumber();
+  console.log(`> Creating ${totalTools} random tools...`);
+  for (let i = 0; i < totalTools; i++) {
+    await prisma.tool.create({
+      data: {
+        name: {
+          nl: faker.lorem.sentence(),
+          en: faker.lorem.sentence(),
+        },
+        slug: {
+          nl: faker.lorem.slug(),
+          en: faker.lorem.slug(),
+        },
+        summary: {
+          nl: faker.lorem.paragraph(),
+          en: faker.lorem.paragraph(),
+        },
+        description: {
+          nl: faker.lorem.paragraph(),
+          en: faker.lorem.paragraph(),
+        },
+        filename: faker.system.filePath(),
+        image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+        categories: {
+          connect: getRandomAmountOfCategories(categories),
+        },
+      },
+    });
+  }
+
+  console.log('Assigning tool purchases randomly to readers...');
+  const readers = await prisma.user.findMany({
+    where: {
+      role: 'READER',
+    },
+  });
+  console.log(`> Found ${readers.length} readers`);
+
+  const articles = await prisma.tool.findMany();
+
+  // Randomly map tools to readers
+  for (const reader of readers) {
+    const randomTools = Array.from({
+      length: Math.floor(Math.random() * articles.length),
+    }).map(() => ({
+      // id: articles[Math.floor(Math.random() * articles.length)].id,
+      ...articles[Math.floor(Math.random() * articles.length)],
+    }));
+
+    const toolsToConnect = randomTools.filter(
+      (tool, index, self) => index === self.findIndex((a) => a.id === tool.id)
+    );
+
+    console.log(
+      `> Reader ${reader.firstName} ${reader.lastName} is going to buy ${toolsToConnect.length} tool(s)`
+    );
+
+    for (const tool of toolsToConnect) {
+      console.log(
+        `> Reader ${reader.firstName} ${reader.lastName} has just bought tool ${tool.name.en}`
+      );
+      await prisma.user.update({
+        where: {
+          id: reader.id,
+        },
+        data: {
+          purchases: {
+            create: {
+              tool: {
+                connect: {
+                  id: tool.id,
+                },
+              },
+            },
+          },
+        },
+      });
+    }
+  }
 }
 
 async function createProjects() {
