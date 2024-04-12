@@ -519,6 +519,7 @@ export function convertUserListToTableData(
     OFFICEMANAGER: 'Office manager',
     CONSULTANT: 'Consultant',
     PROJECTLEADER: 'Projectleider',
+    READER: 'Lezer',
   };
 
   const data: TableData[] = users.map((user) => {
@@ -529,7 +530,7 @@ export function convertUserListToTableData(
         ['Achternaam', user.lastName],
         ['E-mailadres', user.email],
         ['Rol', translatedRoles[user.role]],
-        ['Organisatie', user.organisation.name],
+        ['Organisatie', user.organisation?.name ?? ''],
         ['Projecten', user.projects.map((project) => project.name).join(', ')],
       ]),
     };

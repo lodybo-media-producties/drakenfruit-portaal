@@ -18,6 +18,7 @@ const config: StorybookConfig = {
     },
     'storybook-react-i18next',
     'storybook-addon-deep-controls',
+    '@storybook/addon-mdx-gfm'
   ],
   framework: {
     name: '@storybook/react-vite',

@@ -30,8 +30,9 @@ export type UserValidationErrors = Partial<
   projectIds?: string;
 };
 
-export type UserFormValues = CoreUserData & {
+export type UserFormValues = Omit<CoreUserData, 'organisationId'> & {
   role: string;
   id?: string;
   projectIds: string[];
+  organisationId?: string;
 };

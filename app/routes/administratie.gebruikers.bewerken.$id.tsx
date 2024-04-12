@@ -64,7 +64,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     avatarUrl: userData.avatarUrl,
     role: userData.role,
     locale: userData.locale,
-    organisationId: userData.organisation.id,
+    organisationId: userData.organisation?.id,
     projectIds: userData.projects.map((project) => project.id),
   };
 
