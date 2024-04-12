@@ -36,3 +36,13 @@ export const WithError: Story = {
     error: 'This is an error',
   },
 };
+
+export const WithIcon: Story = {
+  args: {
+    placeholder: 'Select an option',
+    options: options.map((option) => ({
+      ...option,
+      icon: 'https://via.placeholder.com/150',
+    })),
+  },
+};

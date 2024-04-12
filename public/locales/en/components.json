@@ -188,5 +188,12 @@
   "BookmarkIndicator": {
     "Bookmarked": "Bookmarked",
     "Save": "Save bookmark"
+  },
+  "PaymentWall": {
+    "Title": "Interested?",
+    "Description": "Want to have access to this content?",
+    "SelectIssuerLabel": "Which bank do you choose to pay with?",
+    "SelectIssuerPlaceholder": "Select your bank",
+    "PayButtonLabel": "Pay {{price}}"
   }
 }

@@ -127,6 +127,9 @@ model Article {
   author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
+  purchasable   Boolean @default(true)
+  purchasePrice Float?
+
   categories Category[]
   Purchase   Purchase[]
 
@@ -155,6 +158,9 @@ model Tool {
   filename String
 
   image String
+
+  purchasable   Boolean @default(true)
+  purchasePrice Float?
 
   categories Category[]
   Purchase   Purchase[]

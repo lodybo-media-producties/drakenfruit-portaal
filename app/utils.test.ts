@@ -1,4 +1,8 @@
-import { convertDateToUTC, validateEmail } from 'app/utils/utils';
+import {
+  convertDateToUTC,
+  formatCurrency,
+  validateEmail,
+} from 'app/utils/utils';
 
 test.skip('validateEmail returns false for non-emails', () => {
   expect(validateEmail(undefined)).toBe(false);
@@ -49,3 +53,8 @@ test.skip('Converting a Date to UTC', () => {
 });
 
 test.skip('formatDate', () => {});
+
+test('Format currency', () => {
+  expect(formatCurrency(1234.56)).toBe('€\xa01.234,56');
+  expect(formatCurrency(12.56)).toBe('€\xa012,56');
+});

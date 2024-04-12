@@ -188,5 +188,12 @@
   "BookmarkIndicator": {
     "Bookmarked": "Bladwijzer verwijderen",
     "Save": "Bladwijzer opslaan"
+  },
+  "PaymentWall": {
+    "Title": "Geïnteresseerd?",
+    "Description": "Wil je dit verder ontdekken?",
+    "SelectIssuerLabel": "Met welke bank wil je de betaling voldoen?",
+    "SelectIssuerPlaceholder": "Kies je bank",
+    "PayButtonLabel": "Reken {{price}} af"
   }
 }

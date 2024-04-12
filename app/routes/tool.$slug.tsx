@@ -6,7 +6,7 @@ import {
 import { requireUserWithMinimumRole } from '~/session.server';
 import invariant from 'tiny-invariant';
 import i18next, { detectLocale } from '~/i18next.server';
-import { getToolBySlug } from '~/models/tools.server';
+import { getToolBySlug, type ToolWithCategories } from '~/models/tools.server';
 import { getErrorMessage } from '~/utils/utils';
 import { useLoaderData } from '@remix-run/react';
 import ToolDetails from '~/components/ToolDetails';
@@ -15,28 +15,18 @@ import {
   hasBookmarked,
   requireUserHasPurchasedItem,
 } from '~/models/user.server';
+import PaymentWall from '~/components/PaymentWall';
+import { getiDEALIssuers, type Issuer } from '~/payments.server';
 
-interface BasePurchasedData {
+interface ToolLoaderData {
   purchased: boolean;
-}
-
-interface NonPurchasedData extends BasePurchasedData {
-  purchased: false;
-  metaTranslations: {
-    title: string;
-  };
-}
-
-interface PurchasedData extends BasePurchasedData {
-  purchased: true;
-  tool: any;
+  issuers: Issuer[];
+  tool: ToolWithCategories;
   toolIsBookmarked: boolean;
   metaTranslations: {
     title: string;
   };
 }
-
-type ToolLoaderData = NonPurchasedData | PurchasedData;
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUserWithMinimumRole('READER', request);
@@ -54,19 +44,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       title: t('Tools.Detail.Meta.Title', { toolName: tool.name[locale] }),
     };
 
+    // TODO: Improve flow so that users with a role higher than "READER" always have access to the tool.
+    // TODO: Also check whether the tool has a price or not.
+    // TODO: Don't fetch issuers if the tool is free or already purchased.
     const hasPurchased = await requireUserHasPurchasedItem(user.id, tool.id);
 
-    if (!hasPurchased) {
-      return json<ToolLoaderData>({
-        purchased: false,
-        metaTranslations,
-      });
+    let toolIsBookmarked = false;
+
+    let issuers: Issuer[] = [];
+    if (hasPurchased) {
+      toolIsBookmarked = await hasBookmarked(user.id, tool.id);
     }
 
-    const toolIsBookmarked = await hasBookmarked(user.id, tool.id);
+    issuers = await getiDEALIssuers().then((method) => method.issuers);
 
     return json<ToolLoaderData>({
-      purchased: true,
+      purchased: hasPurchased,
+      issuers,
       tool,
       toolIsBookmarked,
       metaTranslations,
@@ -85,9 +79,22 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => [
 export default function ToolPage() {
   const data = useLoaderData<typeof loader>();
   if (!data.purchased) {
+    const { tool } = data;
     return (
-      <div className="w-full">
-        <p className="font-type text-2xl">Je hebt dit item nog niet gekocht.</p>
+      <div className="w-full lg:w-3/4 mx-auto p-12 flex flex-col md:flex-row gap-20">
+        <div className="flex flex-col gap-4 w-full lg:w-2/3">
+          <h1 className="text-6xl font-type">{tool.name.nl}</h1>
+          <p>{tool.description.nl}</p>
+          <img src={tool.image} alt={tool.name.nl} />
+        </div>
+
+        <div className="w-full lg:w-1/3">
+          <PaymentWall
+            issuers={data.issuers}
+            price={tool.purchasePrice}
+            locale="nl"
+          />
+        </div>
       </div>
     );
   }

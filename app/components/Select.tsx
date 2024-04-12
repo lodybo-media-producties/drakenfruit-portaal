@@ -12,6 +12,7 @@ import * as React from 'react';
 export type SelectOption = {
   value: string;
   label: string;
+  icon?: string;
 };
 
 type Props = {
@@ -39,6 +40,13 @@ export default function SelectInput({
           <SelectGroup>
             {options.map((option) => (
               <SelectItem key={option.value} value={option.value}>
+                {option.icon ? (
+                  <img
+                    src={option.icon}
+                    alt={option.label}
+                    className="w-6 h-6 mr-2 inline-block"
+                  />
+                ) : null}
                 {option.label}
               </SelectItem>
             ))}

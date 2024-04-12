@@ -230,6 +230,11 @@ async function createArticles() {
   for (let i = 0; i < max; i++) {
     console.log(`>>Creating article ${i + 1} of ${max}`);
     const creationDate = faker.date.past();
+    const purchasable = faker.datatype.boolean();
+    let purchasePrice: number | undefined;
+    if (purchasable) {
+      purchasePrice = parseFloat(faker.commerce.price({ min: 1, max: 100 }));
+    }
     await prisma.article.create({
       data: {
         title: {
@@ -257,6 +262,8 @@ async function createArticles() {
         categories: {
           connect: getRandomAmountOfCategories(categories),
         },
+        purchasable,
+        purchasePrice,
         published: faker.datatype.boolean(),
         createdAt: creationDate,
         updatedAt: randomItem([creationDate, faker.date.past()]),
@@ -343,6 +350,7 @@ async function createTools() {
       },
       filename: 'portal/tools/inclusiviteitsscan.pdf',
       image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+      purchasable: false,
       categories: {
         connect: [
           {
@@ -377,6 +385,7 @@ async function createTools() {
       },
       filename: 'portal/tools/inclusievere-projecten-canvas.pdf',
       image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+      purchasable: false,
       categories: {
         connect: [
           {
@@ -391,6 +400,12 @@ async function createTools() {
   const totalTools = getRandomNumber();
   console.log(`> Creating ${totalTools} random tools...`);
   for (let i = 0; i < totalTools; i++) {
+    const purchasable = faker.datatype.boolean();
+    let purchasePrice: number | undefined;
+    if (purchasable) {
+      purchasePrice = parseFloat(faker.commerce.price({ min: 1, max: 100 }));
+    }
+
     await prisma.tool.create({
       data: {
         name: {
@@ -411,6 +426,8 @@ async function createTools() {
         },
         filename: faker.system.filePath(),
         image: faker.image.urlPicsumPhotos({ width: 2000, height: 1000 }),
+        purchasable,
+        purchasePrice,
         categories: {
           connect: getRandomAmountOfCategories(categories),
         },

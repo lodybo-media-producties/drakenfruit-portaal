@@ -87,7 +87,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full font-body bg-egg-white">
+      <body className="h-full font-body bg-egg-white flex flex-col">
         <Header user={user} />
         <Outlet />
         <Toaster />
