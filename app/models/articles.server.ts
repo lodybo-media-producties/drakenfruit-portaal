@@ -54,8 +54,10 @@ export type ArticlesWithCategoriesSummaryList = Omit<
       };
     };
   }>,
-  'createdAt' | 'updatedAt'
->;
+  'createdAt' | 'updatedAt' | 'purchasePrice'
+> & {
+  purchasePrice?: number | null;
+};
 
 export function getArticlesSummaryList(): Promise<
   ArticlesWithCategoriesSummaryList[]

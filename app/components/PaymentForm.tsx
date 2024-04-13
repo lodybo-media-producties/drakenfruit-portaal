@@ -11,7 +11,7 @@ import Message from '~/components/Message';
 
 type Props = {
   issuers: Issuer[];
-  price: number | null;
+  price: number | null | undefined;
   locale: SupportedLanguages;
 };
 

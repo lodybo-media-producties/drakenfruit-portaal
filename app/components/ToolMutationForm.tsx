@@ -195,6 +195,8 @@ export default function ToolMutationForm({
         nl: nlSummary,
       },
       categories: selectedCategoryIDs,
+      purchasable: initialValues?.purchasable ?? false,
+      purchasePrice: initialValues?.purchasePrice ?? 0,
     };
 
     return convertToolFormValuesToFormData(data);

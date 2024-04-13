@@ -68,6 +68,7 @@ describe('Content utilities', () => {
             },
           ],
           image: '/path/to/image',
+          purchasable: false,
         },
       ];
 
@@ -105,6 +106,7 @@ describe('Content utilities', () => {
         categories: ['1', '2'],
         authorId: '1',
         image: '/path/to/image.jpg',
+        purchasable: false,
       };
 
       const formData = convertArticleFormValuesToFormData(article);
@@ -133,6 +135,7 @@ describe('Content utilities', () => {
         categories: ['1', '2'],
         authorId: '1',
         image: '/path/to/image',
+        purchasable: false,
       };
 
       const formData = convertArticleFormValuesToFormData(article);
@@ -164,6 +167,8 @@ describe('Content utilities', () => {
       formData.append('categories', '1,2');
       formData.append('authorId', '1');
       formData.append('image', '/path/to/image.jpg');
+      formData.append('purchasable', 'true');
+      formData.append('purchasePrice', '8.99');
 
       const article = convertFormDataToArticleFormValues(formData);
 
@@ -176,6 +181,8 @@ describe('Content utilities', () => {
         categories: ['1', '2'],
         authorId: '1',
         image: '/path/to/image.jpg',
+        purchasable: true,
+        purchasePrice: 8.99,
       });
     });
 
@@ -193,6 +200,7 @@ describe('Content utilities', () => {
       formData.append('categories', '');
       formData.append('authorId', '1');
       formData.append('image', '/path/to/image.jpg');
+      formData.append('purchasable', 'false');
 
       const article = convertFormDataToArticleFormValues(formData);
 
@@ -205,6 +213,7 @@ describe('Content utilities', () => {
         categories: [],
         authorId: '1',
         image: '/path/to/image.jpg',
+        purchasable: false,
       });
     });
 
@@ -222,6 +231,8 @@ describe('Content utilities', () => {
       formData.append('categories', '');
       formData.append('authorId', '1');
       formData.append('image', 'undefined');
+      formData.append('purchasable', 'true');
+      formData.append('purchasePrice', '8.99');
 
       const article = convertFormDataToArticleFormValues(formData);
 
@@ -234,6 +245,8 @@ describe('Content utilities', () => {
         categories: [],
         authorId: '1',
         image: '',
+        purchasable: true,
+        purchasePrice: 8.99,
       });
     });
 
@@ -270,6 +283,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
+        purchasable: false,
+        purchasePrice: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -287,6 +302,7 @@ describe('Content utilities', () => {
         authorId: '1',
         image: '/path/to/image',
         published: true,
+        purchasable: false,
       });
     });
 
@@ -323,6 +339,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
+        purchasable: false,
+        purchasePrice: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -340,6 +358,7 @@ describe('Content utilities', () => {
         authorId: '1',
         image: '/path/to/image',
         published: false,
+        purchasable: false,
       });
     });
 
@@ -368,6 +387,8 @@ describe('Content utilities', () => {
           },
         ],
         image: '/path/to/image',
+        purchasable: false,
+        purchasePrice: 0,
         createdAt: new Date(2023, 10, 18, 21, 14),
         updatedAt: new Date(2023, 10, 18, 22, 14),
       };
@@ -402,6 +423,7 @@ describe('Content utilities', () => {
             slug: 'categorie-1',
           },
         ],
+        purchasable: false,
         createdAt: '18 nov 2023 21:14',
         updatedAt: '18 nov 2023 22:14',
       });
@@ -427,6 +449,7 @@ describe('Content utilities', () => {
             slug: 'category-1',
           },
         ],
+        purchasable: false,
         createdAt: 'Nov 18, 2023, 21:14',
         updatedAt: 'Nov 18, 2023, 22:14',
       });
@@ -525,6 +548,7 @@ describe('Content utilities', () => {
               name: { en: 'Category 2', nl: 'Categorie 2' },
             },
           ],
+          purchasable: false,
         },
       ];
 
@@ -555,6 +579,7 @@ describe('Content utilities', () => {
         image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+        purchasable: false,
       };
 
       const formData = convertToolFormValuesToFormData(tool);
@@ -599,6 +624,7 @@ describe('Content utilities', () => {
         image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+        purchasable: false,
       });
     });
 
@@ -628,6 +654,7 @@ describe('Content utilities', () => {
         image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: [],
+        purchasable: false,
       });
     });
 
@@ -657,6 +684,7 @@ describe('Content utilities', () => {
         image: '',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: [],
+        purchasable: false,
       });
     });
 
@@ -687,6 +715,8 @@ describe('Content utilities', () => {
             updatedAt: new Date(),
           },
         ],
+        purchasable: false,
+        purchasePrice: 0,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -702,6 +732,7 @@ describe('Content utilities', () => {
         image: '/portal/tools/tool.jpg',
         summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
         categories: ['1', '2'],
+        purchasable: false,
       });
     });
   });

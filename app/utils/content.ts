@@ -110,6 +110,7 @@ export function convertFormDataToArticleFormValues(
       .filter(Boolean),
     authorId: formData.get('authorId') as string,
     image: '',
+    purchasable: formData.get('purchasable') === 'true',
   };
 
   const id = formData.get('id') as string | null;
@@ -121,13 +122,19 @@ export function convertFormDataToArticleFormValues(
     articleFormValues.image = formData.get('image') as string;
   }
 
+  if (formData.get('purchasable') === 'true') {
+    articleFormValues.purchasePrice = parseFloat(
+      (formData.get('purchasePrice') as string) ?? 0
+    );
+  }
+
   return articleFormValues;
 }
 
 export function convertPrismaArticleToArticleFormValues(
   article: Awaited<ReturnType<typeof getArticleById>>
 ): ArticleFormValues {
-  return {
+  const articleFormValues: ArticleFormValues = {
     id: article.id,
     title: {
       en: article.title.en,
@@ -149,14 +156,21 @@ export function convertPrismaArticleToArticleFormValues(
     authorId: article.author.id,
     image: article.image,
     published: article.published,
+    purchasable: article.purchasable,
   };
+
+  if (article.purchasable) {
+    articleFormValues.purchasePrice = article.purchasePrice;
+  }
+
+  return articleFormValues;
 }
 
 export function convertPrismaArticleToLocalisedArticle(
   article: Awaited<ReturnType<typeof getLocalisedArticleBySlug>>,
   lang: SupportedLanguages
 ) {
-  return {
+  const articleData: any = {
     id: article.id,
     title: article.title[lang],
     slug: article.slug[lang],
@@ -175,11 +189,16 @@ export function convertPrismaArticleToLocalisedArticle(
       slug: category.slug[lang],
     })),
     purchasable: article.purchasable,
-    purchasePrice: article.purchasePrice,
     published: article.published,
     createdAt: formatDate(article.createdAt, lang),
     updatedAt: formatDate(article.updatedAt, lang),
   };
+
+  if (article.purchasable) {
+    articleData.purchasePrice = article.purchasePrice;
+  }
+
+  return articleData;
 }
 
 export function convertCategoryListToTableData(
@@ -318,6 +337,7 @@ export function convertFormDataIntoToolFormValues(
     categories: (formData.get('categories') as string)
       .split(',')
       .filter(Boolean),
+    purchasable: formData.get('purchasable') === 'true',
   };
 
   const id = formData.get('id') as string | null;
@@ -333,13 +353,19 @@ export function convertFormDataIntoToolFormValues(
     toolFormValues.image = formData.get('image') as string;
   }
 
+  if (formData.has('purchasable')) {
+    toolFormValues.purchasePrice = parseFloat(
+      (formData.get('purchasePrice') as string) ?? 0
+    );
+  }
+
   return toolFormValues;
 }
 
 export function convertPrismaToolDataToToolFormValues(
   tool: Awaited<ReturnType<typeof getToolByID>>
 ): ToolFormValues {
-  return {
+  const values: any = {
     id: tool.id,
     name: {
       en: tool.name.en,
@@ -360,7 +386,14 @@ export function convertPrismaToolDataToToolFormValues(
     filename: tool.filename,
     image: tool.image,
     categories: tool.categories.map((category) => category.id),
+    purchasable: tool.purchasable,
   };
+
+  if (tool.purchasable) {
+    values.purchasePrice = tool.purchasePrice;
+  }
+
+  return values;
 }
 
 export function convertOrganisationListToTableData(

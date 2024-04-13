@@ -1,7 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { type SerializedArticle as Article } from '~/models/articles.server';
-import { Issuer } from '~/payments.server';
-import { convertPrismaArticleToLocalisedArticle } from '~/utils/content';
+import { type Issuer } from '~/payments.server';
+import { type convertPrismaArticleToLocalisedArticle } from '~/utils/content';
 
 export type ArticleValidationErrors = {
   image?: string;
@@ -14,11 +14,12 @@ export type ArticleValidationErrors = {
 
 export type ArticleFormValues = Omit<
   Article,
-  'id' | 'published' | 'createdAt' | 'updatedAt'
+  'id' | 'published' | 'createdAt' | 'updatedAt' | 'purchasePrice'
 > & {
   id?: string;
   categories: string[];
   published?: boolean;
+  purchasePrice?: number | null;
 };
 
 export type ArticleWithAuthorAndCategories = Prisma.ArticleGetPayload<{

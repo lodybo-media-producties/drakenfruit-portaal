@@ -3,7 +3,7 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from '@remix-run/node';
-import { getUser, requireUserWithMinimumRole } from '~/session.server';
+import { getUser } from '~/session.server';
 import invariant from 'tiny-invariant';
 import i18next, { detectLocale } from '~/i18next.server';
 import { getToolBySlug, type ToolWithCategories } from '~/models/tools.server';
@@ -15,7 +15,6 @@ import {
   hasBookmarked,
   requireUserHasPurchasedItem,
 } from '~/models/user.server';
-import PaymentForm from '~/components/PaymentForm';
 import { getiDEALIssuers, type Issuer } from '~/payments.server';
 import PaymentWall from '~/components/PaymentWall';
 import { useTranslation } from 'react-i18next';

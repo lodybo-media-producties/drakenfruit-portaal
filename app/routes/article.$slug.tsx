@@ -18,11 +18,11 @@ import {
   requireUserHasPurchasedItem,
 } from '~/models/user.server';
 import {
-  ArticleLoaderData,
+  type ArticleLoaderData,
   type ArticleWithAuthorAndCategories,
   type LocalisedArticle,
 } from '~/types/Article';
-import { getiDEALIssuers, Issuer } from '~/payments.server';
+import { getiDEALIssuers, type Issuer } from '~/payments.server';
 import PaymentWall from '~/components/PaymentWall';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {

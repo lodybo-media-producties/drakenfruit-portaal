@@ -79,6 +79,8 @@ export const EditTool: Story = {
       filename: '/portal/tools/tool-1.pdf',
       image: '/portal/tools/tool-1.png',
       categories: ['1', '2'],
+      purchasable: false,
+      purchasePrice: 0,
     },
   },
 };

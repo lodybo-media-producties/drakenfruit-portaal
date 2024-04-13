@@ -39,6 +39,8 @@ const tool: ToolWithCategories = {
       },
     },
   ],
+  purchasable: false,
+  purchasePrice: 0,
 };
 
 export const Default: Story = {

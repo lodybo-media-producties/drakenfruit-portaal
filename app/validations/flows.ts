@@ -203,6 +203,7 @@ export async function validateArticle(
         .filter(Boolean),
       authorId: authorId as string,
       image,
+      purchasable: false,
     },
   };
 }
@@ -267,6 +268,12 @@ export async function validateTool(
     .split(',')
     .filter(Boolean);
 
+  const purchasable = formData.get('purchasable') === 'true';
+  let purchasePrice;
+  if (purchasable) {
+    purchasePrice = parseFloat((formData.get('purchasePrice') as string) ?? 0);
+  }
+
   const tool = formData.get('tool') as File;
   const filename = tool.name;
   const imageData = formData.get('image') as File;
@@ -302,6 +309,8 @@ export async function validateTool(
       filename,
       image,
       categories,
+      purchasable,
+      purchasePrice,
     },
   };
 }

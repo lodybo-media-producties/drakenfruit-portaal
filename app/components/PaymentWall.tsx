@@ -5,7 +5,7 @@ type Props = {
   title: string;
   description: string;
   image: string;
-  purchasePrice: number | null;
+  purchasePrice: number | null | undefined;
   issuers: Issuer[];
 };
 

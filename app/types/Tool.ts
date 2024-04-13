@@ -7,10 +7,11 @@ export type ToolValidationErrors = Partial<Record<keyof Tool, string>> & {
 
 export type ToolFormValues = Omit<
   Tool,
-  'id' | 'createdAt' | 'updatedAt' | 'categories'
+  'id' | 'createdAt' | 'updatedAt' | 'categories' | 'purchasePrice'
 > & {
   id?: string;
   categories: string[];
+  purchasePrice?: number | null;
 };
 
 export type SummarisedTool = Prisma.ToolGetPayload<{

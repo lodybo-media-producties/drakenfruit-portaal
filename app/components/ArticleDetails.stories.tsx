@@ -43,6 +43,8 @@ const article: SerializeFrom<
     lastName: 'Rosalina',
     avatarUrl: faker.image.avatar(),
   },
+  purchasable: false,
+  purchasePrice: 0,
   createdAt: faker.date.past().toISOString(),
   updatedAt: faker.date.past().toISOString(),
 };

@@ -91,6 +91,8 @@ export const Edit: Story = {
         en: 'a-new-blog-post',
       },
       image: '/image/trouw2.jpg',
+      purchasable: false,
+      purchasePrice: 0,
     },
   },
 };

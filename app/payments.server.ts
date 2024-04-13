@@ -1,10 +1,10 @@
 import createMollieClient, {
   Locale,
   MethodInclude,
-  PaymentMethod,
+  type PaymentMethod,
 } from '@mollie/api-client';
 import { type MethodData } from '@mollie/api-client/dist/types/src/data/methods/data';
-import { SupportedLanguages } from '~/i18n';
+import { type SupportedLanguages } from '~/i18n';
 
 const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY });
 

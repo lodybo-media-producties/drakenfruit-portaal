@@ -15,8 +15,10 @@ export type ToolWithCategories = Omit<
       };
     };
   }>,
-  'createdAt' | 'updatedAt'
->;
+  'createdAt' | 'updatedAt' | 'purchasePrice'
+> & {
+  purchasePrice?: number | null;
+};
 
 export function getTools() {
   return prisma.tool.findMany();

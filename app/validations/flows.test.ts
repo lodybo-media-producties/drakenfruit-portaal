@@ -96,6 +96,7 @@ describe('Validation flows', () => {
       formData.append('categories', '1,2');
       formData.append('authorId', '1');
       formData.append('image', '/path/to/image.jpg');
+      formData.append('purchasable', 'false');
 
       const request = new Request('http://localhost:3000/api/article', {
         method: 'POST',
@@ -113,6 +114,7 @@ describe('Validation flows', () => {
         categories: ['1', '2'],
         authorId: '1',
         image: '/path/to/image.jpg',
+        purchasable: false,
       });
     });
 
@@ -283,6 +285,7 @@ describe('Validation flows', () => {
         filename: 'tool.zip',
         image: '/portal/tool/tool.zip',
         categories: ['1', '2'],
+        purchasable: false,
       });
     });
 

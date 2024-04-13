@@ -201,6 +201,8 @@ export default function ArticleMutationForm({
         nl: nlContent,
       },
       categories: selectedCategoryIDs,
+      purchasable: initialValues?.purchasable ?? false,
+      purchasePrice: initialValues?.purchasePrice ?? 0,
     };
 
     return convertArticleFormValuesToFormData(data);

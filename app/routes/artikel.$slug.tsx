@@ -7,7 +7,7 @@ import {
   getLocalisedArticleBySlug,
   getRelatedArticlesForArticle,
 } from '~/models/articles.server';
-import { getUser, requireUserWithMinimumRole } from '~/session.server';
+import { getUser } from '~/session.server';
 import invariant from 'tiny-invariant';
 import { useLoaderData } from '@remix-run/react';
 import { convertPrismaArticleToLocalisedArticle } from '~/utils/content';
@@ -15,15 +15,14 @@ import i18next from '~/i18next.server';
 import ArticleDetails from '~/components/ArticleDetails';
 import {
   hasBookmarked,
-  requirePurchased,
   requireUserHasPurchasedItem,
 } from '~/models/user.server';
 import {
-  ArticleLoaderData,
+  type ArticleLoaderData,
   type ArticleWithAuthorAndCategories,
   type LocalisedArticle,
 } from '~/types/Article';
-import { getiDEALIssuers, Issuer } from '~/payments.server';
+import { getiDEALIssuers, type Issuer } from '~/payments.server';
 import PaymentWall from '~/components/PaymentWall';
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
