@@ -1,5 +1,7 @@
 import { type Prisma } from '@prisma/client';
 import { type SerializedArticle as Article } from '~/models/articles.server';
+import { Issuer } from '~/payments.server';
+import { convertPrismaArticleToLocalisedArticle } from '~/utils/content';
 
 export type ArticleValidationErrors = {
   image?: string;
@@ -42,6 +44,18 @@ export type LocalisedArticle<A> = {
   [Property in keyof A]: A[Property] extends PrismaJson.Translated
     ? string
     : A[Property] extends any[]
-    ? LocalisedArticle<A[Property][0]>[]
-    : A[Property];
+      ? LocalisedArticle<A[Property][0]>[]
+      : A[Property];
 };
+
+export interface ArticleLoaderData {
+  purchasable: boolean;
+  isPurchased: boolean;
+  issuers: Issuer[];
+  article: ReturnType<typeof convertPrismaArticleToLocalisedArticle>;
+  articleIsBookmarked: boolean;
+  relatedArticles: { id: string; title: string; slug: string }[];
+  metaTranslations: {
+    title: string;
+  };
+}

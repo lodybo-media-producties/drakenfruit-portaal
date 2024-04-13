@@ -174,6 +174,8 @@ export function convertPrismaArticleToLocalisedArticle(
       name: category.name[lang],
       slug: category.slug[lang],
     })),
+    purchasable: article.purchasable,
+    purchasePrice: article.purchasePrice,
     published: article.published,
     createdAt: formatDate(article.createdAt, lang),
     updatedAt: formatDate(article.updatedAt, lang),
