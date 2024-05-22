@@ -287,10 +287,7 @@ export async function validateTool(
     .filter(Boolean);
 
   const purchasable = formData.get('purchasable') === 'true';
-  let purchasePrice;
-  if (purchasable) {
-    purchasePrice = parseFloat((formData.get('purchasePrice') as string) ?? 0);
-  }
+  let purchasePrice: number | undefined;
 
   const tool = formData.get('tool') as File;
   const filename = tool.name;
@@ -310,6 +307,15 @@ export async function validateTool(
     }
     if (!isDefined(image)) {
       errors.image = 'Afbeelding is verplicht';
+    }
+  }
+
+  if (purchasable) {
+    const result = checks.checkPurchasePrice(formData.get('purchasePrice'));
+    if (typeof result !== 'number') {
+      errors.purchasePrice = result;
+    } else {
+      purchasePrice = result;
     }
   }
 

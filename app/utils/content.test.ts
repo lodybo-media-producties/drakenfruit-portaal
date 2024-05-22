@@ -111,18 +111,53 @@ describe('Content utilities', () => {
 
       const formData = convertArticleFormValuesToFormData(article);
 
-      expect(formData.get('id')).toEqual('1');
-      expect(formData.get('title.en')).toEqual('Title 1');
-      expect(formData.get('title.nl')).toEqual('Titel 1');
-      expect(formData.get('slug.en')).toEqual('title-1');
-      expect(formData.get('slug.nl')).toEqual('titel-1');
-      expect(formData.get('summary.en')).toEqual('Summary 1');
-      expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
-      expect(formData.get('content.en')).toEqual('Content 1');
-      expect(formData.get('content.nl')).toEqual('Inhoud 1');
-      expect(formData.get('categories')).toEqual('1,2');
-      expect(formData.get('authorId')).toEqual('1');
-      expect(formData.get('image')).toBeNull();
+      expect(Object.fromEntries(formData)).toStrictEqual({
+        id: '1',
+        'title.en': 'Title 1',
+        'title.nl': 'Titel 1',
+        'slug.en': 'title-1',
+        'slug.nl': 'titel-1',
+        'summary.en': 'Summary 1',
+        'summary.nl': 'Samenvatting 1',
+        'content.en': 'Content 1',
+        'content.nl': 'Inhoud 1',
+        categories: '1,2',
+        authorId: '1',
+        purchasable: 'false',
+      });
+    });
+
+    test('Convert an ArticleFormValue with purchase price object into FormData', () => {
+      const article: ArticleFormValues = {
+        id: '1',
+        title: { en: 'Title 1', nl: 'Titel 1' },
+        slug: { en: 'title-1', nl: 'titel-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        content: { en: 'Content 1', nl: 'Inhoud 1' },
+        categories: ['1', '2'],
+        authorId: '1',
+        image: '/path/to/image.jpg',
+        purchasable: true,
+        purchasePrice: 8.99,
+      };
+
+      const formData = convertArticleFormValuesToFormData(article);
+
+      expect(Object.fromEntries(formData)).toStrictEqual({
+        id: '1',
+        'title.en': 'Title 1',
+        'title.nl': 'Titel 1',
+        'slug.en': 'title-1',
+        'slug.nl': 'titel-1',
+        'summary.en': 'Summary 1',
+        'summary.nl': 'Samenvatting 1',
+        'content.en': 'Content 1',
+        'content.nl': 'Inhoud 1',
+        categories: '1,2',
+        authorId: '1',
+        purchasable: 'true',
+        purchasePrice: '8.99',
+      });
     });
 
     test('Convert an ArticleFormValue object into FormData without an image', () => {
@@ -584,18 +619,51 @@ describe('Content utilities', () => {
 
       const formData = convertToolFormValuesToFormData(tool);
 
-      expect(formData.get('id')).toEqual('1');
-      expect(formData.get('name.en')).toEqual('Tool 1');
-      expect(formData.get('name.nl')).toEqual('Tool 1');
-      expect(formData.get('slug.en')).toEqual('tool-1');
-      expect(formData.get('slug.nl')).toEqual('tool-1');
-      expect(formData.get('description.en')).toEqual('Content 1');
-      expect(formData.get('description.nl')).toEqual('Inhoud 1');
-      expect(formData.get('summary.en')).toEqual('Summary 1');
-      expect(formData.get('summary.nl')).toEqual('Samenvatting 1');
-      expect(formData.get('categories')).toEqual('1,2');
-      expect(formData.get('filename')).toBeNull();
-      expect(formData.get('image')).toBeNull();
+      expect(Object.fromEntries(formData)).toStrictEqual({
+        id: '1',
+        'name.en': 'Tool 1',
+        'name.nl': 'Tool 1',
+        'slug.en': 'tool-1',
+        'slug.nl': 'tool-1',
+        'description.en': 'Content 1',
+        'description.nl': 'Inhoud 1',
+        'summary.en': 'Summary 1',
+        'summary.nl': 'Samenvatting 1',
+        categories: '1,2',
+        purchasable: 'false',
+      });
+    });
+
+    test('Convert a ToolFormValue with purchase price into FormData object', () => {
+      const tool: ToolFormValues = {
+        id: '1',
+        name: { en: 'Tool 1', nl: 'Tool 1' },
+        slug: { en: 'tool-1', nl: 'tool-1' },
+        description: { en: 'Content 1', nl: 'Inhoud 1' },
+        filename: '/portal/tools/tool.pdf',
+        image: '/portal/tools/tool.jpg',
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        categories: ['1', '2'],
+        purchasable: true,
+        purchasePrice: 8.99,
+      };
+
+      const formData = convertToolFormValuesToFormData(tool);
+
+      expect(Object.fromEntries(formData)).toStrictEqual({
+        id: '1',
+        'name.en': 'Tool 1',
+        'name.nl': 'Tool 1',
+        'slug.en': 'tool-1',
+        'slug.nl': 'tool-1',
+        'description.en': 'Content 1',
+        'description.nl': 'Inhoud 1',
+        'summary.en': 'Summary 1',
+        'summary.nl': 'Samenvatting 1',
+        categories: '1,2',
+        purchasable: 'true',
+        purchasePrice: '8.99',
+      });
     });
 
     test('Convert FormData to ToolFormValue', () => {

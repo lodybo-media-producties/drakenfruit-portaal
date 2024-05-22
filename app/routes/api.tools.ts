@@ -82,21 +82,28 @@ export async function action({ request }: ActionFunctionArgs) {
           uploadHandler
         );
 
-        const data = convertFormDataIntoToolFormValues(formData);
-        await prisma.tool.create({
-          data: {
-            name: data.name,
-            slug: data.slug,
-            description: data.description,
-            summary: data.summary,
-            filename: data.filename,
-            image: data.image,
-            categories: {
-              connect: data.categories.map((category) => ({
-                id: category,
-              })),
-            },
+        const toolFormValues = convertFormDataIntoToolFormValues(formData);
+        const data: Prisma.ToolCreateInput = {
+          name: toolFormValues.name,
+          slug: toolFormValues.slug,
+          description: toolFormValues.description,
+          summary: toolFormValues.summary,
+          filename: toolFormValues.filename,
+          image: toolFormValues.image,
+          categories: {
+            connect: toolFormValues.categories.map((category) => ({
+              id: category,
+            })),
           },
+          purchasable: toolFormValues.purchasable,
+        };
+
+        if (toolFormValues.purchasable) {
+          data.purchasePrice = toolFormValues.purchasePrice;
+        }
+
+        await prisma.tool.create({
+          data,
         });
 
         const session = await getSession(request);
@@ -166,6 +173,7 @@ export async function action({ request }: ActionFunctionArgs) {
           slug: toolFormValues.slug,
           description: toolFormValues.description,
           summary: toolFormValues.summary,
+          purchasable: toolFormValues.purchasable,
         };
 
         if (toolFormValues.categories.length > 0) {
@@ -174,6 +182,10 @@ export async function action({ request }: ActionFunctionArgs) {
               id: category,
             })),
           };
+        }
+
+        if (toolFormValues.purchasable) {
+          data.purchasePrice = toolFormValues.purchasePrice;
         }
 
         await prisma.tool.update({

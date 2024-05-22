@@ -394,6 +394,51 @@ describe('Validation flows', () => {
       });
       expect(validationResult.data).toBe(undefined);
     });
+
+    test.skip('Check a valid tool request with purchase price', async () => {
+      // Skipped because of the same reason as the first test
+      const tool = new File([''], 'tool.zip', { type: 'application/zip' });
+      const image = new File([''], 'image.jpg', { type: 'image/jpeg' });
+
+      const formData = new FormData();
+      formData.append('id', '1');
+      formData.append('name.en', 'Name 1');
+      formData.append('name.nl', 'Naam 1');
+      formData.append('slug.en', 'name-1');
+      formData.append('slug.nl', 'naam-1');
+      formData.append('summary.en', 'Summary 1');
+      formData.append('summary.nl', 'Samenvatting 1');
+      formData.append('description.en', 'Description 1');
+      formData.append('description.nl', 'Beschrijving 1');
+      formData.append('categories', '1,2');
+      formData.append('tool', tool);
+      formData.append('image', image);
+      formData.append('purchasable', 'true');
+      formData.append('purchasePrice', '8.99');
+
+      const request = new Request('http://localhost:3000/api/tool', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const validationResult = await validationFlows.validateTool(
+        request.clone(),
+        false
+      );
+
+      expect(validationResult.success).toBe(true);
+      expect(validationResult.data).toStrictEqual<ToolData>({
+        name: { en: 'Name 1', nl: 'Naam 1' },
+        slug: { en: 'name-1', nl: 'naam-1' },
+        summary: { en: 'Summary 1', nl: 'Samenvatting 1' },
+        description: { en: 'Description 1', nl: 'Beschrijving 1' },
+        filename: 'tool.zip',
+        image: 'image.jpg',
+        categories: ['1', '2'],
+        purchasable: true,
+        purchasePrice: 8.99,
+      });
+    });
   });
 
   describe('Organisation validation', () => {

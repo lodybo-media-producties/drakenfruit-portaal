@@ -25,6 +25,10 @@ import { convertToolFormValuesToFormData } from '~/utils/content';
 import { useEventSource } from 'remix-utils/use-event-source';
 import { type UploadState } from '~/models/storage.server';
 import UploadProgressBar from '~/components/UploadProgressBar';
+import PurchaseInput, {
+  type PurchaseInputValues,
+} from '~/components/PurchaseInput';
+import Label from '~/components/Label';
 
 type Props = {
   mode: 'create' | 'update';
@@ -72,6 +76,10 @@ export default function ToolMutationForm({
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
+  const [purchaseValues, setPurchaseValues] = useState<PurchaseInputValues>({
+    purchasable: initialValues?.purchasable ?? false,
+    purchasePrice: initialValues?.purchasePrice ?? undefined,
+  });
 
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
@@ -175,6 +183,10 @@ export default function ToolMutationForm({
     }
   };
 
+  const handlePurchaseChange = (values: PurchaseInputValues) => {
+    setPurchaseValues(values);
+  };
+
   const generateFormDataFromToolFormValues = () => {
     const data: Omit<ToolFormValues, 'filename' | 'image'> = {
       id: initialValues?.id,
@@ -195,9 +207,12 @@ export default function ToolMutationForm({
         nl: nlSummary,
       },
       categories: selectedCategoryIDs,
-      purchasable: initialValues?.purchasable ?? false,
-      purchasePrice: initialValues?.purchasePrice ?? 0,
+      purchasable: purchaseValues.purchasable,
     };
+
+    if (purchaseValues.purchasable) {
+      data.purchasePrice = purchaseValues.purchasePrice;
+    }
 
     return convertToolFormValuesToFormData(data);
   };
@@ -321,11 +336,21 @@ export default function ToolMutationForm({
         error={getLocalisedError('slug')}
       />
 
-      <CategoryInput
-        categories={categories}
-        initialCategories={selectedCategoryIDs}
-        onSelect={handleCategoriesChange}
-      />
+      <div className="space-y-8">
+        <CategoryInput
+          categories={categories}
+          initialCategories={selectedCategoryIDs}
+          onSelect={handleCategoriesChange}
+        />
+
+        <Label label={t('ToolMutationForm.Purchase Label')}>
+          <PurchaseInput
+            onChange={handlePurchaseChange}
+            initialValues={purchaseValues}
+            error={getLocalisedError('purchasePrice')}
+          />
+        </Label>
+      </div>
 
       <TextAreaInput
         className="w-3/4"

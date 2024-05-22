@@ -1,5 +1,6 @@
 import PaymentForm from '~/components/PaymentForm';
 import { type Issuer } from '~/payments.server';
+import { Image } from '~/components/Image';
 
 type Props = {
   title: string;
@@ -21,7 +22,7 @@ export default function PaymentWall({
       <div className="flex flex-col gap-4 w-full lg:w-2/3">
         <h1 className="text-6xl font-type">{title}</h1>
         <p>{description}</p>
-        <img src={image} alt={title} />
+        <Image src={image} alt={title} />
       </div>
 
       <div className="w-full lg:w-1/3">

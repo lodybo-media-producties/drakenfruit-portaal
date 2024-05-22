@@ -312,9 +312,14 @@ export function convertToolFormValuesToFormData(
   formData.append('description.en', tool.description.en);
   formData.append('description.nl', tool.description.nl);
   formData.append('categories', tool.categories.join(','));
+  formData.append('purchasable', tool.purchasable.toString());
 
   if (tool.id) {
     formData.append('id', tool.id);
+  }
+
+  if (tool.purchasable) {
+    formData.append('purchasePrice', tool.purchasePrice?.toString(10) ?? '0');
   }
 
   return formData;
