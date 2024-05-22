@@ -30,6 +30,9 @@ import { type ArticleErrors } from '~/types/Validations';
 import { useEventSource } from 'remix-utils/use-event-source';
 import { type UploadState } from '~/models/storage.server';
 import UploadProgressBar from '~/components/UploadProgressBar';
+import PurchaseInput, {
+  type PurchaseInputValues,
+} from '~/components/PurchaseInput';
 
 type Props = {
   mode: 'create' | 'update';
@@ -77,6 +80,10 @@ export default function ArticleMutationForm({
   const [selectedCategoryIDs, setSelectedCategoryIDs] = useState(
     initialValues?.categories ?? []
   );
+  const [purchaseValues, setPurchaseValues] = useState<PurchaseInputValues>({
+    purchasable: initialValues?.purchasable ?? false,
+    purchasePrice: initialValues?.purchasePrice ?? undefined,
+  });
 
   useEffect(() => {
     if (fetcher.data) {
@@ -176,6 +183,10 @@ export default function ArticleMutationForm({
     setSelectedCategoryIDs(categories);
   };
 
+  const handlePurchaseChange = (values: PurchaseInputValues) => {
+    setPurchaseValues(values);
+  };
+
   const handleLangSelect = (value: string) => {
     setLang(value as SupportedLanguages);
   };
@@ -201,9 +212,12 @@ export default function ArticleMutationForm({
         nl: nlContent,
       },
       categories: selectedCategoryIDs,
-      purchasable: initialValues?.purchasable ?? false,
-      purchasePrice: initialValues?.purchasePrice ?? 0,
+      purchasable: purchaseValues.purchasable,
     };
+
+    if (purchaseValues.purchasable) {
+      data.purchasePrice = purchaseValues.purchasePrice;
+    }
 
     return convertArticleFormValuesToFormData(data);
   };
@@ -274,8 +288,14 @@ export default function ArticleMutationForm({
     uploadProgress = JSON.parse(uploadProgressData) as UploadState;
   }
 
+  let pageKey = 'ArticleMutationForm.New Article Title';
+  if (mode === 'update') {
+    pageKey = 'ArticleMutationForm.Edit Article Title';
+  }
+
   return (
-    <form className="w-full flex flex-col space-y-4" onSubmit={handleSubmit}>
+    <form className="w-full flex flex-col space-y-6" onSubmit={handleSubmit}>
+      <h1 className="font-type text-6xl">{t(pageKey)}</h1>
       <Message variant="error" message={error} />
 
       <Toggle options={getLanguageOptions()} onSelect={handleLangSelect} />
@@ -318,14 +338,32 @@ export default function ArticleMutationForm({
         error={getLocalisedError('summary')}
       />
 
-      <Label label={t('ArticleMutationForm.Author Label')}>
-        <AuthorSelector
-          authors={authors}
-          initialSelectedAuthorID={selectedAuthorID}
-          onSelect={handleAuthorChange}
-          error={getLocalisedError('authorId')}
-        />
-      </Label>
+      <div className="space-y-8">
+        <Label label={t('ArticleMutationForm.Author Label')}>
+          <AuthorSelector
+            authors={authors}
+            initialSelectedAuthorID={selectedAuthorID}
+            onSelect={handleAuthorChange}
+            error={getLocalisedError('authorId')}
+          />
+        </Label>
+
+        <Label label={t('ArticleMutationForm.Category Label')}>
+          <CategoryInput
+            categories={categories}
+            initialCategories={selectedCategoryIDs}
+            onSelect={handleCategoriesChange}
+          />
+        </Label>
+
+        <Label label={t('ArticleMutationForm.Purchase Label')}>
+          <PurchaseInput
+            onChange={handlePurchaseChange}
+            initialValues={purchaseValues}
+            error={getLocalisedError('purchasePrice')}
+          />
+        </Label>
+      </div>
 
       <Label label={t('ArticleMutationForm.Content Label')}>
         <Editor
@@ -334,14 +372,6 @@ export default function ArticleMutationForm({
           value={getContent()}
           onChange={handleContentChange}
           error={getLocalisedError('content')}
-        />
-      </Label>
-
-      <Label label={t('ArticleMutationForm.Category Label')}>
-        <CategoryInput
-          categories={categories}
-          initialCategories={selectedCategoryIDs}
-          onSelect={handleCategoriesChange}
         />
       </Label>
 

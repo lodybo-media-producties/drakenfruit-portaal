@@ -103,6 +103,8 @@ export async function action({ request }: ActionFunctionArgs) {
                 id: category,
               })),
             },
+            purchasable: data.purchasable,
+            purchasePrice: data.purchasePrice,
           },
         });
 
@@ -179,6 +181,8 @@ export async function action({ request }: ActionFunctionArgs) {
               id: articleFormValues.authorId,
             },
           },
+          purchasable: articleFormValues.purchasable,
+          purchasePrice: articleFormValues.purchasePrice,
         };
 
         if (articleFormValues.image) {

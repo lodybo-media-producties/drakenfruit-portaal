@@ -16,7 +16,7 @@ export default function Checkbox({
 }: Props) {
   return (
     <label
-      className={`flex flex-row gap-2.5 items-top ${
+      className={`flex flex-row gap-2.5 items-center ${
         disabled ? 'cursor-not-allowed' : 'cursor-pointer'
       }`}
     >

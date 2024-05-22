@@ -1,9 +1,9 @@
 import { type ActionFunctionArgs, json } from '@remix-run/node';
-import i18nextServer from '~/i18next.server';
+import { detectLocale } from '~/i18next.server';
 
 export async function action({ request }: ActionFunctionArgs) {
   if (request.method === 'POST') {
-    const locale = await i18nextServer.getLocale(request);
+    const locale = await detectLocale(request);
 
     const formData = await request.formData();
 

@@ -20,6 +20,7 @@ import type {
 import * as checks from './checks';
 import { safeRedirect } from '~/utils/utils';
 import { isDefined } from './checks';
+import { ArticleFormValues } from '~/types/Article';
 
 // Defined here because if we import it from 'user.server.ts', we got a dependency on the actual Postgres database.
 const Role = {
@@ -165,6 +166,8 @@ export async function validateArticle(
   };
   const authorId = formData.get('authorId');
   const image = formData.get('image') as string;
+  const purchasable = formData.get('purchasable') === 'true';
+  let purchasePrice: number | undefined;
 
   const errors: ArticleErrors = {};
 
@@ -187,24 +190,39 @@ export async function validateArticle(
     };
   }
 
+  if (purchasable) {
+    const result = checks.checkPurchasePrice(formData.get('purchasePrice'));
+    if (typeof result !== 'number') {
+      errors.purchasePrice = result;
+    } else {
+      purchasePrice = result;
+    }
+  }
+
   if (Object.keys(errors).some((key) => errors[key as keyof ArticleErrors])) {
     return { success: false, errors };
   }
 
+  const data: ArticleFormValues = {
+    title,
+    slug,
+    summary,
+    content,
+    categories: (formData.get('categories') as string)
+      .split(',')
+      .filter(Boolean),
+    authorId: authorId as string,
+    image,
+    purchasable,
+  };
+
+  if (purchasePrice) {
+    data.purchasePrice = purchasePrice;
+  }
+
   return {
     success: true,
-    data: {
-      title,
-      slug,
-      summary,
-      content,
-      categories: (formData.get('categories') as string)
-        .split(',')
-        .filter(Boolean),
-      authorId: authorId as string,
-      image,
-      purchasable: false,
-    },
+    data,
   };
 }
 

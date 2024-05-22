@@ -33,12 +33,15 @@
       "Dutch": "Dutch",
       "English": "English"
     },
+    "New Article Title": "New article",
+    "Edit Article Title": "Edit article",
     "Title Label": "Title",
     "Slug Label": "Slug",
     "Summary Label": "Summary",
     "Author Label": "Written by",
     "Content Label": "Content",
     "Category Label": "Select one or more categories",
+    "Purchase Label": "Determine if this article is behind a paywall",
     "Image Label": "Article Image",
     "Save Button Label": "Save",
     "Publish Button Label": "Publish",
@@ -195,5 +198,9 @@
     "SelectIssuerLabel": "Which bank do you choose to pay with?",
     "SelectIssuerPlaceholder": "Select your bank",
     "PayButtonLabel": "Pay {{price}}"
+  },
+  "PurchaseInput": {
+    "ItemIsPurchasable": "This item is behind a paywall",
+    "PurchasePrice": "Purchase price"
   }
 }

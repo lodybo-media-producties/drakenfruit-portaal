@@ -77,9 +77,17 @@ export function convertArticleFormValuesToFormData(
   formData.append('content.nl', articleFormValues.content.nl);
   formData.append('categories', articleFormValues.categories.join(','));
   formData.append('authorId', articleFormValues.authorId);
+  formData.append('purchasable', articleFormValues.purchasable.toString());
 
   if (articleFormValues.id) {
     formData.append('id', articleFormValues.id);
+  }
+
+  if (articleFormValues.purchasable) {
+    formData.append(
+      'purchasePrice',
+      articleFormValues.purchasePrice?.toString(10) ?? '0'
+    );
   }
 
   return formData;

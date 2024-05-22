@@ -36,7 +36,6 @@ export async function detectLocale(
   let locale: string;
 
   const user = usr || (await getUser(request));
-
   if (user) {
     locale = user.locale;
   } else {

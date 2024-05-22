@@ -33,12 +33,15 @@
       "Dutch": "Nederlands",
       "English": "Engels"
     },
+    "New Article Title": "Nieuw artikel",
+    "Edit Article Title": "Bewerk artikel",
     "Title Label": "Titel van het artikel",
     "Slug Label": "Slug van het artikel",
     "Summary Label": "Samenvatting",
     "Author Label": "Geschreven door",
     "Content Label": "Inhoud",
     "Category Label": "Kies een of meerdere categorieën",
+    "Purchase Label": "Is dit een betaald artikel?",
     "Image Label": "Hoofdafbeelding",
     "Save Button Label": "Opslaan",
     "Publish Button Label": "Publiceren",
@@ -195,5 +198,9 @@
     "SelectIssuerLabel": "Met welke bank wil je de betaling voldoen?",
     "SelectIssuerPlaceholder": "Kies je bank",
     "PayButtonLabel": "Reken {{price}} af"
+  },
+  "PurchaseInput": {
+    "ItemIsPurchasable": "Dit is een betaald stuk",
+    "PurchasePrice": "Prijs"
   }
 }

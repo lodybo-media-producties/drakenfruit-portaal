@@ -47,3 +47,30 @@ export function checkLocalisedValue(localisedValue: any) {
 
   return errors;
 }
+
+export function checkPurchasePrice(price: any) {
+  if (typeof price !== 'string') {
+    return {
+      nl: 'Waarde heeft een verkeerd formaat',
+      en: 'Value has an incorrect format',
+    };
+  }
+
+  if (!price) {
+    return {
+      nl: 'Waarde is verplicht',
+      en: 'Value is required',
+    };
+  }
+
+  const parsed = parseFloat(price);
+
+  if (isNaN(parsed)) {
+    return {
+      nl: 'Waarde is ongeldig',
+      en: 'Value is invalid',
+    };
+  }
+
+  return parsed;
+}

@@ -98,4 +98,20 @@ describe('Validations', () => {
       });
     });
   });
+
+  describe('Testing purchase price', () => {
+    test('Check whether a purchase price is valid', () => {
+      expect(validationChecks.checkPurchasePrice('')).toStrictEqual({
+        nl: 'Waarde is verplicht',
+        en: 'Value is required',
+      });
+      expect(
+        validationChecks.checkPurchasePrice({ 'not-a-number': 1 })
+      ).toStrictEqual({
+        nl: 'Waarde heeft een verkeerd formaat',
+        en: 'Value has an incorrect format',
+      });
+      expect(validationChecks.checkPurchasePrice('123')).toBe(123);
+    });
+  });
 });

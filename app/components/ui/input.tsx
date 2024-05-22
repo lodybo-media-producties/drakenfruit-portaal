@@ -15,6 +15,13 @@ export interface TextAreaProps
   extends BaseInputProps,
     React.InputHTMLAttributes<HTMLTextAreaElement> {}
 
+const inputBaseClasses = `
+  h-10
+  w-full
+  px-3 py-2
+  text-sm
+`;
+
 const inputBorderAndBgClasses = `
   border
   border-gray-200
@@ -56,13 +63,19 @@ export const inputClasses = {
   placeholder: inputPlaceholderClasses,
 };
 
+export const inputStyles = `
+  ${inputBaseClasses}
+  ${inputBorderAndBgClasses}
+  ${inputFocusClasses}
+  ${inputPlaceholderClasses}
+`;
+
 function getClasses(error: string | undefined, className: string | undefined) {
   return cn(
     `
           flex
-          h-10 w-full
-          px-3 py-2
-          text-sm
+          
+          ${inputBaseClasses}
           
           ${inputPlaceholderClasses}
           
