@@ -391,5 +391,11 @@
       },
       "Back Link Label": "Back to Users"
     }
+  },
+  "Webinars": {
+    "Index": {
+      "Title": "Webinars",
+      "No Webinars": "No webinars were found"
+    }
   }
 }
