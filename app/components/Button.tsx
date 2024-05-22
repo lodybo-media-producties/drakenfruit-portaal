@@ -60,11 +60,12 @@ const Button = forwardRef<HTMLButtonElement, Props>(
 
     if ('to' in props) {
       const { to = '', ...restProps } = props as ButtonLinkProps;
+      const { loading, ...restLinkProps } = restProps;
 
       return (
-        <Link to={to} className={`inline-block ${classes}`} {...restProps}>
+        <Link to={to} className={`inline-block ${classes}`} {...restLinkProps}>
           <ButtonContents
-            isLoading={restProps.loading}
+            isLoading={loading}
             canAnimate={canAnimate}
             primary={primary}
           >
@@ -77,10 +78,11 @@ const Button = forwardRef<HTMLButtonElement, Props>(
     // Take the className prop out of the props object, because we don't need it anymore.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const buttonProps = props as ButtonProps;
+    const { loading, ...restButtonProps } = buttonProps;
     return (
-      <button ref={ref} className={classes} {...buttonProps}>
+      <button ref={ref} className={classes} {...restButtonProps}>
         <ButtonContents
-          isLoading={buttonProps.loading}
+          isLoading={loading}
           canAnimate={canAnimate}
           primary={primary}
         >
