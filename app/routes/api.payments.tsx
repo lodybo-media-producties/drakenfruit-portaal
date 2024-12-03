@@ -7,6 +7,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const formData = await request.formData();
 
+    console.log(Object.fromEntries(formData));
+
     const issuer = formData.get('issuer');
 
     if (!issuer || issuer === '') {
